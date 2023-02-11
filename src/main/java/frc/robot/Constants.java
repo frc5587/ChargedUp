@@ -12,4 +12,9 @@ package frc.robot;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public static final class LEDConstants {
+        public static final int PORT = 0; // TODO Check
+        public static final int STRIP_LENGTH = 0; // TODO
+    }
+}
