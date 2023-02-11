@@ -12,4 +12,9 @@ package frc.robot;
  * wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public static class IntakeConstants {
+        public static final int FORWARD_CHANNEL = 0;
+        public static final int REVERSE_CHANNEL = 1;
+    }
+}
