@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,6 +20,7 @@ public class RobotContainer {
     // COMMANDS
 
     // INPUTS
+    public CommandJoystick joystick = new CommandJoystick(0);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
