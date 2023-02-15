@@ -13,28 +13,24 @@ public class Limelight extends LimelightBase {
     private final Field2d field = new Field2d();
 
     public Limelight() {
-        super(LimelightConstants.mountAngle, LimelightConstants.lensHeight, LimelightConstants.goalHeight, LimelightConstants.distanceOffset);
+        super(LimelightConstants.MOUNT_ANGLE, LimelightConstants.LENS_HEIGHT, LimelightConstants.GOAL_HEIGHT, LimelightConstants.DISTANCE_OFFSET);
 
         ledChooser.setDefaultOption("DEFAULT", LedValues.DEFAULT);
         ledChooser.addOption("ON", LedValues.ON);
         ledChooser.addOption("OFF", LedValues.OFF);
         ledChooser.addOption("BLINK", LedValues.BLINK);
         SmartDashboard.putData("Limelight LEDs", ledChooser);
-        SmartDashboard.putData("Field", field);
+        SmartDashboard.putData("Limelight Pose Field", field);
+    }
+
+    public Pose2d getLimelightPose() {
+        double[] limelightBotPose = limelightTable.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+        return new Pose2d(limelightBotPose[0], limelightBotPose[1], Rotation2d.fromDegrees(limelightBotPose[5]));
     }
 
     @Override
     public void periodic() {
         setLEDs(ledChooser.getSelected());
-        double targetID = limelightTable.getEntry("tid").getDouble(-1.0);
-        if(targetID != -1.0) {
-            System.out.println(targetID);
-        }
-        else {
-            System.out.println("No Target");
-        }
-        double[] limelightBotPose = limelightTable.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
-        Pose2d robotPose = new Pose2d(limelightBotPose[0], limelightBotPose[1], Rotation2d.fromDegrees(limelightBotPose[5]));
-        field.setRobotPose(robotPose);
+        field.setRobotPose(getLimelightPose());
     }
 }

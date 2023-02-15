@@ -1,8 +1,13 @@
 package frc.robot;
 
+import org.frc5587.lib.control.DeadbandCommandJoystick;
+
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Swerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -15,10 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
     // SUBSYSTEMS
+    private Limelight limelight = new Limelight();
+    private Swerve swerve = new Swerve(limelight);
 
     // COMMANDS
 
     // INPUTS
+    private DeadbandCommandJoystick joystick = new DeadbandCommandJoystick(0);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
