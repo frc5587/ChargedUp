@@ -1,11 +1,10 @@
 package frc.robot;
 
-import org.frc5587.lib.control.DeadbandCommandJoystick;
-
+import org.frc5587.lib.control.DeadbandCommandXboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DualStickSwerve;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Swerve;
 
@@ -19,20 +18,22 @@ import frc.robot.subsystems.Swerve;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    // INPUTS
+    private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0);
+
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
     private Swerve swerve = new Swerve(limelight);
 
     // COMMANDS
-
-    // INPUTS
-    private DeadbandCommandJoystick joystick = new DeadbandCommandJoystick(0);
+    private DualStickSwerve dualStickSwerve = new DualStickSwerve(
+            swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        // Configure the trigger bindings
+        swerve.setDefaultCommand(dualStickSwerve);
         configureBindings();
     }
 
