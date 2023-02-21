@@ -168,7 +168,8 @@ public final class Constants {
         public static final double LENS_HEIGHT = Units.inchesToMeters(20.375);
         public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25);
         public static final double DISTANCE_OFFSET = 0;
-      }
+    }
+    
     public static final class ArmConstants {
         public static final int motorPort = 15;
         public static final double gearing = 3; // TODO: Calculate
@@ -183,5 +184,10 @@ public final class Constants {
 
         public static final PivotingArmConstants armConstants = new PivotingArmConstants(
                 gearing, softLimits, zeroOffset, encoderCPR, limitSwitchPorts, switchInverted, armPIDController, armFF);
+    }
+
+    public static class IntakeConstants {
+        public static final int FORWARD_CHANNEL = 0;
+        public static final int REVERSE_CHANNEL = 1;
     }
 }
