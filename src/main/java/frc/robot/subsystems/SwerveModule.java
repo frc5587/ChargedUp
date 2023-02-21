@@ -5,10 +5,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.swervelib.math.Conversions;
-import frc.robot.swervelib.util.CTREConfigs;
-import frc.robot.swervelib.util.CTREModuleState;
-import frc.robot.swervelib.util.SwerveModuleConstants;
+import frc.robot.util.swervelib.math.Conversions;
+import frc.robot.util.swervelib.util.CTREConfigs;
+import frc.robot.util.swervelib.util.CTREModuleState;
+import frc.robot.util.swervelib.util.SwerveModuleConstants;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
