@@ -1,12 +1,18 @@
 package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.SemiAuto;
+import frc.robot.commands.SemiAuto.CommandSampler;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.*;
+import frc.robot.util.CommandButtonBoard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -20,14 +26,18 @@ import frc.robot.subsystems.Swerve;
 public class RobotContainer {
     // INPUTS
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0);
+    private CommandButtonBoard board = new CommandButtonBoard(1);
 
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
     private Swerve swerve = new Swerve(limelight);
+    private Arm arm = new Arm();
+    private Intake intake = new Intake();
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
             swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
+    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -51,7 +61,16 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private void configureBindings() {}
+    private void configureBindings() {
+        boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
+        xb.povLeft().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(5, swerve) : semiAuto.cSampler.new DriveToGrid(0, swerve));
+        xb.povUp().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(4, swerve) : semiAuto.cSampler.new DriveToGrid(1, swerve));
+        xb.povRight().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(3, swerve) : semiAuto.cSampler.new DriveToGrid(2, swerve));
+
+        board.leftButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(0, swerve));
+        board.centerButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(1, swerve));
+        board.rightButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(2, swerve));
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

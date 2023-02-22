@@ -79,10 +79,18 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             mod.setDesiredState(desiredStates[mod.moduleNumber], false);
         }
-    }    
+    }
+
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        setModuleStates(kinematics.toSwerveModuleStates(speeds));
+    }
 
     public Pose2d getPose() {
         return odometry.getPoseMeters();
+    }
+
+    public Pose2d getEstimatedPose() {
+        return poseEstimator.getEstimatedPosition();
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -127,7 +135,9 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-
+    public void stop() {
+        setChassisSpeeds(new ChassisSpeeds());
+    }
 
     @Override
     public void periodic(){

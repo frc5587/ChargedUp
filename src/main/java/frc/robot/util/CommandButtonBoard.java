@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class CommandButtonBoard extends CommandGenericHID {
     public enum Button {
-        upButton(0),
+        upButton(8),
         middleButton(4),
-        downButton(8),
+        downButton(0),
         purpleButton(9),
         yellowButton(10),
         rightButton(5),

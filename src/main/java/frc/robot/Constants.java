@@ -5,15 +5,17 @@ import org.frc5587.lib.pid.FPID;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
 import org.frc5587.lib.subsystems.PivotingArmBase.PivotingArmConstants;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
@@ -157,10 +159,54 @@ public final class Constants {
         public static final double KP_Y_CONTROLLER = 1;
         public static final double KP_THETA_CONTROLLER = 1;
     
-        /* Constraint for the motion profilied robot angle controller */
+        public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS =
+            new TrapezoidProfile.Constraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
+
         public static final TrapezoidProfile.Constraints K_THETA_CONSTRAINTS =
-            new TrapezoidProfile.Constraints(
-                MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+            new TrapezoidProfile.Constraints(MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
+
+        public static TrajectoryConfig DEFAULT_TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
+
+        
+        public static final ProfiledPIDController BOT_DRIVE_CONTROLLER =
+        new ProfiledPIDController(
+            2.5, 0.0, 0.0, K_PXY_CONSTRAINTS);
+        public static final ProfiledPIDController BOT_ANGLE_CONTROLLER =
+        new ProfiledPIDController(
+            7.0, 0.0, 0.0, K_THETA_CONSTRAINTS);
+
+        public static final class GridLocationGroup {
+            public final Pose2d greaterPose, poseLeft, poseRight;
+
+            public GridLocationGroup(Pose2d greaterPose, Alliance alliance) {
+                this.greaterPose = greaterPose;
+                if(alliance.equals(Alliance.Blue)) {
+                    this.poseLeft = new Pose2d(greaterPose.getX(), greaterPose.getY()+.56, greaterPose.getRotation());
+                    this.poseRight = new Pose2d(greaterPose.getX(), greaterPose.getY()-.56, greaterPose.getRotation());
+                }
+                else {
+                    this.poseLeft = new Pose2d(greaterPose.getX(), greaterPose.getY()-.56, greaterPose.getRotation());
+                    this.poseRight = new Pose2d(greaterPose.getX(), greaterPose.getY()+.56, greaterPose.getRotation());
+                }
+            }
+
+            public GridLocationGroup(Pose2d greaterPose, Pose2d poseLeft, Pose2d poseRight) {
+                this.greaterPose = greaterPose;
+                this.poseLeft = poseLeft;
+                this.poseRight = poseRight;
+            }
+        }
+
+        public static final GridLocationGroup blueLeft = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup blueCenter = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup blueRight = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup redLeft = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup redCenter = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup redRight = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(90)), Alliance.Red);
+
+        public static final GridLocationGroup[] GRID_LOCATIONS = {
+            blueLeft, blueCenter, blueRight, redLeft, redCenter, redRight
+        };
     }
 
     public static class LimelightConstants {
@@ -169,7 +215,7 @@ public final class Constants {
         public static final double GOAL_HEIGHT = Units.inchesToMeters(14.25);
         public static final double DISTANCE_OFFSET = 0;
     }
-    
+
     public static final class ArmConstants {
         public static final int motorPort = 15;
         public static final double gearing = 3; // TODO: Calculate
