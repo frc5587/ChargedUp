@@ -33,15 +33,15 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
  */
 public final class Constants {
     public static final class SwerveConstants {
-        public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
 
-        public static final COTSFalconSwerveConstants chosenModule = 
+        public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(18); // TODO Measure
         public static final double WHEEL_BASE = Units.inchesToMeters(18); // TODO Measure
-        public static final double WHEEL_CIRCUMFERENCE_METERS = chosenModule.wheelCircumference;
+        public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
@@ -52,15 +52,15 @@ public final class Constants {
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
         /* Module Gear Ratios */
-        public static final double DRIVE_GEAR_RATIO = chosenModule.driveGearRatio;
-        public static final double ANGLE_GEAR_RATIO = chosenModule.angleGearRatio;
+        public static final double DRIVE_GEAR_RATIO = CHOSEN_MODULE.driveGearRatio;
+        public static final double ANGLE_GEAR_RATIO = CHOSEN_MODULE.angleGearRatio;
 
         /* Motor Inverts */
-        public static final boolean ANGLE_MOTOR_INVERTED = chosenModule.angleMotorInvert;
-        public static final boolean DRIVE_MOTOR_INVERTED = chosenModule.driveMotorInvert;
+        public static final boolean ANGLE_MOTOR_INVERTED = CHOSEN_MODULE.angleMotorInvert;
+        public static final boolean DRIVE_MOTOR_INVERTED = CHOSEN_MODULE.driveMotorInvert;
 
         /* Angle Encoder Invert */
-        public static final boolean CANCODER_INVERTED = chosenModule.canCoderInvert;
+        public static final boolean CANCODER_INVERTED = CHOSEN_MODULE.canCoderInvert;
 
         /* Swerve Current Limiting */
         public static final int ANGLE_CONT_LIMIT = 25;
@@ -80,7 +80,7 @@ public final class Constants {
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
-                chosenModule.angleKF, chosenModule.angleKP, chosenModule.angleKI, chosenModule.angleKD);
+                CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD);
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
@@ -200,15 +200,15 @@ public final class Constants {
             }
         }
 
-        public static final GridLocationGroup blueLeft = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup blueCenter = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup blueRight = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup redLeft = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(90)), Alliance.Red);
-        public static final GridLocationGroup redCenter = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(90)), Alliance.Red);
-        public static final GridLocationGroup redRight = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup BLUE_LEFT = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_CENTER = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_RIGHT = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(-90)), Alliance.Blue);
+        public static final GridLocationGroup RED_RIGHT = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup RED_CENTER = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup RED_LEFT = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(90)), Alliance.Red);
 
         public static final GridLocationGroup[] GRID_LOCATIONS = {
-            blueLeft, blueCenter, blueRight, redLeft, redCenter, redRight
+            BLUE_LEFT, BLUE_CENTER, BLUE_RIGHT, RED_RIGHT, RED_CENTER, RED_LEFT
         };
     }
 
