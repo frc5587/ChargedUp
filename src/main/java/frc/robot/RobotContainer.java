@@ -5,6 +5,7 @@ import org.frc5587.lib.control.DeadbandCommandXboxController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
@@ -69,6 +70,12 @@ public class RobotContainer {
         board.leftButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(0));
         board.centerButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(1));
         board.rightButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(2));
+        board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
+        board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
+        board.downButton().onTrue(new InstantCommand(arm::intakeSetpoint, arm));
+        board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
+        board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
+        board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
     }
 
     /**
