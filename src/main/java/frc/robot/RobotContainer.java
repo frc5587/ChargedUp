@@ -63,13 +63,13 @@ public class RobotContainer {
      */
     private void configureBindings() {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
-        xb.povLeft().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(5, swerve) : semiAuto.cSampler.new DriveToGrid(0, swerve));
-        xb.povUp().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(4, swerve) : semiAuto.cSampler.new DriveToGrid(1, swerve));
-        xb.povRight().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(3, swerve) : semiAuto.cSampler.new DriveToGrid(2, swerve));
+        xb.povLeft().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(5) : semiAuto.cSampler.new DriveToGrid(0));
+        xb.povUp().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(4) : semiAuto.cSampler.new DriveToGrid(1));
+        xb.povRight().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(3) : semiAuto.cSampler.new DriveToGrid(2));
 
-        board.leftButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(0, swerve));
-        board.centerButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(1, swerve));
-        board.rightButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(2, swerve));
+        board.leftButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(0));
+        board.centerButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(1));
+        board.rightButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(2));
     }
 
     /**

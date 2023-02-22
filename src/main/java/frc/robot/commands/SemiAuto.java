@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutoConstants;
@@ -22,83 +23,27 @@ public class SemiAuto {
     }
 
     public class CommandSampler {
-        public class DriveToGrid extends CommandBase {
-            int gridNumber;
-            Swerve swerve;
-            DriveToPose driveToPose;
-    
-            /** 
-             * This image denotes how the grids are numbered:
-             * <img src="../util/doc-files/GridMap.png" width=10 />
-             * and
+        public class DriveToGrid extends DriveToPose {
+            /**
+             * This uses the given gridNumber to select a pre-created {@link Pose2d} from constants.
+             * The poses are numbered left to right from the driver's perspective on the blue side,
+             * and right to left on the red side. A map is provided in the following image:
+             * <img src="../util/doc-files/GridMap.png" width="100%" />
              */
-            public DriveToGrid(int gridNumber, Swerve swerve) {
-                this.gridNumber = gridNumber;
-                this.swerve = swerve;
-                driveToPose = new DriveToPose(swerve, AutoConstants.GRID_LOCATIONS[gridNumber].greaterPose);
+            public DriveToGrid(int gridNumber) {
+                super(swerve, AutoConstants.GRID_LOCATIONS[gridNumber].greaterPose);
                 currentGridNumber = gridNumber;
-            }
-
-            @Override
-            public void initialize() {
-                driveToPose.initialize();
-            }
-
-            @Override
-            public void execute() {
-                driveToPose.execute();
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                driveToPose.end(interrupted);
             }
         }
 
-        public class DriveWithinGrid extends CommandBase {
-            int posNumber;
-            Swerve swerve;
-            DriveToPose driveToPose;
-    
+        public class DriveWithinGrid extends DriveToPose {
             /** 
-             * This image denotes how the positions within grids are numbered:
-             * <img src="../util/doc-files/MapWithinGrid.png" width="10px" />
-             */
-            public DriveWithinGrid(int posNumber, Swerve swerve) {
-                this.posNumber = posNumber;
-                this.swerve = swerve;
-                switch (posNumber) {
-                    case 0:
-                        driveToPose = new DriveToPose(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].poseLeft);
-                        break;
-                
-                    case 1:
-                        driveToPose = new DriveToPose(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].greaterPose);
-                        break;
-
-                    case 2:
-                        driveToPose = new DriveToPose(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].poseRight);
-                        break;
-
-                    default:
-                        break;
-                }
-                
-            }
-
-            @Override
-            public void initialize() {
-                driveToPose.initialize();
-            }
-
-            @Override
-            public void execute() {
-                driveToPose.execute();
-            }
-
-            @Override
-            public void end(boolean interrupted) {
-                driveToPose.end(interrupted);
+             * This uses the given posNumber to select a pre-created {@link Pose2d} from constants.
+             * The poses are numbered left to right from the driver's perspective, 
+             * where left is 0 and right is 2.
+            */
+            public DriveWithinGrid(int posNumber) {
+                super(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
             }
         }
     }

@@ -177,6 +177,7 @@ public final class Constants {
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;
+            public final Pose2d[] poseArray;
 
             public GridLocationGroup(Pose2d greaterPose, Alliance alliance) {
                 this.greaterPose = greaterPose;
@@ -188,12 +189,14 @@ public final class Constants {
                     this.poseLeft = new Pose2d(greaterPose.getX(), greaterPose.getY()-.56, greaterPose.getRotation());
                     this.poseRight = new Pose2d(greaterPose.getX(), greaterPose.getY()+.56, greaterPose.getRotation());
                 }
+                this.poseArray = new Pose2d[]{this.poseLeft, this.greaterPose, this.poseRight};
             }
 
             public GridLocationGroup(Pose2d greaterPose, Pose2d poseLeft, Pose2d poseRight) {
                 this.greaterPose = greaterPose;
                 this.poseLeft = poseLeft;
                 this.poseRight = poseRight;
+                this.poseArray = new Pose2d[]{this.poseLeft, this.greaterPose, this.poseRight};
             }
         }
 
