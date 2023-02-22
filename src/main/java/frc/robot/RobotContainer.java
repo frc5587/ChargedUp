@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.SemiAuto;
-import frc.robot.commands.SemiAuto.CommandSampler;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.*;
 import frc.robot.util.CommandButtonBoard;
