@@ -2,16 +2,15 @@ package frc.robot.subsystems;
 
 import org.frc5587.lib.subsystems.PivotingArmBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import edu.wpi.first.math.util.Units;
-
 public class Arm extends PivotingArmBase {
-    private static WPI_TalonFX motor = new WPI_TalonFX(Constants.ArmConstants.motorPort);
+    private static WPI_TalonFX motor = new WPI_TalonFX(Constants.ArmConstants.MOTOR_PORT);
 
     public Arm() {
-        super(Constants.ArmConstants.armConstants, motor);
+        super(Constants.ArmConstants.ARM_CONSTANTS, motor);
     }
 
     @Override
@@ -36,11 +35,19 @@ public class Arm extends PivotingArmBase {
         motor.setInverted(false);
     }
     
-    public void moveToTop() {
-        this.setGoal(Units.degreesToRadians(90));
+    public void highSetpoint() {
+        this.setGoal(ArmConstants.HIGH_SETPOINT);
     }
 
-    public void moveToBottom() {
-        this.setGoal(0);
+    public void middleSetpoint() {
+        this.setGoal(ArmConstants.MEDIUM_SETPOINT);
+    }
+
+    public void intakeSetpoint() {
+        this.setGoal(ArmConstants.INTAKE_SETPOINT);
+    }
+
+    public void stow() {
+        this.setGoal(ArmConstants.STOW_SETPOINT);
     }
 }
