@@ -33,6 +33,7 @@ public class RobotContainer {
     private Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm();
     private Intake intake = new Intake();
+    private LEDs leds = new LEDs();
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
@@ -76,6 +77,8 @@ public class RobotContainer {
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
         board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
         board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
+        board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
+        board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
     }
 
     /**

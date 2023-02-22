@@ -243,4 +243,9 @@ public final class Constants {
         public static final int FORWARD_CHANNEL = 0;
         public static final int REVERSE_CHANNEL = 1;
     }
+    
+    public static final class LEDConstants {
+        public static final int PORT = 0; // TODO Check
+        public static final int STRIP_LENGTH = 0; // TODO
+    }
 }
