@@ -9,6 +9,7 @@ public class AutoSetArm extends CommandBase {
 
     public enum GridHeight {
         High,
+        Middle,
         Low
     }
 
@@ -23,8 +24,12 @@ public class AutoSetArm extends CommandBase {
             arm.highSetpoint();
         }
 
-        else {
+        else if(gridHeight == GridHeight.Middle) {
             arm.middleSetpoint();
+        }
+
+        else {
+            arm.intakeSetpoint();
         }
     }
 

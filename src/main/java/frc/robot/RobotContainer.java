@@ -27,7 +27,7 @@ import frc.robot.util.CommandButtonBoard;
 public class RobotContainer {
     // INPUTS
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0);
-    private CommandButtonBoard board = new CommandButtonBoard(1);
+    public CommandButtonBoard board = new CommandButtonBoard(1);
 
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
@@ -65,6 +65,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
+
         xb.povLeft().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(5) : semiAuto.new DriveToGrid(0));
         xb.povUp().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(4) : semiAuto.new DriveToGrid(1));
         xb.povRight().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(3) : semiAuto.new DriveToGrid(2));
@@ -74,9 +75,11 @@ public class RobotContainer {
         board.rightButton().onTrue(semiAuto.new DriveWithinGrid(2));
         board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
         board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
-        // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAutocommands!!!
-        // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAutocommands!!!
+        // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
+        // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
+        //* If the downButton is pressed once, set it to the intaking position. otherwise, score low. */
         board.downButton().onTrue(new InstantCommand(arm::intakeSetpoint, arm));
+        // board.downButtonDoublePressed().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); /These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
         board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
         board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
