@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.SemiAuto;
+import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.*;
 import frc.robot.util.CommandButtonBoard;
@@ -64,15 +65,17 @@ public class RobotContainer {
      */
     private void configureBindings() {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
-        xb.povLeft().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(5) : semiAuto.cSampler.new DriveToGrid(0));
-        xb.povUp().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(4) : semiAuto.cSampler.new DriveToGrid(1));
-        xb.povRight().onTrue(usingRedPoses ? semiAuto.cSampler.new DriveToGrid(3) : semiAuto.cSampler.new DriveToGrid(2));
+        xb.povLeft().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(5) : semiAuto.new DriveToGrid(0));
+        xb.povUp().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(4) : semiAuto.new DriveToGrid(1));
+        xb.povRight().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(3) : semiAuto.new DriveToGrid(2));
 
-        board.leftButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(0));
-        board.centerButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(1));
-        board.rightButton().onTrue(semiAuto.cSampler.new DriveWithinGrid(2));
+        board.leftButton().onTrue(semiAuto.new DriveWithinGrid(0));
+        board.centerButton().onTrue(semiAuto.new DriveWithinGrid(1));
+        board.rightButton().onTrue(semiAuto.new DriveWithinGrid(2));
         board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
         board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
+        // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAutocommands!!!
+        // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAutocommands!!!
         board.downButton().onTrue(new InstantCommand(arm::intakeSetpoint, arm));
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
         board.extendButton().onTrue(new InstantCommand(intake::extend, intake));

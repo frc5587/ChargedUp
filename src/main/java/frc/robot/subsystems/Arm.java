@@ -50,4 +50,12 @@ public class Arm extends PivotingArmBase {
     public void stow() {
         this.setGoal(ArmConstants.STOW_SETPOINT);
     }
+
+    public void liftAwayFromGrid() {
+        this.setGoal(pidController.getGoal().position+5);
+    }
+    
+    public void lowerFromGrid() {
+        this.setGoal(pidController.getGoal().position-5);
+    }
 }
