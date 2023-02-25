@@ -54,7 +54,7 @@ public class Arm extends PivotingArmBase {
         getController().setGoal(ArmConstants.MEDIUM_SETPOINT);
     }
 
-    public void intakeSetpoint() {
+    public void lowSetpoint() {
         getController().setGoal(ArmConstants.INTAKE_SETPOINT);
         
     }

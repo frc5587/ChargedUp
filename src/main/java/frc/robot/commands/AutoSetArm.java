@@ -29,7 +29,7 @@ public class AutoSetArm extends CommandBase {
         }
 
         else {
-            arm.intakeSetpoint();
+            arm.lowSetpoint();
         }
     }
 

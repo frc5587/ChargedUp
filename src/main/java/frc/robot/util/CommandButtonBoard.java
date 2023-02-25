@@ -1,7 +1,5 @@
 package frc.robot.util;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -28,9 +26,6 @@ public class CommandButtonBoard extends CommandGenericHID {
         }
     }
 
-    // public double timeSinceLastPress = 1;
-    // public BooleanSupplier doublePressed = () -> downButton().getAsBoolean() && timeSinceLastPress < 1;
-
     public CommandButtonBoard(int port) {
         super(port);
     }
@@ -46,11 +41,6 @@ public class CommandButtonBoard extends CommandGenericHID {
     public Trigger downButton() {
         return button(Button.downButton.value);
     }
-
-    // public Trigger downButtonDoublePressed() {
-    //     System.out.println("DOUBLE PRESSED!!!!");
-    //     return new Trigger(doublePressed);
-    // }
 
     public Trigger purpleButton() {
         return button(Button.purpleButton.value);
@@ -73,12 +63,10 @@ public class CommandButtonBoard extends CommandGenericHID {
     }
 
     public Trigger retractButton() {
-        
         return button(Button.retractIntakeButton.value);
     }
     
     public Trigger extendButton() {
-        
         return button(Button.extendIntakeButton.value);
     }
 
