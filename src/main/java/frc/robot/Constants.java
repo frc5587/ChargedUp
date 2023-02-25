@@ -256,6 +256,6 @@ public final class Constants {
     
     public static final class LEDConstants {
         public static final int PORT = 0; // TODO Check
-        public static final int STRIP_LENGTH = 24; // TODO
+        public static final int STRIP_LENGTH = 23; // TODO
     }
 }
