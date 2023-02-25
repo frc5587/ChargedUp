@@ -7,19 +7,19 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class CommandButtonBoard extends CommandGenericHID {
     public enum Button {
-        upButton(8),
-        middleButton(4),
-        downButton(0),
-        purpleButton(9),
-        yellowButton(10),
-        rightButton(5),
-        centerButton(6),
-        leftButton(7),
-        retractIntakeButton(1),
-        extendIntakeButton(2),
-        resetButton(11),
-        stowButton(3),
-        doublePressDownButton(12);
+        upButton(9),
+        middleButton(5),
+        downButton(1),
+        purpleButton(10),
+        yellowButton(11),
+        rightButton(6),
+        centerButton(7),
+        leftButton(8),
+        retractIntakeButton(2),
+        extendIntakeButton(3),
+        resetButton(12),
+        stowButton(4),
+        doublePressDownButton(13);
     
         public final int value;
     
@@ -28,8 +28,8 @@ public class CommandButtonBoard extends CommandGenericHID {
         }
     }
 
-    public double timeSinceLastPress = 1;
-    public BooleanSupplier doublePressed = () -> downButton().getAsBoolean() && timeSinceLastPress < 1;
+    // public double timeSinceLastPress = 1;
+    // public BooleanSupplier doublePressed = () -> downButton().getAsBoolean() && timeSinceLastPress < 1;
 
     public CommandButtonBoard(int port) {
         super(port);
@@ -44,15 +44,13 @@ public class CommandButtonBoard extends CommandGenericHID {
     }
 
     public Trigger downButton() {
-        timeSinceLastPress = 0;
-        System.out.println("Single Pressed!!!!!!!!!!!!");
-        return new Trigger(() -> button(Button.downButton.value).getAsBoolean() && timeSinceLastPress > 1);
+        return button(Button.downButton.value);
     }
 
-    public Trigger downButtonDoublePressed() {
-        System.out.println("DOUBLE PRESSED!!!!");
-        return new Trigger(doublePressed);
-    }
+    // public Trigger downButtonDoublePressed() {
+    //     System.out.println("DOUBLE PRESSED!!!!");
+    //     return new Trigger(doublePressed);
+    // }
 
     public Trigger purpleButton() {
         return button(Button.purpleButton.value);
@@ -75,10 +73,12 @@ public class CommandButtonBoard extends CommandGenericHID {
     }
 
     public Trigger retractButton() {
+        
         return button(Button.retractIntakeButton.value);
     }
     
     public Trigger extendButton() {
+        
         return button(Button.extendIntakeButton.value);
     }
 

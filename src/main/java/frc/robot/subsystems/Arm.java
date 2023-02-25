@@ -1,61 +1,81 @@
 package frc.robot.subsystems;
 
-import org.frc5587.lib.subsystems.PivotingArmBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import org.frc5587.lib.subsystems.PivotingArmBase;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 public class Arm extends PivotingArmBase {
-    private static WPI_TalonFX motor = new WPI_TalonFX(Constants.ArmConstants.MOTOR_PORT);
+    private static WPI_TalonFX leader = new WPI_TalonFX(Constants.ArmConstants.LEADER_PORT);
+    private static WPI_TalonFX follower = new WPI_TalonFX(Constants.ArmConstants.FOLLOWER_PORT);
+    private static MotorControllerGroup group = new MotorControllerGroup(leader, follower);
 
     public Arm() {
-        super(Constants.ArmConstants.ARM_CONSTANTS, motor);
+        super(Constants.ArmConstants.ARM_CONSTANTS, group);
+
+        configureMotors();
     }
 
     @Override
     public double getEncoderPosition() {
-        return motor.getSelectedSensorPosition();
+        return leader.getSelectedSensorPosition();
     }
 
     @Override
     public double getEncoderVelocity() {
-        return motor.getSelectedSensorVelocity();
+        return follower.getSelectedSensorVelocity();
     }
 
     @Override
     public void setEncoderPosition(double position) {
-        motor.setSelectedSensorPosition(position);
+        leader.setSelectedSensorPosition(position);
     }
 
     @Override
     public void configureMotors() {
-        motor.configFactoryDefault();
-        motor.setNeutralMode(NeutralMode.Brake);
-        motor.setInverted(false);
+        leader.configFactoryDefault();
+        follower.configFactoryDefault();
+        leader.setNeutralMode(NeutralMode.Brake);
+        follower.setNeutralMode(NeutralMode.Brake);
+        leader.setInverted(false);
+        follower.setInverted(true);
     }
     
     public void highSetpoint() {
-        this.setGoal(ArmConstants.HIGH_SETPOINT);
+        getController().setGoal(ArmConstants.HIGH_SETPOINT);
     }
 
     public void middleSetpoint() {
-        this.setGoal(ArmConstants.MEDIUM_SETPOINT);
+        getController().setGoal(ArmConstants.MEDIUM_SETPOINT);
     }
 
     public void intakeSetpoint() {
-        this.setGoal(ArmConstants.INTAKE_SETPOINT);
+        getController().setGoal(ArmConstants.INTAKE_SETPOINT);
+        
     }
 
     public void stow() {
-        this.setGoal(ArmConstants.STOW_SETPOINT);
+        getController().setGoal(ArmConstants.STOW_SETPOINT);
     }
 
     public void liftAwayFromGrid() {
-        this.setGoal(pidController.getGoal().position+5);
+        this.setGoal(pidController.getGoal().position+Units.degreesToRadians(5));
     }
     
     public void lowerFromGrid() {
-        this.setGoal(pidController.getGoal().position-5);
+        this.setGoal(pidController.getGoal().position-Units.degreesToRadians(5));
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putNumber("Current Setpoint", Units.radiansToDegrees(getController().getSetpoint().position));
+        SmartDashboard.putNumber("Current Position", getAngleDegrees());
+        SmartDashboard.putNumber("Current Output", getController().calculate(getMeasurement(), getController().getSetpoint()));
     }
 }

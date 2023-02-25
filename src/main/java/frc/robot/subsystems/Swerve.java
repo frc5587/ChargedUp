@@ -35,6 +35,7 @@ public class Swerve extends SubsystemBase {
         this.gyro = new AHRS();
         zeroGyro();
         this.limelight = limelight;
+        this.kinematics = SwerveConstants.SWERVE_KINEMATICS;
 
         this.mSwerveMods = new SwerveModule[] {
             new SwerveModule(0, SwerveConstants.Mod0.MODULECONSTANTS),

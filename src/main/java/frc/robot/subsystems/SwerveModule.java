@@ -31,6 +31,8 @@ public class SwerveModule {
         this.moduleNumber = moduleNumber;
         this.angleOffset = moduleConstants.angleOffset;
         
+        ctreConfigs = new CTREConfigs();
+        
         /* Angle Encoder Config */
         angleEncoder = new CANCoder(moduleConstants.cancoderID);
         configAngleEncoder();
@@ -44,8 +46,6 @@ public class SwerveModule {
         configDriveMotor();
 
         lastAngle = getState().angle;
-
-        ctreConfigs = new CTREConfigs();
     }
 
     public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop){
