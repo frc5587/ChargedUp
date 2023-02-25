@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
-import org.frc5587.lib.subsystems.PivotingArmBase;
+// import org.frc5587.lib.subsystems.PivotingArmBase;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -19,6 +19,7 @@ public class Arm extends PivotingArmBase {
         super(Constants.ArmConstants.ARM_CONSTANTS, group);
 
         configureMotors();
+        this.enable();
     }
 
     @Override
@@ -56,7 +57,11 @@ public class Arm extends PivotingArmBase {
 
     public void lowSetpoint() {
         getController().setGoal(ArmConstants.INTAKE_SETPOINT);
-        
+        System.out.println(getController().getGoal().position);
+        System.out.println(getController().getGoal().position);
+        System.out.println(getController().getGoal().position);
+        System.out.println(getController().getGoal().position);
+
     }
 
     public void stow() {
@@ -77,5 +82,7 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putNumber("Current Setpoint", Units.radiansToDegrees(getController().getSetpoint().position));
         SmartDashboard.putNumber("Current Position", getAngleDegrees());
         SmartDashboard.putNumber("Current Output", getController().calculate(getMeasurement(), getController().getSetpoint()));
+        SmartDashboard.putNumber("Current FF", ffController.calculate(getController().getGoal().position, getController().getGoal().velocity));
+        SmartDashboard.putBoolean("Arm is enabled??", this.isEnabled());
     }
 }

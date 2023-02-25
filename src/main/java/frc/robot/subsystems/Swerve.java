@@ -154,12 +154,5 @@ public class Swerve extends SubsystemBase {
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
         }
-
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANDegrees", mod.getCanCoder().getDegrees()-mod.angleOffset.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANAbsolute", mod.angleEncoder.getAbsolutePosition());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Falcon", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-        }
     }
 }

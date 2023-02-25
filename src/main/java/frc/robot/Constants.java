@@ -15,7 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
-import org.frc5587.lib.subsystems.PivotingArmBase.PivotingArmConstants;
+import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
@@ -222,7 +222,7 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int LEADER_PORT = 20;
         public static final int FOLLOWER_PORT = 21;
-        public static final double GEARING = 80; // TODO: Calculate
+        public static final double GEARING = 80;
         public static final double VELOCITY_DENOMINATOR = 0.1;
         public static final double[] SOFT_LIMITS = {0, Units.degreesToRadians(100)};
         public static final int ZERO_OFFSET = 0; // TODO: Find
@@ -230,23 +230,22 @@ public final class Constants {
         public static final int[] SWITCH_PORTS = {0};
         public static final boolean[] SWITCHES_INVERTED = {false};
         public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(0.8, 0.4); // TODO: Verify
-        public static final double KP = 5.1051;//4.6126;
+        public static final double KP = 4.6126;
         public static final double KI = 0;
-        public static final double KD = 0.73244;//0.5518;
+        public static final double KD = 0.5518;
         public static final double KS = 0.10322;
         public static final double KG = 0.4412;
         public static final double KV = 1.4181;
-        public static final double KA = 0.025661;
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
-        public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV, KA);
+        public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
         public static final double HIGH_SETPOINT = Units.degreesToRadians(80);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(73);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
         public static final double STOW_SETPOINT = Units.degreesToRadians(0);
-        public static final double FF_ANGLE_OFFSET = Units.degreesToRadians(85);
+        public static final double FF_ANGLE_OFFSET = 0;//Units.degreesToRadians(85);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
-                GEARING, VELOCITY_DENOMINATOR, FF_ANGLE_OFFSET, SOFT_LIMITS, ZERO_OFFSET, ENCODER_CPR, SWITCH_PORTS, SWITCHES_INVERTED, ARM_PID, ARM_FF);
+                GEARING, SOFT_LIMITS, ZERO_OFFSET, ENCODER_CPR, SWITCH_PORTS, SWITCHES_INVERTED, ARM_PID, ARM_FF);
     }
 
     public static class IntakeConstants {
@@ -255,7 +254,7 @@ public final class Constants {
     }
     
     public static final class LEDConstants {
-        public static final int PORT = 0; // TODO Check
-        public static final int STRIP_LENGTH = 23; // TODO
+        public static final int PORT = 0;
+        public static final int STRIP_LENGTH = 60;
     }
 }

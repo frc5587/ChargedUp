@@ -16,6 +16,7 @@ public class LEDs extends SubsystemBase {
         leds.setLength(buffer.getLength());
         leds.setData(buffer);
         leds.start();
+        System.out.println("leds work sorta");
     }
 
     public void setColor(int r, int g, int b) {
@@ -25,6 +26,7 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setYellow() {
+        System.out.println("set yelow");
         setColor(255, 255, 0);
     }
 
