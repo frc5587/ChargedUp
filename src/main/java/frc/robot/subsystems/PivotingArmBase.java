@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
     protected Hashtable<Integer, ArrayList<Object>> switchTable = new Hashtable<Integer, ArrayList<Object>>();
 
     public static class PivotingArmConstants {
-        public final double gearing;
+        public final double gearing, velocityDenominator, offsetFromHorizontalRadians;
         public final double[] softLimits;
         public final int zeroOffset, encoderCPR;
         public final int[] switchPorts;
@@ -37,6 +38,8 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
 
         public PivotingArmConstants(
                 double gearing,
+                double velocityDenominator,
+                double offsetFromHorizontalRadians,
                 double[] softLimits,
                 int zeroOffset,
                 int encoderCPR,
@@ -45,6 +48,8 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
                 ProfiledPIDController pid,
                 ArmFeedforward ff) {
             this.gearing = gearing;
+            this.velocityDenominator = velocityDenominator;
+            this.offsetFromHorizontalRadians = offsetFromHorizontalRadians;
             this.softLimits = softLimits;
             this.zeroOffset = zeroOffset;
             this.encoderCPR = encoderCPR;
@@ -196,12 +201,12 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
 
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
-        double ff = ffController.calculate(setpoint.position, setpoint.velocity);
+        double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
         //TODO: remove debug prints once we know this code works
         SmartDashboard.putNumber("ARM FEEDFORWARD", ff);
         SmartDashboard.putNumber("ARM OUTPUT USED", output);
-        SmartDashboard.putNumber("ARM SETPOINT USED", setpoint.position);
-        SmartDashboard.putNumber("ARM GOAL USED", pidController.getGoal().position);
+        SmartDashboard.putNumber("ARM SETPOINT USED", Units.radiansToDegrees(setpoint.position));
+        SmartDashboard.putNumber("ARM POSITION", getAngleDegrees());
         SmartDashboard.putBoolean("ARM AT SETPOINT", pidController.atGoal());
 
         /** SOFT LIMITS */
@@ -209,24 +214,22 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         if(SmartDashboard.getBoolean("ARM OUTPUT ON?", true)) {
             /** output should be feedforward + calculated PID. */
             /** if the limit switch is pressed and the arm is powered to move downward, set the voltage to 0 */
-            if(getLimitSwitchValue(constants.switchPorts[0]) && output < 0) {
-                setVoltage(0);
-            }
+            // if(getLimitSwitchValue(constants.switchPorts[0]) && output < 0) {
+            //     setVoltage(0);
+            // }
 
-            /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
-            else if(!getLimitSwitchValue(constants.switchPorts[0]) && getMeasurement() > constants.softLimits[1] && output > 0) {
-                setVoltage(0);
-            }
+            // /** if the arm is above the limit and is powered to move upward, set the voltage to 0 */
+            // else if(!getLimitSwitchValue(constants.switchPorts[0]) && getMeasurement() > constants.softLimits[1] && output > 0) {
+            //     setVoltage(0);
+            // }
 
-            else {
+            // else {
                 setVoltage(output + ff);
-            }
+            // }
         }
         /** otherwise, set output to 0 */
         else {
             setVoltage(0);
-        }
-
-        
+        } 
     }
 }

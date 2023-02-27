@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm extends PivotingArmBase {
     private static WPI_TalonFX leader = new WPI_TalonFX(Constants.ArmConstants.LEADER_PORT);
@@ -29,7 +28,7 @@ public class Arm extends PivotingArmBase {
 
     @Override
     public double getEncoderVelocity() {
-        return follower.getSelectedSensorVelocity();
+        return leader.getSelectedSensorVelocity();
     }
 
     @Override
@@ -57,11 +56,6 @@ public class Arm extends PivotingArmBase {
 
     public void lowSetpoint() {
         getController().setGoal(ArmConstants.INTAKE_SETPOINT);
-        System.out.println(getController().getGoal().position);
-        System.out.println(getController().getGoal().position);
-        System.out.println(getController().getGoal().position);
-        System.out.println(getController().getGoal().position);
-
     }
 
     public void stow() {
@@ -74,15 +68,5 @@ public class Arm extends PivotingArmBase {
     
     public void lowerFromGrid() {
         this.setGoal(pidController.getGoal().position-Units.degreesToRadians(5));
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-        SmartDashboard.putNumber("Current Setpoint", Units.radiansToDegrees(getController().getSetpoint().position));
-        SmartDashboard.putNumber("Current Position", getAngleDegrees());
-        SmartDashboard.putNumber("Current Output", getController().calculate(getMeasurement(), getController().getSetpoint()));
-        SmartDashboard.putNumber("Current FF", ffController.calculate(getController().getGoal().position, getController().getGoal().velocity));
-        SmartDashboard.putBoolean("Arm is enabled??", this.isEnabled());
     }
 }
