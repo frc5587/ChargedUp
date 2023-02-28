@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -16,7 +19,6 @@ public class LEDs extends SubsystemBase {
         leds.setLength(buffer.getLength());
         leds.setData(buffer);
         leds.start();
-        System.out.println("leds work sorta");
     }
 
     public void setColor(int r, int g, int b) {
@@ -26,12 +28,35 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setYellow() {
-        System.out.println("set yelow");
         setColor(255, 255, 0);
     }
 
     public void setPurple() {
         setColor(178, 37, 188);
+    }
+
+    public void off() {
+        setColor(0, 0, 0);
+    }
+
+    boolean on = false;
+
+    public void blink(int r, int g, int b) {
+        if(on) {
+            off();
+            on = false;
+        } else {
+            setColor(r, g, b);
+            on = true;
+        }
+    }
+
+    public void chargingLights() {
+        if(DriverStation.getAlliance() == Alliance.Red) {
+            blink(255, 0, 0);
+        } else {
+            blink(0, 0, 255);
+        }
     }
 
     @Override

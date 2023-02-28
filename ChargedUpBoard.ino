@@ -15,7 +15,7 @@ void setup() {
     pinMode(9, INPUT_PULLUP); // DOWN BUTTON
     pinMode(10, INPUT_PULLUP); // PURPLE BUTTON
     pinMode(11, INPUT_PULLUP); // YELLOW BUTTON
-    pinMode(12, INPUT_PULLUP); // RESET BUTTON
+    pinMode(12, INPUT_PULLUP); // BALANCE BUTTON
     pinMode(LED_BUILTIN, OUTPUT);
 }
 

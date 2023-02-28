@@ -15,7 +15,7 @@ public class CommandButtonBoard extends CommandGenericHID {
         leftButton(8),
         retractIntakeButton(2),
         extendIntakeButton(3),
-        resetButton(12),
+        balanceButton(12),
         stowButton(4),
         doublePressDownButton(13);
     
@@ -70,8 +70,8 @@ public class CommandButtonBoard extends CommandGenericHID {
         return button(Button.extendIntakeButton.value);
     }
 
-    public Trigger resetButton() {
-        return button(Button.resetButton.value);
+    public Trigger balanceButton() {
+        return button(Button.balanceButton.value);
     }
 
     public Trigger stowButton() {

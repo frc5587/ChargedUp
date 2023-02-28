@@ -3,11 +3,13 @@ package frc.robot;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.AutoBalance;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.SemiAuto;
 import frc.robot.commands.AutoSetArm.GridHeight;
@@ -40,6 +42,7 @@ public class RobotContainer {
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
             swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
+    private AutoBalance autoBalance = new AutoBalance(swerve, leds);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -84,6 +87,7 @@ public class RobotContainer {
         board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
+        board.balanceButton().onTrue(autoBalance);
     }
 
     /**
