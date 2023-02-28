@@ -39,25 +39,14 @@ public class LEDs extends SubsystemBase {
         setColor(0, 0, 0);
     }
 
-    boolean on = false;
-
-    public void blink(int r, int g, int b) {
-        if(on) {
-            off();
-            on = false;
-        } else {
-            setColor(r, g, b);
-            on = true;
-        }
+    public void setRed() {
+        setColor(255, 0, 0);
     }
 
-    public void chargingLights() {
-        if(DriverStation.getAlliance() == Alliance.Red) {
-            blink(255, 0, 0);
-        } else {
-            blink(0, 0, 255);
-        }
+    public void setBlue() {
+        setColor(0, 0, 255);
     }
+
 
     @Override
     public void periodic() {
