@@ -47,6 +47,10 @@ public class LEDs extends SubsystemBase {
         setColor(0, 0, 255);
     }
 
+    public void setWhite() {
+        setColor(255, 255, 255);
+    }
+
 
     @Override
     public void periodic() {
