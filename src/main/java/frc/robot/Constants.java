@@ -225,10 +225,10 @@ public final class Constants {
         public static final double GEARING = 80;
         public static final double VELOCITY_DENOMINATOR = 0.1;
         public static final double[] SOFT_LIMITS = {0, Units.degreesToRadians(100)};
-        public static final int ZERO_OFFSET = 0; // TODO: Find
-        public static final int ENCODER_CPR = 2048; // Change to 2048 if using Falcon
-        public static final int[] SWITCH_PORTS = {0};
-        public static final boolean[] SWITCHES_INVERTED = {false};
+        public static final int ENCODER_CPR = 2048;
+        public static final int ZERO_OFFSET = Math.round((float) (Units.degreesToRadians(-2) * GEARING * ENCODER_CPR / 2 / Math.PI)); // TODO: Find
+        public static final int SWITCH_PORT = 0;
+        public static final boolean SWITCH_INVERTED = true;
         public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(0.8, 0.4); // TODO: Verify
         public static final double KP = 12.556;
         public static final double KI = 0;
@@ -245,7 +245,7 @@ public final class Constants {
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
-                GEARING, VELOCITY_DENOMINATOR, FF_ANGLE_OFFSET, SOFT_LIMITS, ZERO_OFFSET, ENCODER_CPR, SWITCH_PORTS, SWITCHES_INVERTED, ARM_PID, ARM_FF);
+                GEARING, VELOCITY_DENOMINATOR, FF_ANGLE_OFFSET, SOFT_LIMITS, ZERO_OFFSET, ENCODER_CPR, ARM_PID, ARM_FF);
     }
 
     public static class IntakeConstants {

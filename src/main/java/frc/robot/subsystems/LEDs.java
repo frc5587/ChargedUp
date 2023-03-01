@@ -1,10 +1,7 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
@@ -50,7 +47,6 @@ public class LEDs extends SubsystemBase {
     public void setWhite() {
         setColor(255, 255, 255);
     }
-
 
     @Override
     public void periodic() {
