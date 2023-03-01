@@ -21,9 +21,12 @@ public class AutoBalance extends CommandBase {
         this.swerve = swerve;
         this.leds = leds;
 
-        blinkLeds.startPeriodic(0.1); // TODO Check
-
         addRequirements(swerve);
+    }
+
+    @Override
+    public void initialize() {
+        blinkLeds.startPeriodic(0.1); // TODO Check
     }
 
     @Override
@@ -40,11 +43,6 @@ public class AutoBalance extends CommandBase {
             
             swerve.drive(new Translation2d(0, speed), currentRotDegrees > 0 ? currentRotDegrees - currentRotDegrees : currentRotDegrees + currentRotDegrees, false, false);
         }
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        DriverStation.isDisabled();
     }
 
     boolean ledStatus = false;

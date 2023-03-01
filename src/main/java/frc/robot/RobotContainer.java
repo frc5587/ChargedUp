@@ -49,6 +49,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve.setDefaultCommand(dualStickSwerve);
+        leds.setDefaultCommand(new InstantCommand(leds::setWhite, leds));
         configureBindings();
     }
 
