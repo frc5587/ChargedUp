@@ -1,7 +1,6 @@
 package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandXboxController;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +47,8 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve.setDefaultCommand(dualStickSwerve);
-        leds.setDefaultCommand(new InstantCommand(leds::setWhite, leds));
+        // leds.setDefaultCommand(new InstantCommand(leds::setWhite, leds));
+        leds.setRainbow();
         configureBindings();
     }
 
