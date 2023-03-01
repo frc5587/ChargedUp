@@ -37,7 +37,9 @@ public class AutoBalance extends CommandBase {
 
         if(currentPitch <= Math.abs(2.5)) {
             return;
-        } else if (currentPitch <= -2.5) {
+        } 
+        
+        else if (currentPitch <= -2.5) {
             double pitchAngleRad = currentPitch * (Math.PI / 180.);
             double speed = currentPitch <= -2.5 ? Math.sin(pitchAngleRad) : Math.sin(pitchAngleRad) * -1;
             
@@ -51,15 +53,19 @@ public class AutoBalance extends CommandBase {
         if(ledStatus == true) {
             leds.off();
 
-            ledStatus = true;
-        } else {
+            ledStatus = false;
+        } 
+
+        else {
             if(isRedAlliance) {
                 leds.setColor(255, 0, 0); 
-            } else {
+            } 
+            
+            else {
                 leds.setColor(0, 0, 255);
             }
 
-            ledStatus = false;
+            ledStatus = true;
         }
     }
 }
