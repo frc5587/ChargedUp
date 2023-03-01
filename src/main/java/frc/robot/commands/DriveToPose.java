@@ -33,7 +33,7 @@ public class DriveToPose extends CommandBase {
   @Override
   public void initialize() {
     // Reset all controllers
-    var currentPose = swerve.getPose();
+    var currentPose = swerve.getPose(false);
     AutoConstants.BOT_DRIVE_CONTROLLER.reset(
         currentPose.getTranslation().getDistance(poseSupplier.get().getTranslation()));
     AutoConstants.BOT_ANGLE_CONTROLLER.reset(currentPose.getRotation().getRadians());
@@ -43,7 +43,7 @@ public class DriveToPose extends CommandBase {
     public void execute() {
         this.running = true;
         // Get current and target pose
-        Pose2d currentPose = swerve.getEstimatedPose();
+        Pose2d currentPose = swerve.getPose(false);
         Pose2d targetPose = poseSupplier.get();
 
         // Command speeds
@@ -55,7 +55,7 @@ public class DriveToPose extends CommandBase {
                 currentPose.getRotation().getRadians(), targetPose.getRotation().getRadians());
         if (AutoConstants.BOT_DRIVE_CONTROLLER.atGoal()) driveVelocityScalar = 0.0;
         if (AutoConstants.BOT_ANGLE_CONTROLLER.atGoal()) thetaVelocity = 0.0;
-        var driveVelocity =
+        Translation2d driveVelocity =
             new Pose2d(
                     new Translation2d(),
                     currentPose.getTranslation().minus(targetPose.getTranslation()).getAngle())

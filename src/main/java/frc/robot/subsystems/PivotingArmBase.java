@@ -208,6 +208,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         SmartDashboard.putNumber("ARM SETPOINT USED", Units.radiansToDegrees(setpoint.position));
         SmartDashboard.putNumber("ARM POSITION", getAngleDegrees());
         SmartDashboard.putBoolean("ARM AT SETPOINT", pidController.atGoal());
+        SmartDashboard.putBoolean("LIMIT SWITCH", getLimitSwitchValue(0));
 
         /** SOFT LIMITS */
         /** if the driver has set output on, useOutput. */

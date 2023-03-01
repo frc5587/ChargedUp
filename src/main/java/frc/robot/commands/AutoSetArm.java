@@ -19,7 +19,7 @@ public class AutoSetArm extends CommandBase {
     }
 
     @Override
-    public void initialize() {
+    public void execute() {
         if(gridHeight == GridHeight.High) {
             arm.highSetpoint();
         }
@@ -31,10 +31,9 @@ public class AutoSetArm extends CommandBase {
         else {
             arm.lowSetpoint();
         }
-    }
 
-    @Override
-    public void end(boolean interrupted) {
-        arm.stop();
+        if(arm.getController().atGoal()) {
+            end(false);
+        }
     }
 }

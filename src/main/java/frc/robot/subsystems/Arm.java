@@ -42,8 +42,8 @@ public class Arm extends PivotingArmBase {
         follower.configFactoryDefault();
         leader.setNeutralMode(NeutralMode.Brake);
         follower.setNeutralMode(NeutralMode.Brake);
-        leader.setInverted(false);
-        follower.setInverted(true);
+        leader.setInverted(true);
+        follower.setInverted(false);
     }
     
     public void highSetpoint() {

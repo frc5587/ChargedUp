@@ -150,10 +150,10 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO Confirm
-        public static final double MAX_SPEED_MPS = 3; //m/s
-        public static final double MAX_ACCEL_MPS_2 = 3; // m/s^2
-        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // radians/s
-        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; //radians/s^2
+        public static final double MAX_SPEED_MPS = 0.5; //m/s
+        public static final double MAX_ACCEL_MPS_2 = 0.25; // m/s^2
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
     
         public static final double KP_X_CONTROLLER = 1;
         public static final double KP_Y_CONTROLLER = 1;
@@ -200,12 +200,12 @@ public final class Constants {
             }
         }
 
-        public static final GridLocationGroup BLUE_LEFT = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup BLUE_CENTER = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup BLUE_RIGHT = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(-90)), Alliance.Blue);
-        public static final GridLocationGroup RED_RIGHT = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(90)), Alliance.Red);
-        public static final GridLocationGroup RED_CENTER = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(90)), Alliance.Red);
-        public static final GridLocationGroup RED_LEFT = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(90)), Alliance.Red);
+        public static final GridLocationGroup BLUE_LEFT = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(180)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_CENTER = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(180)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_RIGHT = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(180)), Alliance.Blue);
+        public static final GridLocationGroup RED_RIGHT = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(0)), Alliance.Red);
+        public static final GridLocationGroup RED_CENTER = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(0)), Alliance.Red);
+        public static final GridLocationGroup RED_LEFT = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(0)), Alliance.Red);
 
         public static final GridLocationGroup[] GRID_LOCATIONS = {
             BLUE_LEFT, BLUE_CENTER, BLUE_RIGHT, RED_RIGHT, RED_CENTER, RED_LEFT
@@ -239,7 +239,7 @@ public final class Constants {
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
         public static final double HIGH_SETPOINT = Units.degreesToRadians(95);
-        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(83);
+        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(78);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(22);
         public static final double STOW_SETPOINT = Units.degreesToRadians(0);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
