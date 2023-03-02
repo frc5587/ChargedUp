@@ -34,7 +34,7 @@ public class RobotContainer {
     private Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm();
     private Intake intake = new Intake();
-    private LEDs leds = new LEDs();
+    public LEDs leds = new LEDs();
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
@@ -47,8 +47,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve.setDefaultCommand(dualStickSwerve);
-        // leds.setDefaultCommand(new InstantCommand(leds::setWhite, leds));
-        leds.setRainbow();
+        leds.setChase();
         configureBindings();
     }
 

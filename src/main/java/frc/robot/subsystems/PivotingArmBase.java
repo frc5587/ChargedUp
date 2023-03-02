@@ -48,7 +48,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         this.pidController = getController();
         this.ffController = constants.ff;
         
-        SmartDashboard.getBoolean("ARM OUTPUT ON?", true);
+        SmartDashboard.putBoolean("ARM OUTPUT ON?", true);
     }
 
     /**
@@ -181,11 +181,12 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         /** SOFT LIMITS */
         /** if the driver has set output on, useOutput. */
         if(SmartDashboard.getBoolean("ARM OUTPUT ON?", true)) {
-                setVoltage(output + ff);
+            setVoltage(output + ff);
         }
         /** otherwise, set output to 0 */
         else {
             setVoltage(0);
-        } 
+        }
+        SmartDashboard.putNumber("ARM PERCENTOUTPUT", motor.get());
     }
 }

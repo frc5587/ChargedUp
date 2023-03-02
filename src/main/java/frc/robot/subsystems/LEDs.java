@@ -6,13 +6,17 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.commands.RedBlueChase;
 
 public class LEDs extends SubsystemBase {
     private final AddressableLED leds;
     public final AddressableLEDBuffer buffer;
-    private final RainbowLEDPattern rainbowLEDPattern = new RainbowLEDPattern(6, 30, 60, 255);
+    private final RainbowLEDPattern rainbowLEDPattern = new RainbowLEDPattern(30, 60, 60, 55);
+    private final RedBlueChase chase = new RedBlueChase(60, 60, 55);
     private boolean isRunningRainbow = false;
-    private int rainbowIndexer = 0;
+    private boolean isRunningChase = true;
+    private int patternIndexer = 0;
+    private double timeSinceSetSeconds = 0;
 
     public LEDs() {
         leds = new AddressableLED(LEDConstants.PORT);
@@ -25,6 +29,8 @@ public class LEDs extends SubsystemBase {
 
     public void setColor(int r, int g, int b) {
         isRunningRainbow = false;
+        isRunningChase = false;
+        timeSinceSetSeconds = 0;
         for(int i = 0; i < buffer.getLength(); i++) {
             buffer.setRGB(i, r, g, b);
         }
@@ -56,17 +62,34 @@ public class LEDs extends SubsystemBase {
 
     public void setRainbow() {
         isRunningRainbow = true;
+        isRunningChase = false;
+        patternIndexer = 0;
+    }
+
+    public void setChase() {
+        isRunningChase = true;
+        isRunningRainbow = false;
+        patternIndexer = 0;
     }
 
     @Override
     public void periodic() {
-        if(!isRunningRainbow) {
-            leds.setData(buffer);
-            rainbowIndexer = 0;
+        timeSinceSetSeconds += 0.02;
+        System.out.println(timeSinceSetSeconds);
+        if(timeSinceSetSeconds >= 30) {
+            timeSinceSetSeconds = 0;
+            isRunningRainbow = true;
         }
-        if(isRunningRainbow) {
-            leds.setData(rainbowLEDPattern.step(rainbowIndexer, buffer));
-            rainbowIndexer++;
+        if(!isRunningRainbow && !isRunningChase) {
+            leds.setData(buffer);
+        }
+        else if(isRunningChase) {
+            leds.setData(chase.step(patternIndexer, buffer));
+            patternIndexer++;
+        }
+        else if(isRunningRainbow) {
+            leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
+            patternIndexer++;
         }
     }
 }

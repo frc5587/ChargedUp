@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm extends PivotingArmBase {
     private static WPI_TalonFX leader = new WPI_TalonFX(ArmConstants.LEADER_PORT);
@@ -85,5 +86,14 @@ public class Arm extends PivotingArmBase {
     
     public void lowerFromGrid() {
         this.setGoal(pidController.getGoal().position-Units.degreesToRadians(5));
+    }
+
+    @Override
+    public void periodic() {
+        super.periodic();
+        SmartDashboard.putBoolean("Limit Switch", getLimitSwitchValue());
+        if(getLimitSwitchValue()) {
+            this.resetEncoders();
+        }
     }
 }
