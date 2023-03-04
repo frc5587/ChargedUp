@@ -55,13 +55,12 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        // m_robotContainer.board.timeSinceLastPress += 0.02;
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        m_robotContainer.leds.setChase();
+        m_robotContainer.leds.setRB();
     }
 
     @Override

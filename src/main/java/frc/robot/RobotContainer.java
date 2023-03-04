@@ -47,7 +47,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve.setDefaultCommand(dualStickSwerve);
-        leds.setChase();
+        leds.setPY();
         configureBindings();
     }
 
@@ -78,12 +78,12 @@ public class RobotContainer {
         board.leftButton().onTrue(semiAuto.new DriveWithinGrid(0));
         board.centerButton().onTrue(semiAuto.new DriveWithinGrid(1));
         board.rightButton().onTrue(semiAuto.new DriveWithinGrid(2));
-        // board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
-        // board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
-        // board.downButton().onTrue(new InstantCommand(arm::lowSetpoint, arm));
-        board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
-        board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
-        board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
+        board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
+        board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
+        board.downButton().onTrue(new InstantCommand(arm::lowSetpoint, arm));
+        // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
+        // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
+        // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
         board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
         board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
