@@ -57,7 +57,7 @@ public class SemiAuto {
     public class ScoreInGrid extends SequentialCommandGroup {
         public ScoreInGrid(GridHeight height) {
             super(
-                new AutoSetArm(arm, height),
+                new AutoSetArm(arm, intake, height),
                 new InstantCommand(() -> System.out.println("ARM IS SET")),
                 new InstantCommand(() -> System.out.println("ARM IS SET")),
                 new InstantCommand(() -> System.out.println("ARM IS SET")),

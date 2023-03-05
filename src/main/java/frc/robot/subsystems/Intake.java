@@ -4,6 +4,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -15,11 +19,18 @@ public class Intake extends SimpleMotorBase {
     private static final CANSparkMax leftIntake = new CANSparkMax(IntakeConstants.LEFT_MOTOR, MotorType.kBrushless);
     private static final CANSparkMax rightIntake = new CANSparkMax(IntakeConstants.RIGHT_MOTOR, MotorType.kBrushless);
 
+    private DoubleSolenoid pistons = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+
     private final RelativeEncoder leftEncoder = leftIntake.getEncoder();
     private final RelativeEncoder rightEncoder = rightIntake.getEncoder();
 
+    private final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
+
     public Intake() {
         super(new MotorControllerGroup(leftIntake, rightIntake), IntakeConstants.THROTTLE_FORWARD, IntakeConstants.THROTTLE_REVERSE);
+
+        setName("Intake");
+
         configureMotors();
     }
 
@@ -49,12 +60,25 @@ public class Intake extends SimpleMotorBase {
         return rightEncoder.getVelocity();
     }
 
-    public boolean hasGamePiece() {
-        return false;
+    public void extend() {
+        pistons.set(Value.kForward);
+    }
+
+    public void retract() {
+        pistons.set(Value.kReverse);
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Has Game Piece", hasGamePiece());
+        if (colorSensor.hasCone()) {
+            SmartDashboard.putBoolean("Game Piece", true); // TODO set true color to yellow
+        } else if (colorSensor.hasCube()) {
+            SmartDashboard.putBoolean("Game Piece", false); // TODO Set false color to purple
+        }
+        
+        SmartDashboard.putBoolean("Has Game Piece", colorSensor.hasCone() || colorSensor.hasCube());
+        
+        SmartDashboard.putNumber("Left Velocity", leftVelocity());
+        SmartDashboard.putNumber("Right Velocity", rightVelocity());
     }
 }
