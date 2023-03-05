@@ -85,8 +85,8 @@ public class RobotContainer {
         board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
-        board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
-        board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
+        // board.extendButton().onTrue(new InstantCommand(intake::extend, intake)); // TODO
+        // board.retractButton().onTrue(new InstantCommand(intake::retract, intake)); // TODO
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         board.balanceButton().onTrue(autoBalance);
