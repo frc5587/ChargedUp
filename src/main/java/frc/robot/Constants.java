@@ -230,7 +230,7 @@ public final class Constants {
         public static final int SWITCH_PORT = 0;
         public static final boolean SWITCH_INVERTED = true;
         public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(0.8, 0.4); // TODO: Verify
-        public static final double KP = 12.556;
+        public static final double KP = 18;//12.556;
         public static final double KI = 0;
         public static final double KD = 0.82269;
         public static final double KS = 0.066434;

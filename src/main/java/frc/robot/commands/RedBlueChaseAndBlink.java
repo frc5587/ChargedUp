@@ -26,7 +26,7 @@ public class RedBlueChaseAndBlink implements CustomLEDPattern {
     public AddressableLEDBuffer step(int stepNumber, AddressableLEDBuffer ledBuffer) {
         double usedSpeed;
 
-        if(idx > length + 7) {
+        if(idx > length + 15) {
             idx = 0;
         }
         

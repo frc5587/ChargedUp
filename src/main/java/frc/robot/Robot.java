@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.schedule();
         }
 
-        m_robotContainer.leds.setRainbow();
+        m_robotContainer.leds.setRB();
     }
 
     /** This function is called periodically during autonomous. */
@@ -98,7 +98,7 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
-        m_robotContainer.leds.setRainbow();
+        m_robotContainer.leds.setRB();
     }
 
     /** This function is called periodically during operator control. */

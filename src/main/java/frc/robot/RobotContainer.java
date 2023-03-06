@@ -47,7 +47,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         swerve.setDefaultCommand(dualStickSwerve);
-        leds.setPY();
+        leds.setRB();
         configureBindings();
     }
 
