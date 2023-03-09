@@ -25,24 +25,24 @@ public class AutoSetArm extends CommandBase {
     public void execute() {
         if(gridHeight == GridHeight.High) {
             arm.highSetpoint();
-            if(arm.getController().atGoal()) {
-                intake.forward();
-                intake.extend();
-            }
+            // if(arm.getController().atGoal()) {
+            //     intake.forward();
+            //     intake.extend();
+            // }
         }
 
         else if(gridHeight == GridHeight.Middle) {
             arm.middleSetpoint();
-            if(arm.getController().atGoal()) {
-                intake.forward();
-                intake.extend();
-            }
+            // if(arm.getController().atGoal()) {
+            //     intake.forward();
+            //     intake.extend();
+            // }
         }
 
         else {
             arm.lowSetpoint();
-            intake.retract();
-            intake.backward();
+            // intake.retract();
+            // intake.backward();
         }
 
         if(arm.getController().atGoal()) {

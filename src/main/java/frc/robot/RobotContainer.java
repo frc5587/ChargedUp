@@ -95,6 +95,8 @@ public class RobotContainer {
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
         // board.extendButton().onTrue(new InstantCommand(intake::extend, intake)); // TODO
         // board.retractButton().onTrue(new InstantCommand(intake::retract, intake)); // TODO
+        board.extendButton().onTrue(new InstantCommand(intake::forward, intake)).onFalse(new InstantCommand(intake::stop));
+        board.retractButton().onTrue(new InstantCommand(intake::backward, intake)).onFalse(new InstantCommand(intake::stop));
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         board.balanceButton().onTrue(autoBalance);
