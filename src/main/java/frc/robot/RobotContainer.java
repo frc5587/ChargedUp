@@ -4,8 +4,10 @@ import org.frc5587.lib.control.DeadbandCommandJoystick;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoBalance;
@@ -34,7 +36,7 @@ public class RobotContainer {
 
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
-    private Swerve swerve = new Swerve(limelight);
+    public Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm();
     private Intake intake = new Intake();
     public LEDs leds = new LEDs();
@@ -93,8 +95,8 @@ public class RobotContainer {
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
-        // board.extendButton().onTrue(new InstantCommand(intake::extend, intake)); // TODO
-        // board.retractButton().onTrue(new InstantCommand(intake::retract, intake)); // TODO
+        board.intakeButton().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward, intake), new InstantCommand(arm::lowSetpoint, intake)));
+        board.spitButton().onTrue(new InstantCommand(intake::forward, intake));
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         board.balanceButton().onTrue(autoBalance);

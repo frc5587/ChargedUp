@@ -23,6 +23,8 @@ public class LEDs extends SubsystemBase {
     private boolean isRunningRainbow = false;
     private boolean isRunningPY = true;
     private boolean isRunningRB, isRunningAlliance = false;
+    private final RedBlueChase chase = new RedBlueChase(60, 60, 55);
+    public boolean isRunningChase = true;
     private int patternIndexer = 0;
     private double timeSinceSetSeconds = 0;
     private enum LEDPattern {
@@ -62,10 +64,14 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setYellow() {
+        isRunningChase = false;
+        isRunningRainbow = false;
         setColor(255, 255, 0);
     }
 
     public void setPurple() {
+        isRunningChase = false;
+        isRunningRainbow = false;
         setColor(178, 37, 188);
     }
 

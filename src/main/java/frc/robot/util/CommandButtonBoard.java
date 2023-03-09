@@ -13,8 +13,8 @@ public class CommandButtonBoard extends CommandGenericHID {
         rightButton(6),
         centerButton(7),
         leftButton(8),
-        retractIntakeButton(2),
-        extendIntakeButton(3),
+        spitButton(2),
+        intakeButton(3),
         balanceButton(12),
         stowButton(4),
         doublePressDownButton(13);
@@ -62,12 +62,12 @@ public class CommandButtonBoard extends CommandGenericHID {
         return button(Button.leftButton.value);
     }
 
-    public Trigger retractButton() {
-        return button(Button.retractIntakeButton.value);
+    public Trigger spitButton() {
+        return button(Button.spitButton.value);
     }
     
-    public Trigger extendButton() {
-        return button(Button.extendIntakeButton.value);
+    public Trigger intakeButton() {
+        return button(Button.intakeButton.value);
     }
 
     public Trigger balanceButton() {

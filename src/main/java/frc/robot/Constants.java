@@ -260,9 +260,6 @@ public final class Constants {
 
         public static final boolean LEFT_MOTOR_INVERTED = false; // TODO
         public static final boolean RIGHT_MOTOR_INVERTED = false; // TODO
-
-        public static final int FORWARD_CHANNEL = 0;
-        public static final int REVERSE_CHANNEL = 1;
     }
     
     public static final class LEDConstants {
