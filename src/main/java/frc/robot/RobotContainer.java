@@ -1,5 +1,6 @@
 package frc.robot;
 
+import org.frc5587.lib.control.DeadbandCommandJoystick;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.JoystickSwerve;
 import frc.robot.commands.SemiAuto;
 import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Limelight;
@@ -27,7 +29,8 @@ import frc.robot.util.CommandButtonBoard;
 public class RobotContainer {
     // INPUTS
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .3);
-    public CommandButtonBoard board = new CommandButtonBoard(1);
+    private DeadbandCommandJoystick joy = new DeadbandCommandJoystick(1, 1.5, 0.02);
+    public CommandButtonBoard board = new CommandButtonBoard(2);
 
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
@@ -39,6 +42,10 @@ public class RobotContainer {
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
             swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
+
+    private JoystickSwerve joystickSwerve = new JoystickSwerve(
+        swerve, joy::getY, joy::getX, joy::getX, () -> joy.getHID().getTrigger(), () -> true);
+
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
 
@@ -46,7 +53,8 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        swerve.setDefaultCommand(dualStickSwerve);
+        // swerve.setDefaultCommand(dualStickSwerve);
+        swerve.setDefaultCommand(joystickSwerve);
         leds.setRB();
         configureBindings();
     }
@@ -85,8 +93,8 @@ public class RobotContainer {
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
-        board.extendButton().onTrue(new InstantCommand(intake::extend, intake));
-        board.retractButton().onTrue(new InstantCommand(intake::retract, intake));
+        // board.extendButton().onTrue(new InstantCommand(intake::extend, intake)); // TODO
+        // board.retractButton().onTrue(new InstantCommand(intake::retract, intake)); // TODO
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         board.balanceButton().onTrue(autoBalance);
