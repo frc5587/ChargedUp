@@ -156,6 +156,12 @@ public class Swerve extends SubsystemBase {
         setChassisSpeeds(new ChassisSpeeds());
     }
 
+    public void stopWithLock() {
+        stop();
+
+        // TODO Make modules position to 45 degrees inwards
+    }
+
     @Override
     public void periodic(){
         odometry.update(getYaw(), getModulePositions());  

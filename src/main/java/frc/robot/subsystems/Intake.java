@@ -57,11 +57,6 @@ public class Intake extends SimpleMotorBase {
 
     @Override
     public void periodic() {
-        if (colorSensor.hasCone()) {
-            SmartDashboard.putBoolean("Game Piece", true); // TODO set true color to yellow
-        } else if (colorSensor.hasCube()) {
-            SmartDashboard.putBoolean("Game Piece", false); // TODO Set false color to purple
-        }
         
         SmartDashboard.putBoolean("Has Game Piece", colorSensor.hasCone() || colorSensor.hasCube());
         
