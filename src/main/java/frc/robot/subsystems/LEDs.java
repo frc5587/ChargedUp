@@ -13,8 +13,8 @@ public class LEDs extends SubsystemBase {
     public final AddressableLEDBuffer buffer;
     private final RainbowLEDPattern rainbowLEDPattern = new RainbowLEDPattern(30, 60, 60, 55);
     private final RedBlueChase chase = new RedBlueChase(60, 60, 55);
-    private boolean isRunningRainbow = false;
-    private boolean isRunningChase = true;
+    public boolean isRunningRainbow = false;
+    public boolean isRunningChase = true;
     private int patternIndexer = 0;
     private double timeSinceSetSeconds = 0;
 
@@ -37,10 +37,14 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setYellow() {
+        isRunningChase = false;
+        isRunningRainbow = false;
         setColor(255, 255, 0);
     }
 
     public void setPurple() {
+        isRunningChase = false;
+        isRunningRainbow = false;
         setColor(178, 37, 188);
     }
 

@@ -5,8 +5,8 @@ void setup() {
     // initialize button pins
     Joystick.begin();
     pinMode(1, INPUT_PULLUP); // UP BUTTON
-    pinMode(2, INPUT_PULLUP); // RETRACT INTAKE
-    pinMode(3, INPUT_PULLUP); // RELEASE INTAKE
+    pinMode(2, INPUT_PULLUP); // SPIT OUT
+    pinMode(3, INPUT_PULLUP); // INTAKE
     pinMode(4, INPUT_PULLUP); // STOW BUTTON
     pinMode(5, INPUT_PULLUP); // MIDDLE BUTTON
     pinMode(6, INPUT_PULLUP); // RIGHT BUTTON
