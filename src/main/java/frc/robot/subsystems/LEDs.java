@@ -20,11 +20,8 @@ public class LEDs extends SubsystemBase {
     private final PurpleYellowChaseAndBlink purpleyellow = new PurpleYellowChaseAndBlink(3, 60, LEDConstants.STRIP_LENGTH, 0.04);
     private final RedBlueChaseAndBlink redblue = new RedBlueChaseAndBlink(10, 105, LEDConstants.STRIP_LENGTH, 20);
     private final RedBlueChase allianceChase = new RedBlueChase(60, LEDConstants.STRIP_LENGTH, 20);
-    private boolean isRunningRainbow = false;
     private boolean isRunningPY = true;
-    private boolean isRunningRB, isRunningAlliance = false;
-    private final RedBlueChase chase = new RedBlueChase(60, 60, 55);
-    public boolean isRunningChase = true;
+    private boolean isRunningRainbow, isRunningRB, isRunningAlliance = false;
     private int patternIndexer = 0;
     private double timeSinceSetSeconds = 0;
     private enum LEDPattern {
@@ -64,14 +61,10 @@ public class LEDs extends SubsystemBase {
     }
 
     public void setYellow() {
-        isRunningChase = false;
-        isRunningRainbow = false;
         setColor(255, 255, 0);
     }
 
     public void setPurple() {
-        isRunningChase = false;
-        isRunningRainbow = false;
         setColor(178, 37, 188);
     }
 

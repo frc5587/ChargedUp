@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.IntakeIn;
+import frc.robot.commands.IntakeOut;
 import frc.robot.commands.JoystickSwerve;
 import frc.robot.commands.SemiAuto;
 import frc.robot.commands.AutoSetArm.GridHeight;
@@ -81,13 +83,13 @@ public class RobotContainer {
 
         armLimitSwitch.onTrue(new InstantCommand(() -> arm.resetEncoders()));
 
-        xb.povLeft().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(5) : semiAuto.new DriveToGrid(0));
-        xb.povUp().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(4) : semiAuto.new DriveToGrid(1));
-        xb.povRight().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(3) : semiAuto.new DriveToGrid(2));
+        // xb.povLeft().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(5) : semiAuto.new DriveToGrid(0));
+        // xb.povUp().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(4) : semiAuto.new DriveToGrid(1));
+        // xb.povRight().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(3) : semiAuto.new DriveToGrid(2));
 
-        board.leftButton().onTrue(semiAuto.new DriveWithinGrid(0));
-        board.centerButton().onTrue(semiAuto.new DriveWithinGrid(1));
-        board.rightButton().onTrue(semiAuto.new DriveWithinGrid(2));
+        // board.leftButton().onTrue(semiAuto.new DriveWithinGrid(0));
+        // board.centerButton().onTrue(semiAuto.new DriveWithinGrid(1));
+        // board.rightButton().onTrue(semiAuto.new DriveWithinGrid(2));
         board.upButton().onTrue(new InstantCommand(arm::highSetpoint, arm));
         board.middleButton().onTrue(new InstantCommand(arm::middleSetpoint, arm));
         board.downButton().onTrue(new InstantCommand(arm::lowSetpoint, arm));
@@ -95,10 +97,8 @@ public class RobotContainer {
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
-        // board.extendButton().onTrue(new InstantCommand(intake::extend, intake)); // TODO
-        // board.retractButton().onTrue(new InstantCommand(intake::retract, intake)); // TODO
-        board.intakeButton().onTrue(new InstantCommand(intake::backward, intake));
-        board.spitButton().onTrue(new InstantCommand(intake::forward, intake)).onFalse(new InstantCommand(intake::stop));
+        board.intakeButton().onTrue(new IntakeIn(intake));
+        board.spitButton().onTrue(new IntakeOut(intake));
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         board.balanceButton().onTrue(autoBalance);

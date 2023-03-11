@@ -249,8 +249,8 @@ public final class Constants {
     }
 
     public static class IntakeConstants {
-        public static final int LEFT_MOTOR = 30; // TODO
-        public static final int RIGHT_MOTOR = 31; // TODO
+        public static final int LEFT_MOTOR = 30;
+        public static final int RIGHT_MOTOR = 31;
 
         public static final double THROTTLE_FORWARD = 1; // TODO
         public static final double THROTTLE_REVERSE = 1; // TOOD
@@ -259,7 +259,11 @@ public final class Constants {
         public static final int FREE_LIMIT = 25;
 
         public static final boolean LEFT_MOTOR_INVERTED = false; // TODO
-        public static final boolean RIGHT_MOTOR_INVERTED = false; // TODO
+        public static final boolean RIGHT_MOTOR_INVERTED = true; // TODO
+
+        public static final double LEFT_VELOCITY_THRESHOLD = 10; // rotations per second
+        public static final double RIGHT_VELOCITY_THRESHOLD = 10;
+        public static final double EJECT_CRATE_RUNTIME = 2; // seconds
     }
     
     public static final class LEDConstants {

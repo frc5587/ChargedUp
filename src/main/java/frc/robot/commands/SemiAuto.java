@@ -58,37 +58,13 @@ public class SemiAuto {
         public ScoreInGrid(GridHeight height) {
             super(
                 new AutoSetArm(arm, height),
-                new InstantCommand(() -> System.out.println("ARM IS SET")),
-                new InstantCommand(() -> System.out.println("ARM IS SET")),
-                new InstantCommand(() -> System.out.println("ARM IS SET")),
-                new InstantCommand(() -> System.out.println("ARM IS SET")),
                 new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()-0.2, swerve.getPose().getY(), new Rotation2d())),
-                new InstantCommand(() -> System.out.println("DRIVEN TO POSE")),
-                new InstantCommand(() -> System.out.println("DRIVEN TO POSE")),
-                new InstantCommand(() -> System.out.println("DRIVEN TO POSE")),
-                new InstantCommand(() -> System.out.println("DRIVEN TO POSE")),
                 new WaitCommand(0.2), // This and following WaitCommands are arbitrary
                 new InstantCommand(arm::lowerFromGrid),
-                new InstantCommand(() -> System.out.println("LOWERED")),
-                new InstantCommand(() -> System.out.println("LOWERED")),
-                new InstantCommand(() -> System.out.println("LOWERED")),
-                new InstantCommand(() -> System.out.println("LOWERED")),
                 new InstantCommand(intake::backward),
-                new InstantCommand(() -> System.out.println("INTAKE")),
-                new InstantCommand(() -> System.out.println("INTAKE")),
-                new InstantCommand(() -> System.out.println("INTAKE")),
-                new InstantCommand(() -> System.out.println("INTAKE")),
                 new WaitCommand(0.2),
                 new InstantCommand(arm::liftAwayFromGrid),
-                new InstantCommand(() -> System.out.println("LIFTED")),
-                new InstantCommand(() -> System.out.println("LIFTED")),
-                new InstantCommand(() -> System.out.println("LIFTED")),
-                new InstantCommand(() -> System.out.println("LIFTED")),
-                new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()+0.2, swerve.getPose().getY(), new Rotation2d())),
-                new InstantCommand(() -> System.out.println("BACKED UP")),
-                new InstantCommand(() -> System.out.println("BACKED UP")),
-                new InstantCommand(() -> System.out.println("BACKED UP")),
-                new InstantCommand(() -> System.out.println("BACKED UP"))
+                new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()+0.2, swerve.getPose().getY(), new Rotation2d()))
             );
         }
     }

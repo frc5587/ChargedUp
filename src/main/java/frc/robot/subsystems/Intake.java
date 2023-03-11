@@ -55,10 +55,13 @@ public class Intake extends SimpleMotorBase {
         return rightEncoder.getVelocity();
     }
 
+    public boolean hasElement() {
+        return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
+    }
+
     @Override
     public void periodic() {
-        
-        SmartDashboard.putBoolean("Has Game Piece", colorSensor.hasCone() || colorSensor.hasCube());
+        SmartDashboard.putBoolean("Has Game Piece", hasElement());//colorSensor.hasCone() || colorSensor.hasCube());
         
         SmartDashboard.putNumber("Left Velocity", leftVelocity());
         SmartDashboard.putNumber("Right Velocity", rightVelocity());
