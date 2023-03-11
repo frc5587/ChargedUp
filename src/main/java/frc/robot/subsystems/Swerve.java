@@ -46,7 +46,7 @@ public class Swerve extends SubsystemBase {
 
         this.odometry = new SwerveDriveOdometry(SwerveConstants.SWERVE_KINEMATICS, getYaw(), getModulePositions());
 
-        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getPose(true), // ! these numbers are 100% not tuned
+        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getPose(), // ! these numbers are 100% not tuned
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1), // State measurement standard deviations. X, Y, theta.
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.03, 0.03, 0.2)); // Vision standard deviations.
 
@@ -88,14 +88,9 @@ public class Swerve extends SubsystemBase {
         setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
-    public Pose2d getPose(boolean gettingForEstimator) {
-        if(limelight.hasTarget() && limelight.calculateDistance() < 5) { // TODO: tune distance requirement
-            return limelight.getLimelightPose();
-        }
-        if(gettingForEstimator) {
-            return odometry.getPoseMeters();
-        }
-        return getEstimatedPose();
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+        // return getEstimatedPose();
     }
 
     public Pose2d getEstimatedPose() {
@@ -135,7 +130,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public Rotation2d getYaw() {
-        return (SwerveConstants.INVERT_GYRO) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+        return (SwerveConstants.INVERT_GYRO) ? Rotation2d.fromDegrees(-gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
     }
 
     public double getPitch() {
@@ -170,8 +165,8 @@ public class Swerve extends SubsystemBase {
         if(limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
             poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
         }
-        poseHistory.addSample(Timer.getFPGATimestamp(), getPose(false));
-        field.setRobotPose(getPose(false)); //poseEstimator.getEstimatedPosition()
+        poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
+        field.setRobotPose(getPose()); //poseEstimator.getEstimatedPosition()
 
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
