@@ -10,10 +10,10 @@ import frc.robot.subsystems.Swerve;
 
 public class JoystickSwerve extends CommandBase {
     private Swerve swerve;
-    private DoubleSupplier translationSup, strafeSup, rotationSup;
-    private BooleanSupplier activeRotateSup, robotCentricSup;
+    private DoubleSupplier translationSup, strafeSup, rotationSup, activeRotateSup;
+    private BooleanSupplier robotCentricSup;
 
-    public JoystickSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier activeRotateSup, BooleanSupplier robotCentricSup) {
+    public JoystickSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, DoubleSupplier activeRotateSup, BooleanSupplier robotCentricSup) {
         this.swerve = swerve;
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
@@ -26,7 +26,7 @@ public class JoystickSwerve extends CommandBase {
 
     @Override
     public void execute() {
-        swerve.drive(new Translation2d(translationSup.getAsDouble(), activeRotateSup.getAsBoolean() ? 0 : strafeSup.getAsDouble()).times(SwerveConstants.MAX_SPEED), 
-            activeRotateSup.getAsBoolean() ? rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY : 0, !robotCentricSup.getAsBoolean(), true); 
+        // swerve.drive(new Translation2d(translationSup.getAsDouble(), activeRotateSup.getAsDouble() ? 0 : strafeSup.getAsDouble()).times(SwerveConstants.MAX_SPEED), 
+        //     activeRotateSup.getAsBoolean() ? rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY : 0, !robotCentricSup.getAsBoolean(), true); 
     }
 }

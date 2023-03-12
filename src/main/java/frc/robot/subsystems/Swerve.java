@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.MatBuilder;
@@ -53,6 +54,7 @@ public class Swerve extends SubsystemBase {
         this.resetOdometry(limelight.getLimelightPose()); // TODO: REMOVE THIS LINE!!!
 
         SmartDashboard.putData("Swerve Pose Field", field);
+        // SmartDashboard.putBoolean("SWERVE BRAKE MODE", true);
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -161,6 +163,13 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         odometry.update(getYaw(), getModulePositions());  
         poseEstimator.update(getYaw(), getModulePositions());
+        SmartDashboard.putNumber("roll", getRoll());
+        SmartDashboard.putNumber("pitch", getPitch());
+        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
+        for(int i = 0; i < mSwerveMods.length; i++) {
+            SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
+            SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
+        }
         // if the target is within 2.5 meters of the robot, factor it into pose data
         if(limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
             poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
@@ -171,5 +180,18 @@ public class Swerve extends SubsystemBase {
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
         }
+
+        // if(SmartDashboard.getBoolean("SWERVE BREAK MODE", true)) {
+        //     for(SwerveModule mod : mSwerveMods) {
+        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Coast);
+        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
+        //     }
+        // }
+        // else {
+        //     for(SwerveModule mod : mSwerveMods) {
+        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Brake);
+        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
+        //     }
+        // }
     }
 }

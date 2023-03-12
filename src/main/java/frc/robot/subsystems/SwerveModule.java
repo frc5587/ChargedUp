@@ -21,8 +21,8 @@ public class SwerveModule {
     private Rotation2d lastAngle;
     public static CTREConfigs ctreConfigs;
 
-    private TalonFX mAngleMotor;
-    private TalonFX mDriveMotor;
+    public TalonFX mAngleMotor;
+    public TalonFX mDriveMotor;
     public CANCoder angleEncoder;
 
     SimpleMotorFeedforward feedforward = SwerveConstants.DRIVE_FF;

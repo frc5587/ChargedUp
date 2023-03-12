@@ -2,15 +2,24 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandJoystick;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
+
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.server.PathPlannerServer;
+import com.revrobotics.REVLibError;
+
+import edu.wpi.first.hal.REVPHFaults;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoSetArm;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.IntakeIn;
 import frc.robot.commands.IntakeOut;
@@ -32,9 +41,10 @@ import frc.robot.util.CommandButtonBoard;
  */
 public class RobotContainer {
     // INPUTS
-    private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .3);
-    private DeadbandCommandJoystick joy = new DeadbandCommandJoystick(1, 1.5, 0.02);
-    public CommandButtonBoard board = new CommandButtonBoard(2);
+    private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .05);
+    private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 1.5, 0.02);
+    private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 1.5, 0.02);
+    public CommandButtonBoard board = new CommandButtonBoard(3);
 
     // SUBSYSTEMS
     private Limelight limelight = new Limelight();
@@ -45,22 +55,29 @@ public class RobotContainer {
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-            swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
+            swerve, () -> Math.pow(xb.getRightY(), 3), () -> Math.pow(xb.getRightX(), 3), () -> Math.pow(xb.getLeftX(), 3), () -> true); // last param is robotcentric, should be true
+
+    private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
+            swerve, () -> Math.pow(rightJoy.getY(), 3), () -> Math.pow(rightJoy.getX(), 3), () -> Math.pow(leftJoy.getX(), 3), () -> true); // last param is robotcentric, should be true
 
     private JoystickSwerve joystickSwerve = new JoystickSwerve(
-        swerve, joy::getY, joy::getX, joy::getX, () -> joy.getHID().getTrigger(), () -> true);
+        swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
 
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
-    private AutoBalance autoBalance = new AutoBalance(swerve, leds);
+    private AutoBalance autoBalance = new AutoBalance(swerve, leds);   
+    private SendableChooser autoChooser = new SendableChooser<>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         // swerve.setDefaultCommand(dualStickSwerve);
-        swerve.setDefaultCommand(joystickSwerve);
+        // swerve.setDefaultCommand(joystickSwerve);
+        swerve.setDefaultCommand(dualJoystickSwerve);
         leds.setRB();
         configureBindings();
+        new PowerDistribution().clearStickyFaults();
+        // PathPlannerServer.startServer(0);
     }
 
     /**
@@ -81,7 +98,7 @@ public class RobotContainer {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
         Trigger armLimitSwitch = new Trigger(arm::getLimitSwitchValue);
 
-        armLimitSwitch.onTrue(new InstantCommand(() -> arm.resetEncoders()));
+        // armLimitSwitch.onTrue(new InstantCommand(() -> arm.resetEncoders()));
 
         // xb.povLeft().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(5) : semiAuto.new DriveToGrid(0));
         // xb.povUp().onTrue(usingRedPoses ? semiAuto.new DriveToGrid(4) : semiAuto.new DriveToGrid(1));
@@ -96,12 +113,33 @@ public class RobotContainer {
         // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
-        board.stowButton().onTrue(new InstantCommand(arm::stow, arm));
-        board.intakeButton().onTrue(new IntakeIn(intake));
-        board.spitButton().onTrue(new IntakeOut(intake));
+        board.stowButton().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
+        // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
+        // board.spitButton().onTrue(new IntakeOut(intake));
+        board.intakeButton().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward), new InstantCommand(arm::lowSetpoint))).onFalse(new InstantCommand(intake::stop));
+        board.spitButton().onTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         board.purpleButton().onTrue(new InstantCommand(leds::setPurple, leds));
         board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
-        board.balanceButton().onTrue(autoBalance);
+        board.balanceButton().whileTrue(autoBalance);
+
+
+
+
+        xb.povUp().onTrue(new InstantCommand(arm::highSetpoint, arm));
+        xb.povRight().onTrue(new InstantCommand(arm::middleSetpoint, arm));
+        xb.povDown().onTrue(new InstantCommand(arm::lowSetpoint, arm));
+        // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
+        // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
+        // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
+        xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
+        xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
+        // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
+        // board.spitButton().onTrue(new IntakeOut(intake));
+        xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));
+        xb.leftBumper().onTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
+        xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
+        xb.rightTrigger().whileTrue(autoBalance);
     }
 
     /**
@@ -110,6 +148,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return new SequentialCommandGroup(new InstantCommand(arm::middleSetpoint, arm), new InstantCommand(intake::forward, intake));
     }
 }

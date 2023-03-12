@@ -3,6 +3,7 @@ package frc.robot;
 import org.frc5587.lib.pid.FPID;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +18,8 @@ import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
 import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 
 /**
@@ -33,14 +36,14 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
  */
 public final class Constants {
     public static final class SwerveConstants {
-        public static final boolean INVERT_GYRO = false; // Always ensure Gyro is CCW+ CW-
+        public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
 
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(22);
-        public static final double WHEEL_BASE = Units.inchesToMeters(22);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(21.5);
+        public static final double WHEEL_BASE = Units.inchesToMeters(21.5);
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -109,7 +112,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(212.607);// TODO: tune all angle offsets
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(214.277);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -120,7 +123,7 @@ public final class Constants {
             public static final int DRIVE_ID = 11;
             public static final int ANGLE_ID = 16;
             public static final int CANCODER_ID = 51;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(196.435);// TODO: tune all angle offsets
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(193.875);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -131,7 +134,7 @@ public final class Constants {
             public static final int DRIVE_ID = 12;
             public static final int ANGLE_ID = 17;
             public static final int CANCODER_ID = 52;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(261.563);// TODO: tune all angle offsets
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(260.332);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -142,7 +145,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(168.662);// TODO: tune all angle offsets
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);//194.169);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -165,6 +168,10 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints K_THETA_CONSTRAINTS =
             new TrapezoidProfile.Constraints(MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
 
+        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0);
+        public static final PIDConstants ROT_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0);
+
+
         public static TrajectoryConfig DEFAULT_TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
 
         
@@ -174,6 +181,10 @@ public final class Constants {
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER =
         new ProfiledPIDController(
             7.0, 0.0, 0.0, K_THETA_CONSTRAINTS);
+        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0);
+        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, 0);
+
+        public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(BOT_X_CONTROLLER, BOT_Y_CONTROLLER, BOT_ANGLE_CONTROLLER);
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;
@@ -229,18 +240,18 @@ public final class Constants {
         public static final int ZERO_OFFSET = Math.round((float) (Units.degreesToRadians(-2) * GEARING * ENCODER_CPR / 2 / Math.PI)); // TODO: Find
         public static final int SWITCH_PORT = 0;
         public static final boolean SWITCH_INVERTED = true;
-        public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(0.8, 0.4); // TODO: Verify
-        public static final double KP = 25.059;//12.556;
+        public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 0.8); // TODO: Verify
+        public static final double KP = 7.5857;//25.059;//12.556;
         public static final double KI = 0;
-        public static final double KD = 15.771;
+        public static final double KD = 4.6857;//15.771;
         public static final double KS = 0.28737;
         public static final double KG = 0.31488;
         public static final double KV = 3.5722;
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
-        public static final double HIGH_SETPOINT = Units.degreesToRadians(95);
-        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(78);
-        public static final double INTAKE_SETPOINT = Units.degreesToRadians(22);
+        public static final double HIGH_SETPOINT = Units.degreesToRadians(105);
+        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(85);
+        public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
         public static final double STOW_SETPOINT = Units.degreesToRadians(0);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
@@ -252,8 +263,8 @@ public final class Constants {
         public static final int LEFT_MOTOR = 30;
         public static final int RIGHT_MOTOR = 31;
 
-        public static final double THROTTLE_FORWARD = 1; // TODO
-        public static final double THROTTLE_REVERSE = 1; // TOOD
+        public static final double THROTTLE_FORWARD = .25; // TODO
+        public static final double THROTTLE_REVERSE = 1; // TODO
 
         public static final int STALL_LIMIT = 20;
         public static final int FREE_LIMIT = 25;

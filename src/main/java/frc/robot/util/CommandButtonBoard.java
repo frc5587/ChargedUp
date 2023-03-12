@@ -13,8 +13,8 @@ public class CommandButtonBoard extends CommandGenericHID {
         rightButton(6),
         centerButton(7),
         leftButton(8),
-        spitButton(2),
-        intakeButton(3),
+        spitButton(3),
+        intakeButton(2),
         balanceButton(12),
         stowButton(4),
         doublePressDownButton(13);

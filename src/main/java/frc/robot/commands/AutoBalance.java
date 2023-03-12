@@ -20,7 +20,8 @@ public class AutoBalance extends CommandBase {
     private boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
     private double angleDegrees;
 
-    private final double speedInchesPerSec = 15;
+    private final double speedInchesPerSec = 7.5;
+    private final double metersPerSec = Units.inchesToMeters(speedInchesPerSec);
     private final double positionThresholdDegrees = 3.0;
     private final double velocityThresholdDegreesPerSec = 8.0;
 
@@ -40,10 +41,11 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void execute() {
+        // angleDegrees = Math.sqrt(Math.pow(swerve.getPitch(), 2) + Math.pow(swerve.getRoll(), 2));
         angleDegrees = swerve.getPitch();
         // double angleVelocityDegreesPerSec = swerve.getRotation().getCos() * Units.radiansToDegrees(swerve.getPitchVelocity()) + swerve.getRotation().getSin() * Units.radiansToDegrees(swerve.getRollVelocity);
         // boolean shouldStop = (angleDegrees < 0.0 && angleVelocityDegreesPerSec > velocityThresholdDegreesPerSec.get()) || (angleDegrees > 0.0 && angleVelocityDegreesPerSec < -velocityThresholdDegreesPerSec.get());
-        boolean shouldStop = Math.abs(angleDegrees) < 2.5;
+        boolean shouldStop = Math.abs(angleDegrees) < 6.5;
 
         if(shouldStop) {
             System.out.println("Within no move threshold");
@@ -55,19 +57,30 @@ public class AutoBalance extends CommandBase {
                 0.0,
                 0.0,
                 swerve.getYaw()));
+
+            // swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
+            //     swerve.getPitch() / angleDegrees * metersPerSec,
+            //     swerve.getRoll() / angleDegrees * metersPerSec,
+            //     0.0,
+            //     swerve.getYaw()));
             
         }
+        System.out.println(angleDegrees);
     }
 
     @Override
     public void end(boolean interrupted) {
         swerve.stopWithLock();
+        blinkLeds.stop();
+        blinkLeds.close();
+        leds.setAlliance();
     }
 
-    @Override
-    public boolean isFinished() {
-        return Math.abs(angleDegrees) < positionThresholdDegrees;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     System.out.println(angleDegrees);
+    //     return Math.abs(angleDegrees) < positionThresholdDegrees;
+    // }
 
     boolean ledStatus = false;
 
