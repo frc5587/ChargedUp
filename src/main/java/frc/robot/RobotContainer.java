@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Auto;
+import frc.robot.commands.AutoCommands;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoSetArm;
 import frc.robot.commands.DualStickSwerve;
@@ -60,7 +60,7 @@ public class RobotContainer {
 
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
-    private Auto auto = new Auto(swerve, intake);
+    private AutoCommands auto = new AutoCommands(swerve, intake, leds);
     private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
@@ -76,10 +76,13 @@ public class RobotContainer {
         pdh.clearStickyFaults();
         pdh.close();
         autoChooser.setDefaultOption("just spit", auto.justSpit());
-        autoChooser.addOption("spittaxi near", auto.spitThenTaxiNear());
-        autoChooser.addOption("spittaxi far", auto.spitThenTaxiAway());
-        autoChooser.addOption("taxi near sub", auto.taxiNear());
-        autoChooser.addOption("taxi far from sub", auto.taxiAway());
+        autoChooser.addOption("CloseToSub", auto.close());
+        autoChooser.addOption("FarFromSub", auto.far());
+        autoChooser.addOption("MiddleToClose", auto.midToClose());
+        autoChooser.addOption("MiddleToFar", auto.midToFar());
+        autoChooser.addOption("MidCharge", auto.midMidCharge());
+        autoChooser.addOption("CloseCharge", auto.midCloseCharge());
+        autoChooser.addOption("FarCharge", auto.midFarCharge());
         autoChooser.addOption("NO COMMAND", auto.noAuto());
     }
 

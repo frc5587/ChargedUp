@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
@@ -76,14 +78,16 @@ public class SemiAuto {
         public ConeFlipper() {
             super(
                 new AutoSetArm(arm, GridHeight.Low),
-                new ParallelCommandGroup(
+                new ParallelRaceGroup(
                         new InstantCommand(intake::backward), 
-                        new InstantCommand(() ->
+                        new RepeatCommand(new InstantCommand(() ->
                             swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
                             -AutoConstants.CRAWL_SPEED,
                             0.0,
                             0.0,
-                            swerve.getYaw()))))
+                            swerve.getYaw())))),
+                            new WaitCommand(1)), //TODO CHANGE THIS!!!!!!
+                new InstantCommand(swerve::stop)
             );
         }
     }

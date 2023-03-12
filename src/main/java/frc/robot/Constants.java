@@ -3,6 +3,7 @@ package frc.robot;
 import org.frc5587.lib.pid.FPID;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -155,6 +156,7 @@ public final class Constants {
     public static final class AutoConstants { //TODO Confirm
         public static final double MAX_SPEED_MPS = 0.5; //m/s
         public static final double MAX_ACCEL_MPS_2 = 0.25; // m/s^2
+        public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
         public static final double CRAWL_SPEED = 5; //inches per sec
