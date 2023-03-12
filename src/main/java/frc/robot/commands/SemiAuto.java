@@ -1,13 +1,19 @@
 package frc.robot.commands;
 
+import java.util.List;
+
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,13 +28,15 @@ public class SemiAuto {
     private final Swerve swerve;
     private final Arm arm;
     private final Intake intake;
+    private final AutoCommands auto;
     public int currentGridNumber;
     public Field2d desiredPoseField = new Field2d();
 
-    public SemiAuto(Swerve swerve, Arm arm, Intake intake) {
+    public SemiAuto(Swerve swerve, Arm arm, Intake intake, AutoCommands auto) {
         this.swerve = swerve;
         this.arm = arm;
         this.intake = intake;
+        this.auto = auto;
 
         SmartDashboard.putData("Desired Pose Field", desiredPoseField);
     }
@@ -56,6 +64,20 @@ public class SemiAuto {
         public DriveWithinGrid(int posNumber) {
             super(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
             desiredPoseField.setRobotPose(AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
+        }
+    }
+
+    public class MoveToGrid {
+        private Pose2d desiredPose = AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[0];
+        private Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                swerve.getPose(), 
+                List.of(new Translation2d((swerve.getPose().getX()+desiredPose.getX())/2, (swerve.getPose().getY()+desiredPose.getY())/2)), 
+                desiredPose, 
+                AutoConstants.DEFAULT_TRAJECTORY_CONFIG);
+        private PathPlannerTrajectory pptraj = new PathPlannerTrajectory(trajectory.getStates(), null, null, null, false);
+
+        public Command get() {
+            return auto.autoBuilder.followPath(pptraj);
         }
     }
 

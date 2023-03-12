@@ -59,6 +59,10 @@ public class Intake extends SimpleMotorBase {
         return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
     }
 
+    public void autoThrottle() {
+        motors.set(IntakeConstants.THROTTLE_AUTO);
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Has Game Piece", hasElement());//colorSensor.hasCone() || colorSensor.hasCube());

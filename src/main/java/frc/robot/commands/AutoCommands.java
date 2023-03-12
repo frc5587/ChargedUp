@@ -16,7 +16,7 @@ import frc.robot.subsystems.Swerve;
 
 public class AutoCommands {
     private Intake intake;
-    private final SwerveAutoBuilder autoBuilder;
+    public final SwerveAutoBuilder autoBuilder;
     private final Map<String, Command> eventMap;
 
     public AutoCommands(Swerve swerve, Intake intake, LEDs leds) {
@@ -42,12 +42,12 @@ public class AutoCommands {
      * @param pathCommand the auto to play after the game element is spit out
      */
     private Command spitTravelCommand(Command pathCommand) {
-        return new SequentialCommandGroup(new InstantCommand(intake::forward), new WaitCommand(1.5), new InstantCommand(intake::stop), pathCommand);
+        return new SequentialCommandGroup(new InstantCommand(intake::autoThrottle), new WaitCommand(1.5), new InstantCommand(intake::stop), pathCommand);
     }
 
     /**
      * takes a path command from autoBuilder and adds an outtake to the beginning of it
-     * @param pathName the name of the autoPath to build and play after the game element is spit out
+     * @param pathName the name of the autoPath file to build and play after the game element is spit out
      */
     private Command spitTravelCommand(String pathName) {
         return spitTravelCommand(autoBuilder.fullAuto(PathPlanner.loadPathGroup(pathName, AutoConstants.PATH_CONSTRAINTS)));
@@ -116,6 +116,6 @@ public class AutoCommands {
      * Only outtake during auto, do not move.
      */
     public Command justSpit() {
-        return new InstantCommand(intake::forward, intake);
+        return new InstantCommand(intake::autoThrottle, intake);
     }
 }

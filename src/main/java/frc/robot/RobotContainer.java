@@ -58,9 +58,9 @@ public class RobotContainer {
     private JoystickSwerve joystickSwerve = new JoystickSwerve(
         swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
 
-    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
+        public AutoCommands auto = new AutoCommands(swerve, intake, leds);
+    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, auto);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
-    private AutoCommands auto = new AutoCommands(swerve, intake, leds);
     private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**

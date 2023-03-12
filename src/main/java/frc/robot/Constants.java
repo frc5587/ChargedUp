@@ -268,6 +268,7 @@ public final class Constants {
 
         public static final double THROTTLE_FORWARD = .25; // TODO
         public static final double THROTTLE_REVERSE = 1; // TODO
+        public static final double THROTTLE_AUTO = .75; // TODO
 
         public static final int STALL_LIMIT = 20;
         public static final int FREE_LIMIT = 25;
