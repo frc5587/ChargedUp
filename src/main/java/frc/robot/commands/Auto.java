@@ -11,18 +11,23 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Swerve;
 
 public class Auto {
     private Swerve swerve;
+    private Intake intake;
     private final SwerveAutoBuilder autoBuilder;
     private static final Map<String, Command> eventMap = new HashMap<>(Map.ofEntries(
-        Map.entry("startAway", Commands.print("Start Away from Sub")),
-        Map.entry("startBySubstation", Commands.print("Start By Sub"))
+        // Map.entry("startAway", Commands.print("Start Away from Sub")),
+        // Map.entry("startBySubstation", Commands.print("Start By Sub"))
     ));
 
-    public Auto(Swerve swerve) {
+    public Auto(Swerve swerve, Intake intake) {
         this.swerve = swerve;
         autoBuilder = new SwerveAutoBuilder(swerve::getPose, swerve::resetOdometry, AutoConstants.TRANSL_CONSTANTS, AutoConstants.ROT_CONSTANTS, swerve::setChassisSpeeds, eventMap, swerve);
     }
@@ -35,5 +40,14 @@ public class Auto {
     }
     public Command noAuto() {
         return Commands.none();
+    }
+    public Command spitThenTaxiAway() {
+        return new SequentialCommandGroup(new InstantCommand(intake::forward), new WaitCommand(1.5), new InstantCommand(intake::stop), taxiAway());
+    }
+    public Command spitThenTaxiNear() {
+        return new SequentialCommandGroup(new InstantCommand(intake::forward), new WaitCommand(1.5), new InstantCommand(intake::stop), taxiNear());
+    }
+    public Command justSpit() {
+        return new InstantCommand(intake::forward, intake);
     }
 }

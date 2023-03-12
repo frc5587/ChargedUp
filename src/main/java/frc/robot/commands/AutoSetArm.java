@@ -31,9 +31,10 @@ public class AutoSetArm extends CommandBase {
         else {
             arm.lowSetpoint();
         }
+    }
 
-        if(arm.getController().atGoal()) {
-            end(false);
-        }
+    @Override
+    public boolean isFinished() {
+        return arm.getController().atSetpoint();
     }
 }

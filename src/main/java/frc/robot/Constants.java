@@ -157,6 +157,7 @@ public final class Constants {
         public static final double MAX_ACCEL_MPS_2 = 0.25; // m/s^2
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
+        public static final double CRAWL_SPEED = 5; //inches per sec
     
         public static final double KP_X_CONTROLLER = 1;
         public static final double KP_Y_CONTROLLER = 1;

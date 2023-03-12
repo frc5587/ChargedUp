@@ -2,12 +2,6 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandJoystick;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
-
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.server.PathPlannerServer;
-import com.revrobotics.REVLibError;
-
-import edu.wpi.first.hal.REVPHFaults;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -18,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Auto;
 import frc.robot.commands.AutoBalance;
 import frc.robot.commands.AutoSetArm;
 import frc.robot.commands.DualStickSwerve;
@@ -64,8 +59,9 @@ public class RobotContainer {
         swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
 
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake);
-    private AutoBalance autoBalance = new AutoBalance(swerve, leds);   
-    private SendableChooser autoChooser = new SendableChooser<>();
+    private AutoBalance autoBalance = new AutoBalance(swerve, leds);
+    private Auto auto = new Auto(swerve, intake);
+    private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -76,8 +72,15 @@ public class RobotContainer {
         swerve.setDefaultCommand(dualJoystickSwerve);
         leds.setRB();
         configureBindings();
-        new PowerDistribution().clearStickyFaults();
-        // PathPlannerServer.startServer(0);
+        PowerDistribution pdh = new PowerDistribution();
+        pdh.clearStickyFaults();
+        pdh.close();
+        autoChooser.setDefaultOption("just spit", auto.justSpit());
+        autoChooser.addOption("spittaxi near", auto.spitThenTaxiNear());
+        autoChooser.addOption("spittaxi far", auto.spitThenTaxiAway());
+        autoChooser.addOption("taxi near sub", auto.taxiNear());
+        autoChooser.addOption("taxi far from sub", auto.taxiAway());
+        autoChooser.addOption("NO COMMAND", auto.noAuto());
     }
 
     /**
@@ -133,6 +136,7 @@ public class RobotContainer {
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
+        xb.x().onTrue(semiAuto.new ConeFlipper());
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
         xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));
@@ -148,6 +152,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new SequentialCommandGroup(new InstantCommand(arm::middleSetpoint, arm), new InstantCommand(intake::forward, intake));
+        return autoChooser.getSelected();
     }
 }
