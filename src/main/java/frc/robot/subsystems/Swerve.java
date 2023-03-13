@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import org.frc5587.lib.subsystems.DifferentialDriveBase.DriveConstants;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -21,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.util.swervelib.math.Conversions;
 
 public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
@@ -156,16 +160,29 @@ public class Swerve extends SubsystemBase {
     public void stopWithLock() {
         stop();
 
-        // TODO Make modules position to 45 degrees inwards
+        // mSwerveMods[0].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
+        // mSwerveMods[1].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+        // mSwerveMods[2].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
+        // mSwerveMods[3].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
+        // mSwerveMods[0].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        // mSwerveMods[1].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        // mSwerveMods[2].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+        // mSwerveMods[3].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+        mSwerveMods[0].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(45, SwerveConstants.ANGLE_GEAR_RATIO));
+        mSwerveMods[1].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(-45, SwerveConstants.ANGLE_GEAR_RATIO));
+        mSwerveMods[2].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(-45, SwerveConstants.ANGLE_GEAR_RATIO));
+        mSwerveMods[3].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(45, SwerveConstants.ANGLE_GEAR_RATIO));
+        System.out.println("STOPLOCK");
+        // TODO Make sure modules position is 45 degrees inwards
     }
 
     @Override
     public void periodic(){
         odometry.update(getYaw(), getModulePositions());  
         poseEstimator.update(getYaw(), getModulePositions());
-        SmartDashboard.putNumber("roll", getRoll());
-        SmartDashboard.putNumber("pitch", getPitch());
-        SmartDashboard.putNumber("yaw", getYaw().getDegrees());
+        // SmartDashboard.putNumber("roll", getRoll());
+        // SmartDashboard.putNumber("pitch", getPitch());
+        // SmartDashboard.putNumber("yaw", getYaw().getDegrees());
         for(int i = 0; i < mSwerveMods.length; i++) {
             SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
             SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
@@ -177,6 +194,19 @@ public class Swerve extends SubsystemBase {
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(poseEstimator.getEstimatedPosition());
 
+        int stoppedModuleCounter = 0;
+        for(SwerveModule module : mSwerveMods) {
+            double velocity = Conversions.falconToMPS(module.mDriveMotor.getSelectedSensorVelocity(), SwerveConstants.CHOSEN_MODULE.wheelCircumference, SwerveConstants.CHOSEN_MODULE.driveGearRatio);
+            if(velocity < .5) {
+                stoppedModuleCounter++;
+            }
+            System.out.println(velocity);
+        }
+
+        if(stoppedModuleCounter == 4) {
+            stopWithLock();
+            System.out.println("ALLMODSLOW");
+        }
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
         }

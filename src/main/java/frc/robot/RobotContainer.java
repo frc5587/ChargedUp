@@ -6,9 +6,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -71,7 +73,7 @@ public class RobotContainer {
         // swerve.setDefaultCommand(dualStickSwerve);
         // swerve.setDefaultCommand(joystickSwerve);
         swerve.setDefaultCommand(dualJoystickSwerve);
-        leds.setRB();
+        leds.setRainbow();
         configureBindings();
         PowerDistribution pdh = new PowerDistribution();
         pdh.clearStickyFaults();
@@ -85,6 +87,7 @@ public class RobotContainer {
         autoChooser.addOption("CloseCharge", auto.midCloseCharge());
         autoChooser.addOption("FarCharge", auto.midFarCharge());
         autoChooser.addOption("NO COMMAND", auto.noAuto());
+        SmartDashboard.putData("AUTO", autoChooser);
     }
 
     /**
@@ -135,12 +138,14 @@ public class RobotContainer {
         xb.povUp().onTrue(new InstantCommand(arm::highSetpoint, arm));
         xb.povRight().onTrue(new InstantCommand(arm::middleSetpoint, arm));
         xb.povDown().onTrue(new InstantCommand(arm::lowSetpoint, arm));
+        xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
         xb.x().onTrue(semiAuto.new ConeFlipper());
+        rightJoy.trigger().whileTrue(new RunCommand(swerve::stopWithLock, swerve)).onFalse(dualJoystickSwerve);
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
         xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));

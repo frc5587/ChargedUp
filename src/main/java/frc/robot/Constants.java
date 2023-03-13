@@ -146,7 +146,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(0);//194.169);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(29.26);//194.169);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -255,7 +255,7 @@ public final class Constants {
         public static final double HIGH_SETPOINT = Units.degreesToRadians(105);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(85);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
-        public static final double STOW_SETPOINT = Units.degreesToRadians(0);
+        public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
@@ -268,7 +268,7 @@ public final class Constants {
 
         public static final double THROTTLE_FORWARD = .25; // TODO
         public static final double THROTTLE_REVERSE = 1; // TODO
-        public static final double THROTTLE_AUTO = .75; // TODO
+        public static final double THROTTLE_AUTO = 1; // TODO
 
         public static final int STALL_LIMIT = 20;
         public static final int FREE_LIMIT = 25;
