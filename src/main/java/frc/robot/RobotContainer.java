@@ -38,8 +38,8 @@ import frc.robot.util.CommandButtonBoard;
 public class RobotContainer {
     // INPUTS
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .05);
-    private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 1.5, 0.02);
-    private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 1.5, 0.02);
+    private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
+    private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
     public CommandButtonBoard board = new CommandButtonBoard(3);
 
     // SUBSYSTEMS
@@ -51,10 +51,10 @@ public class RobotContainer {
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-            swerve, () -> Math.pow(xb.getRightY(), 3), () -> Math.pow(xb.getRightX(), 3), () -> Math.pow(xb.getLeftX(), 3), () -> true); // last param is robotcentric, should be true
+            swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
 
     private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
-            swerve, () -> Math.pow(rightJoy.getY(), 3), () -> Math.pow(rightJoy.getX(), 3), () -> Math.pow(leftJoy.getX(), 3), () -> true); // last param is robotcentric, should be true
+            swerve, () -> rightJoy.getYCurved(), () -> rightJoy.getXCurved(), () -> leftJoy.getXCurved(), () -> true); // last param is robotcentric, should be true
 
     private JoystickSwerve joystickSwerve = new JoystickSwerve(
         swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
