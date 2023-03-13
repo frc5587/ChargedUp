@@ -16,11 +16,15 @@ import frc.robot.subsystems.Swerve;
 
 public class AutoCommands {
     private Intake intake;
+    private Swerve swerve;
+    private LEDs leds;
     public final SwerveAutoBuilder autoBuilder;
     private final Map<String, Command> eventMap;
 
     public AutoCommands(Swerve swerve, Intake intake, LEDs leds) {
         this.intake = intake;
+        this.swerve = swerve;
+        this.leds = leds;
 
         this.eventMap = new HashMap<>(Map.ofEntries(
                 Map.entry("stopIntake", new InstantCommand(intake::stop)),
@@ -93,7 +97,7 @@ public class AutoCommands {
      * (ideal if another robot is not charging during auto)
      */
     public Command midMidCharge() {
-        return spitTravelCommand("StartMiddleChargeMiddle");
+        return spitTravelCommand("StartMiddleChargeMiddle").andThen(new AutoBalance(swerve, leds));
     }
 
     /**

@@ -187,6 +187,6 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         else {
             setVoltage(0);
         }
-        SmartDashboard.putNumber("ARM PERCENTOUTPUT", motor.get());
+        SmartDashboard.putNumber("ARM VOLTAGE", motor.get());
     }
 }

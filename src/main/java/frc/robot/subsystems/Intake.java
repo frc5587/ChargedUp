@@ -65,9 +65,9 @@ public class Intake extends SimpleMotorBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Has Game Piece", hasElement());//colorSensor.hasCone() || colorSensor.hasCube());
+        // SmartDashboard.putBoolean("Has Game Piece", hasElement());//colorSensor.hasCone() || colorSensor.hasCube());
         
-        SmartDashboard.putNumber("Left Velocity", leftVelocity());
-        SmartDashboard.putNumber("Right Velocity", rightVelocity());
+        // SmartDashboard.putNumber("Left Velocity", leftVelocity());
+        // SmartDashboard.putNumber("Right Velocity", rightVelocity());
     }
 }

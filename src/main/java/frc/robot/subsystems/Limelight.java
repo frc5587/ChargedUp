@@ -20,7 +20,7 @@ public class Limelight extends LimelightBase {
         ledChooser.addOption("OFF", LedValues.OFF);
         ledChooser.addOption("BLINK", LedValues.BLINK);
         SmartDashboard.putData("Limelight LEDs", ledChooser);
-        SmartDashboard.putData("Limelight Pose Field", field);
+        // SmartDashboard.putData("Limelight Pose Field", field);
     }
 
     public Pose2d getLimelightPose() {
@@ -31,6 +31,6 @@ public class Limelight extends LimelightBase {
     @Override
     public void periodic() {
         setLEDs(ledChooser.getSelected());
-        field.setRobotPose(getLimelightPose());
+        // field.setRobotPose(getLimelightPose());
     }
 }
