@@ -20,6 +20,7 @@ import frc.robot.commands.IntakeIn;
 import frc.robot.commands.IntakeOut;
 import frc.robot.commands.JoystickSwerve;
 import frc.robot.commands.SemiAuto;
+import frc.robot.commands.SwerveLock;
 import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.*;
@@ -147,6 +148,8 @@ public class RobotContainer {
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         xb.rightTrigger().whileTrue(autoBalance);
+        // if all joystick axes are below deadband, lock the swerve.
+        leftJoy.axisLessThan(0, .1).and(leftJoy.axisLessThan(1, .1)).and(rightJoy.axisLessThan(0, .1)).and(rightJoy.axisLessThan(0, 0.1)).whileTrue(new SwerveLock(swerve));
     }
 
     /**
