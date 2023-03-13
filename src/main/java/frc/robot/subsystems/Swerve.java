@@ -48,10 +48,10 @@ public class Swerve extends SubsystemBase {
         this.odometry = new SwerveDriveOdometry(SwerveConstants.SWERVE_KINEMATICS, getYaw(), getModulePositions());
 
         this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getPose(), // ! these numbers are 100% not tuned
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1), // State measurement standard deviations. X, Y, theta.
-                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.03, 0.03, 0.2)); // Vision standard deviations.
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.01, 0.01, 0.01), // State measurement standard deviations. X, Y, theta.
+                new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1)); // Vision standard deviations.
 
-        this.resetOdometry(limelight.getLimelightPose()); // TODO: REMOVE THIS LINE!!!
+        // this.resetOdometry(limelight.getLimelightPose()); // TODO: REMOVE THIS LINE!!!
 
         SmartDashboard.putData("Swerve Pose Field", field);
         // SmartDashboard.putBoolean("SWERVE BRAKE MODE", true);
@@ -175,7 +175,7 @@ public class Swerve extends SubsystemBase {
             poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
         }
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
-        field.setRobotPose(getPose()); //poseEstimator.getEstimatedPosition()
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
 
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
