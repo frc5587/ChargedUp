@@ -44,12 +44,12 @@ public final class Constants {
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(19.51); // distance from left wheel to right wheel
-        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); // distance from front wheel to back wheel
+        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); // distance from front wheel to back wheel //TODO MAKE NEGATIVE???
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
+         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics( //TODO switch front/back wheels?????
             new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
@@ -76,6 +76,7 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 60;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        public static final double SLEW_RATE = 1.5; // m/s^2
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */

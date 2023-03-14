@@ -5,6 +5,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,6 +33,7 @@ public class Swerve extends SubsystemBase {
     public Limelight limelight;
     public Field2d field = new Field2d();
     private boolean locked = false;
+    private SlewRateLimiter slew = new SlewRateLimiter(SwerveConstants.SLEW_RATE);
 
     public Swerve(Limelight limelight) {
         this.gyro = new AHRS();
@@ -69,13 +71,13 @@ public class Swerve extends SubsystemBase {
             SwerveModuleState[] swerveModuleStates =
                 SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
                     fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(), 
+                            translation.getX(), //TODO invert getX??????
                             translation.getY(), 
                             rotation, 
                             getYaw())
                         : new ChassisSpeeds(
-                            translation.getX(), 
-                            translation.getY(), 
+                            slew.calculate(translation.getX()), //TODO invert getX????
+                            slew.calculate(translation.getY()), 
                             rotation));
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
             for(SwerveModule mod : mSwerveMods){
@@ -123,6 +125,7 @@ public class Swerve extends SubsystemBase {
         for(SwerveModule mod : mSwerveMods){
             states[mod.moduleNumber] = mod.getState();
         }
+        //TODO invert states??????
         return states;
     }
 
