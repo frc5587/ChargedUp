@@ -48,12 +48,12 @@ public class AutoBalance extends CommandBase {
         boolean shouldStop = Math.abs(angleDegrees) < 6.5;
 
         if(shouldStop) {
-            System.out.println("Within no move threshold");
-            swerve.stopWithLock();
+            System.out.println("Within angle threshold");
+            swerve.stopWithLock(true);
         } else {
             System.out.println("Autobalancing");
             swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-                Units.inchesToMeters(speedInchesPerSec) * (angleDegrees > 0.0 ? -1.0 : 1.0),
+                metersPerSec * (angleDegrees > 0.0 ? -1.0 : 1.0),
                 0.0,
                 0.0,
                 swerve.getYaw()));
@@ -70,7 +70,7 @@ public class AutoBalance extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        swerve.stopWithLock();
+        swerve.stopWithLock(true);
         blinkLeds.stop();
         blinkLeds.close();
         leds.setAlliance();

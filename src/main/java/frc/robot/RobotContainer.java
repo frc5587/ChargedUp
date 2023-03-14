@@ -145,7 +145,7 @@ public class RobotContainer {
         xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
         xb.x().onTrue(semiAuto.new ConeFlipper());
-        rightJoy.trigger().whileTrue(new RunCommand(swerve::stopWithLock, swerve)).onFalse(dualJoystickSwerve);
+        // rightJoy.trigger().whileTrue(new RunCommand(swerve::stopWithLock, swerve)).onFalse(dualJoystickSwerve);
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
         xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));
@@ -153,8 +153,6 @@ public class RobotContainer {
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         xb.rightTrigger().whileTrue(autoBalance);
-        // if all joystick axes are below deadband, lock the swerve.
-        leftJoy.axisLessThan(0, .1).and(leftJoy.axisLessThan(1, .1)).and(rightJoy.axisLessThan(0, .1)).and(rightJoy.axisLessThan(0, 0.1)).whileTrue(new SwerveLock(swerve));
     }
 
     /**

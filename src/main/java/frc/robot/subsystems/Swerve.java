@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import org.frc5587.lib.subsystems.DifferentialDriveBase.DriveConstants;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
-
 import edu.wpi.first.math.MatBuilder;
 import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -35,6 +31,7 @@ public class Swerve extends SubsystemBase {
     public TimeInterpolatableBuffer<Pose2d> poseHistory = TimeInterpolatableBuffer.createBuffer(1.5); 
     public Limelight limelight;
     public Field2d field = new Field2d();
+    private boolean locked = false;
 
     public Swerve(Limelight limelight) {
         this.gyro = new AHRS();
@@ -55,29 +52,35 @@ public class Swerve extends SubsystemBase {
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.01, 0.01, 0.01), // State measurement standard deviations. X, Y, theta.
                 new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.1, 0.1, 0.1)); // Vision standard deviations.
 
-        // this.resetOdometry(limelight.getLimelightPose()); // TODO: REMOVE THIS LINE!!!
-
         SmartDashboard.putData("Swerve Pose Field", field);
-        // SmartDashboard.putBoolean("SWERVE BRAKE MODE", true);
+        SmartDashboard.putBoolean("SWERVE BRAKE MODE", true);
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        SwerveModuleState[] swerveModuleStates =
-            SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
-                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation, 
-                                    getYaw()
-                                )
-                                : new ChassisSpeeds(
-                                    translation.getX(), 
-                                    translation.getY(), 
-                                    rotation)
-                                );
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
-        for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+        if(locked && modsStopped()) {
+            setModuleStates(new SwerveModuleState[] {
+                new SwerveModuleState(0, new Rotation2d(45)),
+                new SwerveModuleState(0, new Rotation2d(-45)),
+                new SwerveModuleState(0, new Rotation2d(-45)),
+                new SwerveModuleState(0, new Rotation2d(45)),
+            });
+        }
+        else {
+            SwerveModuleState[] swerveModuleStates =
+                SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
+                    fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                            translation.getX(), 
+                            translation.getY(), 
+                            rotation, 
+                            getYaw())
+                        : new ChassisSpeeds(
+                            translation.getX(), 
+                            translation.getY(), 
+                            rotation));
+            SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
+            for(SwerveModule mod : mSwerveMods){
+                mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+            }
         }
     }    
 
@@ -157,23 +160,22 @@ public class Swerve extends SubsystemBase {
         setChassisSpeeds(new ChassisSpeeds());
     }
 
-    public void stopWithLock() {
-        stop();
 
-        // mSwerveMods[0].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
-        // mSwerveMods[1].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
-        // mSwerveMods[2].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)), true);
-        // mSwerveMods[3].setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)), true);
-        // mSwerveMods[0].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        // mSwerveMods[1].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        // mSwerveMods[2].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
-        // mSwerveMods[3].setAngle(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
-        mSwerveMods[0].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(45, SwerveConstants.ANGLE_GEAR_RATIO));
-        mSwerveMods[1].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(-45, SwerveConstants.ANGLE_GEAR_RATIO));
-        mSwerveMods[2].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(-45, SwerveConstants.ANGLE_GEAR_RATIO));
-        mSwerveMods[3].mAngleMotor.set(ControlMode.Position,  Conversions.degreesToFalcon(45, SwerveConstants.ANGLE_GEAR_RATIO));
-        System.out.println("STOPLOCK");
-        // TODO Make sure modules position is 45 degrees inwards
+    public void stopWithLock(boolean lock) {
+        this.locked = lock;
+        if(lock) {
+            stop();
+        }
+    }
+
+    private boolean modsStopped() {
+        int stoppedModules = 0;
+        for(SwerveModuleState state : getModuleStates()) {
+            if(state.speedMetersPerSecond < 0.1) {
+                stoppedModules ++;
+            }
+        }
+        return stoppedModules == 4;
     }
 
     @Override
@@ -204,24 +206,24 @@ public class Swerve extends SubsystemBase {
         }
 
         if(stoppedModuleCounter == 4) {
-            stopWithLock();
+            stopWithLock(true);
             System.out.println("ALLMODSLOW");
         }
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
         }
 
-        // if(SmartDashboard.getBoolean("SWERVE BREAK MODE", true)) {
-        //     for(SwerveModule mod : mSwerveMods) {
-        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Coast);
-        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
-        //     }
-        // }
-        // else {
-        //     for(SwerveModule mod : mSwerveMods) {
-        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Brake);
-        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
-        //     }
-        // }
+        if(!SmartDashboard.getBoolean("SWERVE BREAK MODE", true)) {
+            for(SwerveModule mod : mSwerveMods) {
+                mod.mAngleMotor.setNeutralMode(NeutralMode.Coast);
+                mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
+            }
+        }
+        else {
+            for(SwerveModule mod : mSwerveMods) {
+                mod.mAngleMotor.setNeutralMode(NeutralMode.Brake);
+                mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
+            }
+        }
     }
 }

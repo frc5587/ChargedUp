@@ -43,8 +43,8 @@ public final class Constants {
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
 
         /* Drivetrain Constants */
-        public static final double TRACK_WIDTH = Units.inchesToMeters(21.5);
-        public static final double WHEEL_BASE = Units.inchesToMeters(21.5);
+        public static final double TRACK_WIDTH = Units.inchesToMeters(19.51); // distance from left wheel to right wheel
+        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); // distance from front wheel to back wheel
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /* Swerve Kinematics 
@@ -146,7 +146,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(29.26);//194.169);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(37.617);//194.169);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
