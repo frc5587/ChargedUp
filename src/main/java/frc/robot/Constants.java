@@ -54,6 +54,11 @@ public final class Constants {
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+            // new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            // new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
+            // new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
+            // new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
+
 
         /* Module Gear Ratios */
         public static final double DRIVE_GEAR_RATIO = CHOSEN_MODULE.driveGearRatio;
@@ -76,33 +81,35 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 60;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
-        public static final double SLEW_RATE = 1.5; // m/s^2
+        public static final double SLEW_RATE = 3; // m/s^2
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
         public static final double OPEN_LOOP_RAMP = 0.25;
-        public static final double CLOSED_LOOP_RAMP = 0.0;
+        public static final double CLOSED_LOOP_RAMP = 0.0; //TODO CHANGE BACK TO 0 IF SLEW RATE IS TOO HIGH!!!!!!!
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
                 CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD);
 
         /* Drive Motor PID Values */
+        // public static final FPID DRIVE_FPID = new FPID(
+        //         0.05, 0., 0., 0.); // TODO Characterize
         public static final FPID DRIVE_FPID = new FPID(
-                0.05, 0., 0., 0.); // TODO Characterize
+        0.05, 0.1, 0., 0); // TODO Characterize
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double DRIVE_KS = (0.32 / 12); // TODO Characterize
-        public static final double DRIVE_KV = (1.51 / 12);
-        public static final double DRIVE_KA = (0.27 / 12);
+        public static final double DRIVE_KS = .18576/12;//0.15917/12;//(0.32 / 12); // TODO Characterize
+        public static final double DRIVE_KV = 2.3317/12;//2.7317/12;//(1.51 / 12);
+        public static final double DRIVE_KA = 0.25916/12;//0.40975/12;//(0.27 / 12);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4.5; // TODO Confirm
+        public static final double MAX_SPEED = .5; // TODO Confirm
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 10.0; //TODO Confirm
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI/4; //TODO Confirm
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -114,7 +121,7 @@ public final class Constants {
             public static final int DRIVE_ID = 10;
             public static final int ANGLE_ID = 15;
             public static final int CANCODER_ID = 50;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(214.277);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(215.771);
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -155,16 +162,16 @@ public final class Constants {
     }
 
     public static final class AutoConstants { //TODO Confirm
-        public static final double MAX_SPEED_MPS = 0.5; //m/s
-        public static final double MAX_ACCEL_MPS_2 = 0.25; // m/s^2
+        public static final double MAX_SPEED_MPS = 10; //m/s
+        public static final double MAX_ACCEL_MPS_2 = 3; // m/s^2
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
         public static final double CRAWL_SPEED = 5; //inches per sec
     
-        public static final double KP_X_CONTROLLER = 1;
+        public static final double KP_X_CONTROLLER = 0.1;
         public static final double KP_Y_CONTROLLER = 1;
-        public static final double KP_THETA_CONTROLLER = 1;
+        public static final double KP_THETA_CONTROLLER = .02;
     
         public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS =
             new TrapezoidProfile.Constraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
@@ -181,10 +188,13 @@ public final class Constants {
         
         public static final ProfiledPIDController BOT_DRIVE_CONTROLLER =
         new ProfiledPIDController(
-            2.5, 0.0, 0.0, K_PXY_CONSTRAINTS);
+            //2.5, 0.0, 0.0, K_PXY_CONSTRAINTS);
+            // 0.1, 0.0, 0.0, K_PXY_CONSTRAINTS);
+            1, 0.0, 0, K_PXY_CONSTRAINTS);
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER =
         new ProfiledPIDController(
-            7.0, 0.0, 0.0, K_THETA_CONSTRAINTS);
+            // 7.0, 0.0, 0.0, K_THETA_CONSTRAINTS);
+            KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS);
         public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0);
         public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, 0);
 
@@ -215,16 +225,20 @@ public final class Constants {
             }
         }
 
-        public static final GridLocationGroup BLUE_LEFT = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(180)), Alliance.Blue);
-        public static final GridLocationGroup BLUE_CENTER = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(180)), Alliance.Blue);
-        public static final GridLocationGroup BLUE_RIGHT = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(180)), Alliance.Blue);
-        public static final GridLocationGroup RED_RIGHT = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(0)), Alliance.Red);
-        public static final GridLocationGroup RED_CENTER = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(0)), Alliance.Red);
-        public static final GridLocationGroup RED_LEFT = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(0)), Alliance.Red);
+        public static final GridLocationGroup BLUE_LEFT = new GridLocationGroup(new Pose2d(2, 4.42, Rotation2d.fromDegrees(0)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_CENTER = new GridLocationGroup(new Pose2d(2, 2.75, Rotation2d.fromDegrees(0)), Alliance.Blue);
+        public static final GridLocationGroup BLUE_RIGHT = new GridLocationGroup(new Pose2d(2, 1.06, Rotation2d.fromDegrees(0)), Alliance.Blue);
+        public static final GridLocationGroup RED_RIGHT = new GridLocationGroup(new Pose2d(14.525, 4.42, Rotation2d.fromDegrees(-0)), Alliance.Red);
+        public static final GridLocationGroup RED_CENTER = new GridLocationGroup(new Pose2d(14.525, 2.75, Rotation2d.fromDegrees(-0)), Alliance.Red);
+        public static final GridLocationGroup RED_LEFT = new GridLocationGroup(new Pose2d(14.525, 1.06, Rotation2d.fromDegrees(-0)), Alliance.Red);
 
         public static final GridLocationGroup[] GRID_LOCATIONS = {
             BLUE_LEFT, BLUE_CENTER, BLUE_RIGHT, RED_RIGHT, RED_CENTER, RED_LEFT
         };
+
+        public static final Translation2d[] POSE_WINDOW = {
+            new Translation2d(4, 0), 
+            new Translation2d(12.5, 8)};
     }
 
     public static class LimelightConstants {
@@ -256,6 +270,7 @@ public final class Constants {
         public static final double HIGH_SETPOINT = Units.degreesToRadians(105);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(85);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
+        public static final double DRIVE_SETPOINT = Units.degreesToRadians(20);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 

@@ -27,6 +27,7 @@ import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.*;
 import frc.robot.util.CommandButtonBoard;
+import edu.wpi.first.wpilibj.I2C;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,18 +46,22 @@ public class RobotContainer {
     public CommandButtonBoard board = new CommandButtonBoard(3);
 
     // SUBSYSTEMS
+    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
-    private Arm arm = new Arm();
-    private Intake intake = new Intake();
+    private Arm arm = new Arm(colorSensor, swerve::getPose);
+    public Intake intake = new Intake(colorSensor);
     public LEDs leds = new LEDs();
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-            swerve, () -> xb.getRightY(), () -> xb.getRightX(), () -> xb.getLeftX(), () -> true); // last param is robotcentric, should be true
+            swerve, () -> -Math.pow(xb.getRightY(), 5), 
+                    () -> Math.pow(xb.getRightX(), 5), 
+                    () -> Math.pow(xb.getLeftX(), 5), 
+                    () -> true); // last param is robotcentric, should be true
 
     private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
-            swerve, () -> rightJoy.getYCurved(), () -> rightJoy.getXCurved(), () -> leftJoy.getXCurved(), () -> true); // last param is robotcentric, should be true
+            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> true); // last param is robotcentric, should be true
 
     private JoystickSwerve joystickSwerve = new JoystickSwerve(
         swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
@@ -144,7 +149,7 @@ public class RobotContainer {
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
-        xb.x().onTrue(semiAuto.new ConeFlipper());
+        xb.x().onTrue(semiAuto.new DriveToGrid(0));
         // rightJoy.trigger().whileTrue(new RunCommand(swerve::stopWithLock, swerve)).onFalse(dualJoystickSwerve);
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));

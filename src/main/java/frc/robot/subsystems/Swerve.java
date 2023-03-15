@@ -59,15 +59,16 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        if(locked && modsStopped()) {
-            setModuleStates(new SwerveModuleState[] {
-                new SwerveModuleState(0, new Rotation2d(45)),
-                new SwerveModuleState(0, new Rotation2d(-45)),
-                new SwerveModuleState(0, new Rotation2d(-45)),
-                new SwerveModuleState(0, new Rotation2d(45)),
-            });
-        }
-        else {
+        // if(modsStopped()) {
+        //     setModuleStates(new SwerveModuleState[] {
+        //         new SwerveModuleState(0, new Rotation2d(45)),
+        //         new SwerveModuleState(0, new Rotation2d(-45)),
+        //         new SwerveModuleState(0, new Rotation2d(-45)),
+        //         new SwerveModuleState(0, new Rotation2d(45)),
+        //     });
+        //     System.out.println("LOCKING");
+        // }
+        // else {
             SwerveModuleState[] swerveModuleStates =
                 SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
                     fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -76,14 +77,14 @@ public class Swerve extends SubsystemBase {
                             rotation, 
                             getYaw())
                         : new ChassisSpeeds(
-                            slew.calculate(translation.getX()), //TODO invert getX????
-                            slew.calculate(translation.getY()), 
+                            -translation.getX(), //TODO invert getX????
+                            translation.getY(), 
                             rotation));
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
             for(SwerveModule mod : mSwerveMods){
                 mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
             }
-        }
+        // }
     }    
 
     /* Used by SwerveControllerCommand in Auto */
@@ -96,6 +97,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds speeds) {
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
@@ -208,10 +210,10 @@ public class Swerve extends SubsystemBase {
             System.out.println(velocity);
         }
 
-        if(stoppedModuleCounter == 4) {
-            stopWithLock(true);
-            System.out.println("ALLMODSLOW");
-        }
+        // if(stoppedModuleCounter == 4) {
+        //     stopWithLock(true);
+        //     System.out.println("ALLMODSLOW");
+        // }
         if (DriverStation.isDisabled()){
             resetModulesToAbsolute();
         }

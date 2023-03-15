@@ -4,7 +4,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -18,13 +17,12 @@ public class Intake extends SimpleMotorBase {
 
     private final RelativeEncoder leftEncoder = leftIntake.getEncoder();
     private final RelativeEncoder rightEncoder = rightIntake.getEncoder();
+    private final ColorSensor colorSensor;
 
-    private final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
-
-    public Intake() {
+    public Intake(ColorSensor colorSensor) {
         super(new MotorControllerGroup(leftIntake, rightIntake), IntakeConstants.THROTTLE_FORWARD, IntakeConstants.THROTTLE_REVERSE);
-
         setName("Intake");
+        this.colorSensor = colorSensor;
 
         configureMotors();
     }
@@ -56,7 +54,8 @@ public class Intake extends SimpleMotorBase {
     }
 
     public boolean hasElement() {
-        return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
+        // return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
+        return colorSensor.hasCone() || colorSensor.hasCube();
     }
 
     public void autoThrottle() {
@@ -65,7 +64,7 @@ public class Intake extends SimpleMotorBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putBoolean("Has Game Piece", hasElement());//colorSensor.hasCone() || colorSensor.hasCube());
+        SmartDashboard.putBoolean("Has Game Piece", hasElement());//
         
         // SmartDashboard.putNumber("Left Velocity", leftVelocity());
         // SmartDashboard.putNumber("Right Velocity", rightVelocity());

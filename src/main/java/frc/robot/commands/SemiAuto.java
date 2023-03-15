@@ -30,7 +30,7 @@ public class SemiAuto {
     private final Intake intake;
     private final AutoCommands auto;
     public int currentGridNumber;
-    public Field2d desiredPoseField = new Field2d();
+    // public Field2d desiredPoseField = new Field2d();
 
     public SemiAuto(Swerve swerve, Arm arm, Intake intake, AutoCommands auto) {
         this.swerve = swerve;
@@ -38,7 +38,7 @@ public class SemiAuto {
         this.intake = intake;
         this.auto = auto;
 
-        SmartDashboard.putData("Desired Pose Field", desiredPoseField);
+        // SmartDashboard.putData("Desired Pose Field", desiredPoseField);
     }
 
     public class DriveToGrid extends DriveToPose {
@@ -51,7 +51,7 @@ public class SemiAuto {
         public DriveToGrid(int gridNumber) {
             super(swerve, AutoConstants.GRID_LOCATIONS[gridNumber].greaterPose);
             currentGridNumber = gridNumber;
-            desiredPoseField.setRobotPose(AutoConstants.GRID_LOCATIONS[gridNumber].greaterPose);
+            // desiredPoseField.setRobotPose(AutoConstants.GRID_LOCATIONS[gridNumber].greaterPose);
         }
     }
 
@@ -63,7 +63,7 @@ public class SemiAuto {
         */
         public DriveWithinGrid(int posNumber) {
             super(swerve, AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
-            desiredPoseField.setRobotPose(AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
+            // desiredPoseField.setRobotPose(AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[posNumber]);
         }
     }
 

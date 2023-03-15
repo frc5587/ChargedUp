@@ -43,6 +43,10 @@ public class ColorSensor extends SubsystemBase {
         return false;
     }
 
+    public boolean hasElement() {
+        return hasCone() || hasCube();
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());

@@ -79,9 +79,9 @@ public class SwerveModule {
     }
 
     public Rotation2d getCanCoder(){
-        if(angleEncoder.configGetSensorInitializationStrategy() == SensorInitializationStrategy.BootToAbsolutePosition && angleEncoder.getLastError().value == 0) {
-            return Rotation2d.fromDegrees(angleEncoder.getPosition());
-        }
+        // if(angleEncoder.configGetSensorInitializationStrategy() == SensorInitializationStrategy.BootToAbsolutePosition && angleEncoder.getLastError().value == 0) {
+        //     return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
+        // }
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
 
@@ -113,14 +113,14 @@ public class SwerveModule {
 
     public SwerveModuleState getState(){
         return new SwerveModuleState(
-            Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), 
+            -Conversions.falconToMPS(mDriveMotor.getSelectedSensorVelocity(), SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), 
             getAngle()
         ); 
     }
 
     public SwerveModulePosition getPosition(){
         return new SwerveModulePosition(
-            Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), 
+            -Conversions.falconToMeters(mDriveMotor.getSelectedSensorPosition(), SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), 
             getAngle()
         );
     }
