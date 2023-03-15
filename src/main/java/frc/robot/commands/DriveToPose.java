@@ -51,9 +51,6 @@ public class DriveToPose extends CommandBase {
         // Get current and target pose
         Pose2d currentPose = swerve.getPose();
         Pose2d targetPose = poseSupplier.get();
-        // Pose2d currentPose = poseSupplier.get();
-        // Pose2d targetPose = swerve.getPose();
-
         // Command speeds
         double driveVelocityScalar = AutoConstants.BOT_DRIVE_CONTROLLER.calculate(
                 currentPose.getTranslation().getDistance(poseSupplier.get().getTranslation()), 0.0);

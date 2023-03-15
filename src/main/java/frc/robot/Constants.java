@@ -44,20 +44,16 @@ public final class Constants {
 
         /* Drivetrain Constants */
         public static final double TRACK_WIDTH = Units.inchesToMeters(19.51); // distance from left wheel to right wheel
-        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); // distance from front wheel to back wheel //TODO MAKE NEGATIVE???
+        public static final double WHEEL_BASE = Units.inchesToMeters(21.25); // distance from front wheel to back wheel
         public static final double WHEEL_CIRCUMFERENCE_METERS = CHOSEN_MODULE.wheelCircumference;
 
         /* Swerve Kinematics 
          * No need to ever change this unless you are not doing a traditional rectangular/square 4 module swerve */
-         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics( //TODO switch front/back wheels?????
+         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
             new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
-            // new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            // new Translation2d(-WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0),
-            // new Translation2d(WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0),
-            // new Translation2d(WHEEL_BASE / 2.0, -TRACK_WIDTH / 2.0));
 
 
         /* Module Gear Ratios */
@@ -78,38 +74,37 @@ public final class Constants {
         public static final boolean ANGLE_LIMIT_ENABLED = true;
 
         public static final int DRIVE_CONT_LIMIT = 35;
-        public static final int DRIVE_PEAK_LIMIT = 60;
+        public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
-        public static final double SLEW_RATE = 3; // m/s^2
+        public static final double SLEW_RATE = 3; // m/s^2 // TODO CHANGE AFTER ARM IS ADDED
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
         public static final double OPEN_LOOP_RAMP = 0.25;
-        public static final double CLOSED_LOOP_RAMP = 0.0; //TODO CHANGE BACK TO 0 IF SLEW RATE IS TOO HIGH!!!!!!!
+        public static final double CLOSED_LOOP_RAMP = 0.0;
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
                 CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD);
 
         /* Drive Motor PID Values */
-        // public static final FPID DRIVE_FPID = new FPID(
-        //         0.05, 0., 0., 0.); // TODO Characterize
         public static final FPID DRIVE_FPID = new FPID(
-        0.05, 0.1, 0., 0); // TODO Characterize
+                0.05, 0., 0., 0.); // TODO Characterize
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
-        public static final double DRIVE_KS = .18576/12;//0.15917/12;//(0.32 / 12); // TODO Characterize
+        //COMMENTED VALS IN () ARE FROM BASEFALCONSWERVE, OTHER COMMENTED VALS ARE SYSID, USED VALS ARE FROM FRESTA
+        public static final double DRIVE_KS = .18576/12;//0.15917/12;//(0.32 / 12);
         public static final double DRIVE_KV = 2.3317/12;//2.7317/12;//(1.51 / 12);
         public static final double DRIVE_KA = 0.25916/12;//0.40975/12;//(0.27 / 12);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = .5; // TODO Confirm
+        public static final double MAX_SPEED = 5; // TODO Confirm
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI/4; //TODO Confirm
+        public static final double MAX_ANGULAR_VELOCITY = 5; //TODO Confirm
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -167,38 +162,34 @@ public final class Constants {
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
-        public static final double CRAWL_SPEED = 5; //inches per sec
+        public static final double CRAWL_SPEED = Units.inchesToMeters(5); //m/s
+
+        public static final double KP_X_CONTROLLER = 1; // THIS AFFECTS AUTO
+        public static final double KP_Y_CONTROLLER = 1; // THIS AFFECTS AUTO
+        public static final double KP_THETA_CONTROLLER = .02;//7; // THIS AFFECTS AUTO AND DRIVETOPOSE
+        public static final double KP_DRIVE_CONTROLLER = 1;//2.5; // THIS AFFECTS DRIVETOPOSE
     
-        public static final double KP_X_CONTROLLER = 0.1;
-        public static final double KP_Y_CONTROLLER = 1;
-        public static final double KP_THETA_CONTROLLER = .02;
-    
-        public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS =
+        public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS = // DRIVETOPOSE
             new TrapezoidProfile.Constraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
 
-        public static final TrapezoidProfile.Constraints K_THETA_CONSTRAINTS =
+        public static final TrapezoidProfile.Constraints K_THETA_CONSTRAINTS = // AUTO AND DRIVETOPOSE
             new TrapezoidProfile.Constraints(MAX_ANGULAR_SPEED_R_S, MAX_ANGULAR_ACCEL_R_S_2);
 
-        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0);
-        public static final PIDConstants ROT_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0);
+        public static final ProfiledPIDController BOT_DRIVE_CONTROLLER = // DRIVETOPOSE
+                new ProfiledPIDController(
+                    KP_DRIVE_CONTROLLER, 0.0, 0, K_PXY_CONSTRAINTS);
+        public static final ProfiledPIDController BOT_ANGLE_CONTROLLER = // AUTO AND DRIVETOPOSE
+                new ProfiledPIDController(
+                    KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS);
 
 
-        public static TrajectoryConfig DEFAULT_TRAJECTORY_CONFIG = new TrajectoryConfig(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
+        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
+        public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
+        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0); // AUTO
+        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, 0); // AUTO
 
-        
-        public static final ProfiledPIDController BOT_DRIVE_CONTROLLER =
-        new ProfiledPIDController(
-            //2.5, 0.0, 0.0, K_PXY_CONSTRAINTS);
-            // 0.1, 0.0, 0.0, K_PXY_CONSTRAINTS);
-            1, 0.0, 0, K_PXY_CONSTRAINTS);
-        public static final ProfiledPIDController BOT_ANGLE_CONTROLLER =
-        new ProfiledPIDController(
-            // 7.0, 0.0, 0.0, K_THETA_CONSTRAINTS);
-            KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS);
-        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0);
-        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, 0);
-
-        public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(BOT_X_CONTROLLER, BOT_Y_CONTROLLER, BOT_ANGLE_CONTROLLER);
+        public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
+                BOT_X_CONTROLLER, BOT_Y_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;

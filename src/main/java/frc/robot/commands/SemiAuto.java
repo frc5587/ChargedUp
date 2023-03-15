@@ -67,20 +67,6 @@ public class SemiAuto {
         }
     }
 
-    public class MoveToGrid {
-        private Pose2d desiredPose = AutoConstants.GRID_LOCATIONS[currentGridNumber].poseArray[0];
-        private Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                swerve.getPose(), 
-                List.of(new Translation2d((swerve.getPose().getX()+desiredPose.getX())/2, (swerve.getPose().getY()+desiredPose.getY())/2)), 
-                desiredPose, 
-                AutoConstants.DEFAULT_TRAJECTORY_CONFIG);
-        private PathPlannerTrajectory pptraj = new PathPlannerTrajectory(trajectory.getStates(), null, null, null, false);
-
-        public Command get() {
-            return auto.autoBuilder.followPath(pptraj);
-        }
-    }
-
     public class ScoreInGrid extends SequentialCommandGroup {
         public ScoreInGrid(GridHeight height) {
             super(

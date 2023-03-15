@@ -34,7 +34,7 @@ public class AutoCommands {
                 swerve::getPose, 
                 swerve::resetOdometry, 
                 AutoConstants.TRANSL_CONSTANTS, 
-                AutoConstants.ROT_CONSTANTS, 
+                AutoConstants.THETA_CONSTANTS, 
                 swerve::setChassisSpeeds, 
                 eventMap, 
                 true, 
