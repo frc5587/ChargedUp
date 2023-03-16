@@ -32,7 +32,7 @@ public class AutoCommands {
 
         this.autoBuilder = new SwerveAutoBuilder(
                 swerve::getPose, 
-                swerve::resetOdometry, 
+                swerve::resetOdometry,
                 AutoConstants.TRANSL_CONSTANTS, 
                 AutoConstants.THETA_CONSTANTS, 
                 swerve::setChassisSpeeds, 

@@ -61,50 +61,52 @@ public final class Constants {
         public static final double ANGLE_GEAR_RATIO = CHOSEN_MODULE.angleGearRatio;
 
         /* Motor Inverts */
-        public static final boolean ANGLE_MOTOR_INVERTED = CHOSEN_MODULE.angleMotorInvert;
         public static final boolean DRIVE_MOTOR_INVERTED = CHOSEN_MODULE.driveMotorInvert;
+        public static final boolean ANGLE_MOTOR_INVERTED = CHOSEN_MODULE.angleMotorInvert;
 
         /* Angle Encoder Invert */
         public static final boolean CANCODER_INVERTED = CHOSEN_MODULE.canCoderInvert;
 
         /* Swerve Current Limiting */
-        public static final int ANGLE_CONT_LIMIT = 25;
-        public static final int ANGLE_PEAK_LIMIT = 40;
-        public static final double ANGLE_PEAK_DURATION = 0.1;
-        public static final boolean ANGLE_LIMIT_ENABLED = true;
-
         public static final int DRIVE_CONT_LIMIT = 35;
         public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        
         public static final double SLEW_RATE = 3; // m/s^2 // TODO CHANGE AFTER ARM IS ADDED
+
+        public static final int ANGLE_CONT_LIMIT = 25;
+        public static final int ANGLE_PEAK_LIMIT = 40;
+        public static final double ANGLE_PEAK_DURATION = 0.1;
+        public static final boolean ANGLE_LIMIT_ENABLED = true;
 
         /* These values are used by the drive falcon to ramp in open loop and closed loop driving.
          * We found a small open loop ramp (0.25) helps with tread wear, tipping, etc */
         public static final double OPEN_LOOP_RAMP = 0.25;
         public static final double CLOSED_LOOP_RAMP = 0.0;
 
-        /* Angle Motor PID Values */
-        public static final FPID ANGLE_FPID = new FPID(
-                CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD);
-
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.05, 0., 0., 0.); // TODO Characterize
+                0., 0.3, 0., 0.); // 0.05 for F
+
+        /* Angle Motor PID Values */
+        public static final FPID ANGLE_FPID = new FPID(
+                CHOSEN_MODULE.angleKF, 0.05, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD); // 0.3
+        
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
         //COMMENTED VALS IN () ARE FROM BASEFALCONSWERVE, OTHER COMMENTED VALS ARE SYSID, USED VALS ARE FROM FRESTA
-        public static final double DRIVE_KS = .18576/12;//0.15917/12;//(0.32 / 12);
-        public static final double DRIVE_KV = 2.3317/12;//2.7317/12;//(1.51 / 12);
-        public static final double DRIVE_KA = 0.25916/12;//0.40975/12;//(0.27 / 12);
+        public static final double DRIVE_KS = .18576/12; // 0.15917/12; //(0.32 / 12);
+        public static final double DRIVE_KV = 2.3317/12; // 2.7317/12; // (1.51 / 12);
+        public static final double DRIVE_KA = 0.25916/12; // 0.40975/12; // (0.27 / 12);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 5; // TODO Confirm
+        public static final double MAX_SPEED = 5.;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 5; //TODO Confirm
+        public static final double MAX_ANGULAR_VELOCITY = 6.;
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -149,25 +151,26 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(37.617);//194.169);
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(37.617); // 194.169;
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
         }
     }
 
-    public static final class AutoConstants { //TODO Confirm
-        public static final double MAX_SPEED_MPS = 10; //m/s
-        public static final double MAX_ACCEL_MPS_2 = 3; // m/s^2
+    public static final class AutoConstants { // TODO Confirm
+        public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 0.5; // 3. // in m/s^2 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
-        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI/4; // radians/s
-        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI/4; //radians/s^2
+        public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
+        public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
         public static final double CRAWL_SPEED = Units.inchesToMeters(5); //m/s
 
-        public static final double KP_X_CONTROLLER = 1; // THIS AFFECTS AUTO
+        public static final double KP_X_CONTROLLER = 0.1; // 1. // THIS AFFECTS AUTO 
         public static final double KP_Y_CONTROLLER = 1; // THIS AFFECTS AUTO
-        public static final double KP_THETA_CONTROLLER = .02;//7; // THIS AFFECTS AUTO AND DRIVETOPOSE
-        public static final double KP_DRIVE_CONTROLLER = 1;//2.5; // THIS AFFECTS DRIVETOPOSE
+        public static final double KP_THETA_CONTROLLER = 2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
+
+        public static final double KP_DRIVE_CONTROLLER = 1; //2.5; // THIS AFFECTS DRIVETOPOSE
     
         public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS = // DRIVETOPOSE
             new TrapezoidProfile.Constraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
@@ -178,11 +181,12 @@ public final class Constants {
         public static final ProfiledPIDController BOT_DRIVE_CONTROLLER = // DRIVETOPOSE
                 new ProfiledPIDController(
                     KP_DRIVE_CONTROLLER, 0.0, 0, K_PXY_CONSTRAINTS);
+        
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER = // AUTO AND DRIVETOPOSE
                 new ProfiledPIDController(
-                    KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS);
-
-
+                    KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS); // enableContinuousInput(-Math.PI, Math.PI);
+        
+                    
         public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
         public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
         public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0); // AUTO

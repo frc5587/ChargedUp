@@ -20,7 +20,6 @@ import frc.robot.commands.AutoSetArm;
 import frc.robot.commands.DualStickSwerve;
 import frc.robot.commands.IntakeIn;
 import frc.robot.commands.IntakeOut;
-import frc.robot.commands.JoystickSwerve;
 import frc.robot.commands.SemiAuto;
 import frc.robot.commands.SwerveLock;
 import frc.robot.commands.AutoSetArm.GridHeight;
@@ -58,13 +57,10 @@ public class RobotContainer {
             swerve, () -> -Math.pow(xb.getRightY(), 5), 
                     () -> Math.pow(xb.getRightX(), 5), 
                     () -> Math.pow(xb.getLeftX(), 5), 
-                    () -> true); // last param is robotcentric, should be true
+                    () -> true, () -> false);
 
     private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
-            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> true); // last param is robotcentric, should be true
-
-    private JoystickSwerve joystickSwerve = new JoystickSwerve(
-        swerve, leftJoy::getY, leftJoy::getX, leftJoy::getX, leftJoy::getTwist, () -> true);
+            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> true, () -> false);
 
         public AutoCommands auto = new AutoCommands(swerve, intake, leds);
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, auto);
@@ -76,7 +72,6 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // swerve.setDefaultCommand(dualStickSwerve);
-        // swerve.setDefaultCommand(joystickSwerve);
         swerve.setDefaultCommand(dualJoystickSwerve);
         leds.setRainbow();
         configureBindings();
