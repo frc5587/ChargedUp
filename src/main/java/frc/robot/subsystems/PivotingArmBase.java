@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.Robot;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -172,13 +173,15 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
         double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
         //TODO: remove debug prints once we know this code works
-        SmartDashboard.putNumber("ARM FEEDFORWARD", ff);
-        SmartDashboard.putNumber("ARM OUTPUT USED", output);
-        SmartDashboard.putNumber("ARM SETPOINT USED", Units.radiansToDegrees(setpoint.position));
-        SmartDashboard.putNumber("ARM POSITION", getAngleDegrees());
-        SmartDashboard.putBoolean("ARM AT SETPOINT", pidController.atGoal());
-
-        /** SOFT LIMITS */
+        if(Robot.m_debugMode) {
+            SmartDashboard.putNumber("ARM FEEDFORWARD", ff);
+            SmartDashboard.putNumber("ARM OUTPUT USED", output);
+            SmartDashboard.putNumber("ARM VOLTAGE", motor.get());
+            SmartDashboard.putNumber("ARM SETPOINT USED", Units.radiansToDegrees(setpoint.position));
+            SmartDashboard.putNumber("ARM POSITION", getAngleDegrees());
+            SmartDashboard.putBoolean("ARM AT SETPOINT", pidController.atGoal());
+        }
+        
         /** if the driver has set output on, useOutput. */
         if(SmartDashboard.getBoolean("ARM OUTPUT ON?", true)) {
             setVoltage(output + ff);
@@ -187,6 +190,5 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         else {
             setVoltage(0);
         }
-        SmartDashboard.putNumber("ARM VOLTAGE", motor.get());
     }
 }

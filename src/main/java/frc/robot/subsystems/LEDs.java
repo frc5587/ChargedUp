@@ -41,12 +41,12 @@ public class LEDs extends SubsystemBase {
         leds.setLength(buffer.getLength());
         leds.setData(buffer);
         leds.start();
-        SmartDashboard.putData("LED Pattern:", ledChooser);
         ledChooser.addOption("Purple and Yellow", LEDPattern.PurpleYellow);
         ledChooser.addOption("Rainbow", LEDPattern.Rainbow);
         ledChooser.addOption("Red and Blue", LEDPattern.RedBlue);
         ledChooser.addOption("Alliance", LEDPattern.Alliance);
         ledChooser.setDefaultOption("Solid", LEDPattern.Solid);
+        SmartDashboard.putData("LED Pattern:", ledChooser);
     }
 
     public void setColor(int r, int g, int b) {

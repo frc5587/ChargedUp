@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.frc5587.lib.subsystems.SimpleMotorBase;
 
+import frc.robot.Robot;
 import frc.robot.Constants.IntakeConstants;
 
 public class Intake extends SimpleMotorBase {
@@ -64,8 +65,9 @@ public class Intake extends SimpleMotorBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Has Game Piece", hasElement());//
-        
+        if(Robot.m_debugMode) {
+            SmartDashboard.putBoolean("Has Game Piece", hasElement());
+        }
         // SmartDashboard.putNumber("Left Velocity", leftVelocity());
         // SmartDashboard.putNumber("Right Velocity", rightVelocity());
     }

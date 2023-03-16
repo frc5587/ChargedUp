@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 
@@ -12,6 +14,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.IterativeRobotBase;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -117,7 +121,9 @@ public class Arm extends PivotingArmBase {
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("Limit Switch", getLimitSwitchValue());
+        if(Robot.m_debugMode) {
+            SmartDashboard.putBoolean("Limit Switch", getLimitSwitchValue());
+        }
         if(getLimitSwitchValue()) {
             this.resetEncoders();
         }

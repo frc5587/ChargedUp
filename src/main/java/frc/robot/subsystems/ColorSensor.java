@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class ColorSensor extends SubsystemBase {
     private final ColorSensorV3 sensor;
@@ -49,6 +50,8 @@ public class ColorSensor extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());
+        if(Robot.m_debugMode) {
+            SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());
+        }
     }
 }
