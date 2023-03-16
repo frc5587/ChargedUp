@@ -14,10 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 
 public class Swerve extends SubsystemBase {
@@ -47,6 +49,8 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(3, SwerveConstants.Mod3.MODULECONSTANTS)
         };
         zeroGyro();
+        
+        Timer.delay(1.0);
         resetModulesToAbsolute();
 
         this.odometry = new SwerveDriveOdometry(SwerveConstants.SWERVE_KINEMATICS, getYaw(), getModulePositions());
@@ -172,6 +176,26 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    public boolean inCommunity() {
+        boolean withinX1;
+        boolean withinX2;
+        boolean withinY1;
+        boolean withinY2;
+        if(DriverStation.getAlliance() == Alliance.Red) {
+            withinX1 = getPose().getX() > AutoConstants.RED_COMMUNITY[0].getX() && getPose().getX() < AutoConstants.RED_COMMUNITY[1].getX();
+            withinX2 = getPose().getX() > AutoConstants.RED_COMMUNITY[0].getX() && getPose().getX() < AutoConstants.RED_COMMUNITY[2].getX();
+            withinY1 = getPose().getY() > AutoConstants.RED_COMMUNITY[0].getY() && getPose().getY() < AutoConstants.RED_COMMUNITY[1].getY();
+            withinY2 = getPose().getY() > AutoConstants.RED_COMMUNITY[0].getY() && getPose().getY() < AutoConstants.RED_COMMUNITY[2].getY();
+        }
+        else {
+            withinX1 = getPose().getX() < AutoConstants.BLUE_COMMUNITY[0].getX() && getPose().getX() > AutoConstants.BLUE_COMMUNITY[1].getX();
+            withinX2 = getPose().getX() < AutoConstants.BLUE_COMMUNITY[0].getX() && getPose().getX() > AutoConstants.BLUE_COMMUNITY[2].getX();
+            withinY1 = getPose().getY() > AutoConstants.BLUE_COMMUNITY[0].getY() && getPose().getY() < AutoConstants.BLUE_COMMUNITY[1].getY();
+            withinY2 = getPose().getY() > AutoConstants.BLUE_COMMUNITY[0].getY() && getPose().getY() < AutoConstants.BLUE_COMMUNITY[2].getY();
+        }
+        return (withinX1 && withinY1) || (withinX2 && withinY2);
+    }
+
     // private boolean modsStopped() {
     //     int stoppedModules = 0;
     //     for(SwerveModuleState state : getModuleStates()) {
@@ -189,15 +213,12 @@ public class Swerve extends SubsystemBase {
             poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp()); // Check if within 
         }
 
-        // for (SwerveModule module : mSwerveMods) {
-        //     double velocity = Conversions.falconToMPS(module.mDriveMotor.getSelectedSensorVelocity(),
-        //             SwerveConstants.CHOSEN_MODULE.wheelCircumference, SwerveConstants.CHOSEN_MODULE.driveGearRatio);
-        //     System.out.println(velocity);
-        // }
-
         if (DriverStation.isDisabled()) {
             // TODO Check if robot is outside of community. If so, set motors to coast mode with 0.1 second left
-            resetModulesToAbsolute(); // TODO Maybe remove to fix random wheel positions
+            if(!inCommunity()) {
+                SmartDashboard.putBoolean("Swerve Brake Mode", true);
+            }
+            // resetModulesToAbsolute(); // TODO Maybe remove to fix random wheel positions
         }
 
         odometry.update(getYaw(), getModulePositions());

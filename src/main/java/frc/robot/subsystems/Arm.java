@@ -14,8 +14,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -112,9 +114,23 @@ public class Arm extends PivotingArmBase {
         this.shouldLower = shouldLower;
     }
 
-    public boolean isWithinLoweringArea(Pose2d pose) {
-        boolean withinX = pose.getX() > AutoConstants.POSE_WINDOW[0].getX() && pose.getX() < AutoConstants.POSE_WINDOW[1].getX();
-        boolean withinY = pose.getY() > AutoConstants.POSE_WINDOW[0].getY() && pose.getY() < AutoConstants.POSE_WINDOW[1].getY();
+    public boolean inSubstation(Pose2d pose) {
+        boolean withinX;
+        boolean withinY;
+        if(DriverStation.getAlliance() == Alliance.Red) {
+            withinX = pose.getX() > AutoConstants.RED_SUBSTATION[0].getX() && pose.getX() < AutoConstants.RED_SUBSTATION[1].getX();
+            withinY = pose.getY() > AutoConstants.RED_SUBSTATION[0].getY() && pose.getY() < AutoConstants.RED_SUBSTATION[1].getY();
+        }
+        else {
+            withinX = pose.getX() > AutoConstants.BLUE_COMMUNITY[0].getX() && pose.getX() < AutoConstants.BLUE_COMMUNITY[1].getX();
+            withinY = pose.getY() > AutoConstants.BLUE_COMMUNITY[0].getY() && pose.getY() < AutoConstants.BLUE_COMMUNITY[1].getY();
+        }
+        return withinX && withinY;
+    }
+
+    public boolean inLoweringArea(Pose2d pose) {
+        boolean withinX = pose.getX() > AutoConstants.ARM_POSE_WINDOW[0].getX() && pose.getX() < AutoConstants.ARM_POSE_WINDOW[1].getX();
+        boolean withinY = pose.getY() > AutoConstants.ARM_POSE_WINDOW[0].getY() && pose.getY() < AutoConstants.ARM_POSE_WINDOW[1].getY();
         return withinX && withinY;
     }
 
@@ -123,12 +139,14 @@ public class Arm extends PivotingArmBase {
         super.periodic();
         if(Robot.m_debugMode) {
             SmartDashboard.putBoolean("Limit Switch", getLimitSwitchValue());
+            SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
+            SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
         }
         if(getLimitSwitchValue()) {
             this.resetEncoders();
         }
 
-        if(isWithinLoweringArea(poseSupplier.get()) 
+        if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
                 && (pidController.getSetpoint().position > ArmConstants.DRIVE_SETPOINT 
                 || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.DRIVE_SETPOINT))) {
             setShouldLower(true);

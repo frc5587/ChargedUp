@@ -231,9 +231,31 @@ public final class Constants {
             BLUE_LEFT, BLUE_CENTER, BLUE_RIGHT, RED_RIGHT, RED_CENTER, RED_LEFT
         };
 
-        public static final Translation2d[] POSE_WINDOW = {
+        public static final Translation2d[] ARM_POSE_WINDOW = {
             new Translation2d(4, 0), 
             new Translation2d(12.5, 8)};
+        
+        public static final Translation2d[] BLUE_SUBSTATION = {
+            new Translation2d(9.85, 5.5),
+            new Translation2d(16.5, 8)
+        };
+
+        public static final Translation2d[] RED_SUBSTATION = {
+            new Translation2d(0, 5.5),
+            new Translation2d(6.66, 8)
+        };
+
+        public static final Translation2d[] BLUE_COMMUNITY = {
+            new Translation2d(0, 0),
+            new Translation2d(5, 4),
+            new Translation2d(3.33, 5.5)
+        };
+
+        public static final Translation2d[] RED_COMMUNITY = {
+            new Translation2d(16.5, 0),
+            new Translation2d(11.66, 4),
+            new Translation2d(13.2, 5.5)
+        };
     }
 
     public static class LimelightConstants {
