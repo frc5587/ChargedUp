@@ -54,7 +54,7 @@ public class Swerve extends SubsystemBase {
         resetModulesToAbsolute();
 
         this.odometry = new SwerveDriveOdometry(SwerveConstants.SWERVE_KINEMATICS, getYaw(), getModulePositions());
-        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getPose()); // Vision standard deviations.
+        this.poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw(), getModulePositions(), getOdometryPose()); // Vision standard deviations.
 
         SmartDashboard.putData("Swerve Pose Field", field);
         SmartDashboard.putBoolean("Swerve Brake Mode", true);
@@ -105,8 +105,11 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        // return odometry.getPoseMeters(); 
         return getEstimatedPose(); // ! TODO If this isnt working, uncomment above
+    }
+
+    public Pose2d getOdometryPose() {
+        return odometry.getPoseMeters();
     }
 
     public Pose2d getEstimatedPose() {
@@ -210,7 +213,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // if the target is within 2.5 meters of the robot, factor it into pose data
         if (limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
-            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp()); // Check if within 
+            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
         }
 
         if (DriverStation.isDisabled()) {
