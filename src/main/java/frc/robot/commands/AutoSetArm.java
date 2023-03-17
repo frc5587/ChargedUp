@@ -10,7 +10,10 @@ public class AutoSetArm extends CommandBase {
     public enum GridHeight {
         High,
         Middle,
-        Low
+        Low,
+        Intake,
+        Stow,
+        Substation
     }
 
     public AutoSetArm(Arm arm, GridHeight gridHeight) {
@@ -20,16 +23,27 @@ public class AutoSetArm extends CommandBase {
 
     @Override
     public void execute() {
-        if(gridHeight == GridHeight.High) {
-            arm.highSetpoint();
-        }
-
-        else if(gridHeight == GridHeight.Middle) {
-            arm.middleSetpoint();
-        }
-
-        else {
-            arm.lowSetpoint();
+        switch(gridHeight) {
+            case High:
+                arm.highSetpoint();
+                break;
+            case Middle:
+                arm.middleSetpoint();
+                break;
+            case Low:
+                arm.lowSetpoint();
+                break;
+            case Intake:
+                arm.intakeSetpoint();
+                break;
+            case Stow:
+                arm.stow();
+                break;
+            case Substation:
+                arm.substationSetpoint();
+                break;
+            default:
+                arm.stow();
         }
     }
 

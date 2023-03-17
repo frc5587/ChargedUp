@@ -179,6 +179,19 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    /**
+     * Set the robot's X speed in m/s.
+     * @param speedMetersPerSecond speed to crawl at in m/s. Set to 0 to use speed from constants.
+     */
+    public void crawl(double speedMetersPerSecond) {
+        if(speedMetersPerSecond == 0) {
+            setChassisSpeeds(new ChassisSpeeds(AutoConstants.CRAWL_SPEED, 0, 0));
+        }
+        else {
+            setChassisSpeeds(new ChassisSpeeds(speedMetersPerSecond, 0, 0));
+        }
+    }
+
     public boolean inCommunity() {
         boolean withinX1;
         boolean withinX2;

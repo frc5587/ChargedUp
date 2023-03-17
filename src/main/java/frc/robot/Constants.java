@@ -87,19 +87,19 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0., 0.3, 0., 0.); // 0.05 for F
+                0.05, 2.8884, 0., 0.); // 0.03 for P
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
-                CHOSEN_MODULE.angleKF, 0.05, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD); // 0.3
+                CHOSEN_MODULE.angleKF, CHOSEN_MODULE.angleKP, CHOSEN_MODULE.angleKI, CHOSEN_MODULE.angleKD); // 0.05
         
 
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
         //COMMENTED VALS IN () ARE FROM BASEFALCONSWERVE, OTHER COMMENTED VALS ARE SYSID, USED VALS ARE FROM FRESTA
-        public static final double DRIVE_KS = .18576/12; // 0.15917/12; //(0.32 / 12);
-        public static final double DRIVE_KV = 2.3317/12; // 2.7317/12; // (1.51 / 12);
-        public static final double DRIVE_KA = 0.25916/12; // 0.40975/12; // (0.27 / 12);
+        public static final double DRIVE_KS = .18576/12; // 0.23034/12; //(0.32 / 12);
+        public static final double DRIVE_KV = 2.3317/12; // 2.6998/12; // (1.51 / 12);
+        public static final double DRIVE_KA = 0.25916/12; // 0.29868/12; // (0.27 / 12);
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
@@ -166,11 +166,12 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
         public static final double CRAWL_SPEED = Units.inchesToMeters(5); //m/s
 
-        public static final double KP_X_CONTROLLER = 0.1; // 1. // THIS AFFECTS AUTO 
-        public static final double KP_Y_CONTROLLER = 1; // THIS AFFECTS AUTO
+        public static final double KP_X_CONTROLLER = 19.336;//126.04; // 1. // THIS AFFECTS AUTO 
+        public static final double KP_Y_CONTROLLER = KP_X_CONTROLLER; // THIS AFFECTS AUTO
+        public static final double KD_XY_CONTROLLER = 4.4556;
         public static final double KP_THETA_CONTROLLER = 2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
 
-        public static final double KP_DRIVE_CONTROLLER = 1; //2.5; // THIS AFFECTS DRIVETOPOSE
+        public static final double KP_DRIVE_CONTROLLER = 19.336; //2.5; // THIS AFFECTS DRIVETOPOSE
     
         public static final TrapezoidProfile.Constraints K_PXY_CONSTRAINTS = // DRIVETOPOSE
             new TrapezoidProfile.Constraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
@@ -180,7 +181,7 @@ public final class Constants {
 
         public static final ProfiledPIDController BOT_DRIVE_CONTROLLER = // DRIVETOPOSE
                 new ProfiledPIDController(
-                    KP_DRIVE_CONTROLLER, 0.0, 0, K_PXY_CONSTRAINTS);
+                    KP_DRIVE_CONTROLLER, 0.0, KD_XY_CONTROLLER, K_PXY_CONSTRAINTS);
         
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER = // AUTO AND DRIVETOPOSE
                 new ProfiledPIDController(
@@ -189,8 +190,8 @@ public final class Constants {
                     
         public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
         public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
-        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, 0); // AUTO
-        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, 0); // AUTO
+        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
 
         public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
                 BOT_X_CONTROLLER, BOT_Y_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
@@ -235,14 +236,28 @@ public final class Constants {
             new Translation2d(4, 0), 
             new Translation2d(12.5, 8)};
         
-        public static final Translation2d[] BLUE_SUBSTATION = {
+        public static final Translation2d[] BLUE_SUBSTATION_BOUNDS = {
             new Translation2d(9.85, 5.5),
             new Translation2d(16.5, 8)
         };
 
-        public static final Translation2d[] RED_SUBSTATION = {
+        public static final Translation2d[] RED_SUBSTATION_BOUNDS = {
             new Translation2d(0, 5.5),
             new Translation2d(6.66, 8)
+        };
+
+        // first value is double substation far from bump side, second is closer, 
+        // and third is single substation
+        public static final Pose2d[] BLUE_SUBS = {
+            new Pose2d(15.42, 7.16, Rotation2d.fromDegrees(0)),
+            new Pose2d(15.42, 6, Rotation2d.fromDegrees(0)),
+            new Pose2d(13.85, 7.22, Rotation2d.fromDegrees(90))
+        };
+
+        public static final Pose2d[] RED_SUBS = {
+            new Pose2d(1.1, 7.16, Rotation2d.fromDegrees(180)),
+            new Pose2d(1.1, 6, Rotation2d.fromDegrees(180)),
+            new Pose2d(2.31, 7.22, Rotation2d.fromDegrees(90))
         };
 
         public static final Translation2d[] BLUE_COMMUNITY = {
@@ -287,8 +302,9 @@ public final class Constants {
         public static final double HIGH_SETPOINT = Units.degreesToRadians(105);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(85);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
-        public static final double DRIVE_SETPOINT = Units.degreesToRadians(20);
+        public static final double HOVER_SETPOINT = Units.degreesToRadians(20);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
+        public static final double SUB_SETPOINT = Units.degreesToRadians(74.7);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(

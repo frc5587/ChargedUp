@@ -10,32 +10,51 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 
 public class SemiAuto {
     private final Swerve swerve;
     private final Arm arm;
     private final Intake intake;
+    private final LEDs leds;
     private final AutoCommands auto;
     public int currentGridNumber;
     // public Field2d desiredPoseField = new Field2d();
 
-    public SemiAuto(Swerve swerve, Arm arm, Intake intake, AutoCommands auto) {
+    public enum SubstationType {
+        DoubleFar(0),
+        DoubleBump(1),
+        Single(2);
+
+        int value;
+        SubstationType(int value) {
+            this.value = value;
+        }
+    }
+
+    public SemiAuto(Swerve swerve, Arm arm, Intake intake, LEDs leds, AutoCommands auto) {
         this.swerve = swerve;
         this.arm = arm;
         this.intake = intake;
+        this.leds = leds;
         this.auto = auto;
 
         // SmartDashboard.putData("Desired Pose Field", desiredPoseField);
@@ -78,6 +97,26 @@ public class SemiAuto {
                 new WaitCommand(0.2),
                 new InstantCommand(arm::liftAwayFromGrid),
                 new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()+0.2, swerve.getPose().getY(), new Rotation2d()))
+            );
+        }
+    }
+
+    public class DriveToSubstation extends SequentialCommandGroup {
+        public DriveToSubstation(SubstationType sub) {
+            super(
+                new ParallelCommandGroup(
+                        new DriveToPose(
+                            swerve, DriverStation.getAlliance() == Alliance.Red
+                                ? AutoConstants.RED_SUBS[sub.value]
+                                : AutoConstants.BLUE_SUBS[sub.value]),
+                        new AutoSetArm(arm, GridHeight.Substation)),
+                new ParallelDeadlineGroup(
+                        new IntakeIn(intake),
+                        new RunCommand(() -> swerve.crawl(0), swerve)),
+                new ParallelDeadlineGroup(
+                        new WaitCommand(1), 
+                        new RunCommand(() -> swerve.crawl(.5), swerve)),
+                new InstantCommand(() -> leds.setColor(0, 70, 0))
             );
         }
     }

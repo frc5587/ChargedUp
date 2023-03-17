@@ -119,9 +119,9 @@ public class LEDs extends SubsystemBase {
     @Override
     public void periodic() {
         if(DriverStation.isEnabled()) {
-            if(timeSinceSetSeconds >= 30) {
+            if(timeSinceSetSeconds >= 10) {
                 timeSinceSetSeconds = 0;
-                isRunningRB = true;
+                isRunningRainbow = true;
             }
             timeSinceSetSeconds += 0.02;
         }
@@ -163,6 +163,9 @@ public class LEDs extends SubsystemBase {
             else if(isRunningAlliance) {
                 leds.setData(allianceChase.step(patternIndexer, buffer));
             }
+        }
+        else {
+            off();
         }
     }
 }

@@ -91,12 +91,22 @@ public class Arm extends PivotingArmBase {
 
     public void lowSetpoint() {
         shouldLowerOverride = true;
+        getController().setGoal(ArmConstants.HOVER_SETPOINT);
+    }
+
+    public void intakeSetpoint() {
+        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.INTAKE_SETPOINT);
     }
 
     public void stow() {
         shouldLowerOverride = true;
         getController().setGoal(ArmConstants.STOW_SETPOINT);
+    }
+
+    public void substationSetpoint() {
+        shouldLowerOverride = true;
+        getController().setGoal(ArmConstants.SUB_SETPOINT);
     }
 
     public void liftAwayFromGrid() {
@@ -118,12 +128,12 @@ public class Arm extends PivotingArmBase {
         boolean withinX;
         boolean withinY;
         if(DriverStation.getAlliance() == Alliance.Red) {
-            withinX = pose.getX() > AutoConstants.RED_SUBSTATION[0].getX() && pose.getX() < AutoConstants.RED_SUBSTATION[1].getX();
-            withinY = pose.getY() > AutoConstants.RED_SUBSTATION[0].getY() && pose.getY() < AutoConstants.RED_SUBSTATION[1].getY();
+            withinX = pose.getX() > AutoConstants.RED_SUBSTATION_BOUNDS[0].getX() && pose.getX() < AutoConstants.RED_SUBSTATION_BOUNDS[1].getX();
+            withinY = pose.getY() > AutoConstants.RED_SUBSTATION_BOUNDS[0].getY() && pose.getY() < AutoConstants.RED_SUBSTATION_BOUNDS[1].getY();
         }
         else {
-            withinX = pose.getX() > AutoConstants.BLUE_COMMUNITY[0].getX() && pose.getX() < AutoConstants.BLUE_COMMUNITY[1].getX();
-            withinY = pose.getY() > AutoConstants.BLUE_COMMUNITY[0].getY() && pose.getY() < AutoConstants.BLUE_COMMUNITY[1].getY();
+            withinX = pose.getX() > AutoConstants.BLUE_SUBSTATION_BOUNDS[0].getX() && pose.getX() < AutoConstants.BLUE_SUBSTATION_BOUNDS[1].getX();
+            withinY = pose.getY() > AutoConstants.BLUE_SUBSTATION_BOUNDS[0].getY() && pose.getY() < AutoConstants.BLUE_SUBSTATION_BOUNDS[1].getY();
         }
         return withinX && withinY;
     }
@@ -147,8 +157,8 @@ public class Arm extends PivotingArmBase {
         }
 
         if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
-                && (pidController.getSetpoint().position > ArmConstants.DRIVE_SETPOINT 
-                || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.DRIVE_SETPOINT))) {
+                && (pidController.getSetpoint().position > ArmConstants.HOVER_SETPOINT 
+                || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.HOVER_SETPOINT))) {
             setShouldLower(true);
         }
         else {
@@ -156,7 +166,7 @@ public class Arm extends PivotingArmBase {
             shouldLowerOverride = false;
         }
         if(shouldLower) {
-            setGoal(ArmConstants.DRIVE_SETPOINT);
+            setGoal(ArmConstants.HOVER_SETPOINT);
         }
     }
 }

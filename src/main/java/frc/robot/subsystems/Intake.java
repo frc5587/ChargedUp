@@ -56,7 +56,7 @@ public class Intake extends SimpleMotorBase {
 
     public boolean hasElement() {
         // return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
-        return colorSensor.hasCone() || colorSensor.hasCube();
+        return colorSensor.hasElement();
     }
 
     public void autoThrottle() {

@@ -64,7 +64,7 @@ public class RobotContainer {
             swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> true, () -> false);
 
         public AutoCommands auto = new AutoCommands(swerve, intake, leds);
-    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, auto);
+    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds, auto);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
     private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
     
