@@ -246,7 +246,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());
-        // if(Robot.m_debugMode) {
+        if(Robot.m_debugMode) {
             // DEBUGGING VALUES
             for (int i = 0; i < mSwerveMods.length; i++) {
                 SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
@@ -256,7 +256,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Roll", getRoll());
             SmartDashboard.putNumber("Pitch", getPitch());
             SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
-        // }
+        }
 
         if(SmartDashboard.getBoolean("Swerve Brake Mode", true)) {
             for(SwerveModule mod : mSwerveMods) {

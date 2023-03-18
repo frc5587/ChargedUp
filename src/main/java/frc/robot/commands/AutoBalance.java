@@ -20,7 +20,7 @@ public class AutoBalance extends CommandBase {
     private boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
     private double angleDegrees;
 
-    private final double speedInchesPerSec = 7.5;
+    private final double speedInchesPerSec = 8.5;
     private final double metersPerSec = Units.inchesToMeters(speedInchesPerSec);
     private final double positionThresholdDegrees = 3.0;
     private final double velocityThresholdDegreesPerSec = 8.0;

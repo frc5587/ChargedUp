@@ -64,7 +64,7 @@ public class Intake extends SimpleMotorBase {
     }
 
     public void holdElement() {
-        motors.set(0.2);
+        motors.set(0.1);
     }
     
     @Override

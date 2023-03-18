@@ -146,7 +146,7 @@ public class LEDs extends SubsystemBase {
                 break;
         }
 
-        if(RobotController.getBatteryVoltage() > 10) {
+        // if(RobotController.getBatteryVoltage() > 10) {
             if(!isRunningRainbow && !isRunningPY && !isRunningRB) {
                 leds.setData(buffer);
             }
@@ -163,9 +163,9 @@ public class LEDs extends SubsystemBase {
             else if(isRunningAlliance) {
                 leds.setData(allianceChase.step(patternIndexer, buffer));
             }
-        }
-        else {
-            off();
-        }
+        // }
+        // else {
+        //     off();
+        // }
     }
 }

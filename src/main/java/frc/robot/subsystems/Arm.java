@@ -154,6 +154,7 @@ public class Arm extends PivotingArmBase {
         }
         if(getLimitSwitchValue()) {
             this.resetEncoders();
+            this.setGoal(Units.degreesToRadians(2));
         }
 
         if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))

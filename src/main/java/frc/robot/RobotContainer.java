@@ -44,7 +44,8 @@ public class RobotContainer {
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .05);
     private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
     private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
-    // public CommandButtonBoard board = new CommandButtonBoard(3);
+    private DeadbandCommandXboxController driveXb = new DeadbandCommandXboxController(3);
+    // public CommandButtonBoard board = new CommandButtonBoard(4);
 
     // SUBSYSTEMS
     public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
@@ -56,10 +57,10 @@ public class RobotContainer {
 
     // COMMANDS
     // private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-    //         swerve, () -> -Math.pow(xb.getRightY(), 5), 
-    //                 () -> Math.pow(xb.getRightX(), 5), 
-    //                 () -> Math.pow(xb.getLeftX(), 5), 
-    //                 () -> true, () -> false);
+    //         swerve, () -> -Math.pow(xb.getRightY(), 3), 
+    //                 () -> Math.pow(xb.getRightX(), 3), 
+    //                 () -> Math.pow(xb.getLeftX(), 3), 
+    //                 () -> false);
 
     private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
             swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> false);
@@ -80,7 +81,7 @@ public class RobotContainer {
     public RobotContainer() {
         // swerve.setDefaultCommand(dualStickSwerve);
         swerve.setDefaultCommand(dualJoystickSwerve);
-        // intake.setDefaultCommand(new RunCommand(intake::holdElement, intake));
+        // intake.setDefaultCommand(new InstantCommand(intake::holdElement, intake));
 
         leds.setRainbow();
         configureBindings();
@@ -97,9 +98,10 @@ public class RobotContainer {
         autoChooser.addOption("CloseCharge", auto.midCloseCharge());
         autoChooser.addOption("FarCharge", auto.midFarCharge());
         autoChooser.addOption("thing", auto.spitCrossLine());
+        autoChooser.addOption("charge", auto.charge());
         autoChooser.addOption("NO COMMAND", auto.noAuto());
         SmartDashboard.putData("AUTO", autoChooser);
-        SmartDashboard.putNumber("DriveToPose pose", 0);
+        // SmartDashboard.putNumber("DriveToPose pose", 0);
     }
 
     /**
@@ -150,23 +152,26 @@ public class RobotContainer {
         // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
-        xb.povUp().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
-        xb.povRight().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
-        xb.povDown().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
+        // xb.povUp().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
+        // xb.povRight().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
+        // xb.povDown().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.y().onTrue(new AutoSetArm(arm, GridHeight.High));
+        xb.povLeft().onTrue(new AutoSetArm(arm, GridHeight.Substation));
         xb.a().onTrue(new AutoSetArm(arm, GridHeight.Low));
         xb.x().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
         xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
-        xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));
-        xb.leftBumper().onTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
+        xb.leftBumper().onTrue(new InstantCommand(intake::backward)).and(xb.rightBumper().negate()).onFalse(new InstantCommand(intake::holdElement));
+        xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::holdElement));
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         xb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
 
-        rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
+        // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
+        // rightJoy.button(3).whileTrue(new RunCommand(() -> swerve.crawl(0.4)));
+        // rightJoy.button(4).whileTrue(new RunCommand(() -> swerve.crawl(-0.4)));
         // xb.rightTrigger().whileTrue(pidAutoBalance);
     }
 

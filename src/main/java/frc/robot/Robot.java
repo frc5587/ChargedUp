@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        m_debugMode = SmartDashboard.getBoolean("Debug Mode Enabled?", false);
+        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
