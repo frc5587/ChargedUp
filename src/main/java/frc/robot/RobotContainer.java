@@ -95,7 +95,7 @@ public class RobotContainer {
         autoChooser.addOption("MidCharge", auto.midMidCharge());
         autoChooser.addOption("CloseCharge", auto.midCloseCharge());
         autoChooser.addOption("FarCharge", auto.midFarCharge());
-        autoChooser.addOption("thing", auto.fuckYou());
+        autoChooser.addOption("thing", auto.spitCrossLine());
         autoChooser.addOption("NO COMMAND", auto.noAuto());
         SmartDashboard.putData("AUTO", autoChooser);
         SmartDashboard.putNumber("DriveToPose pose", 0);

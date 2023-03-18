@@ -71,7 +71,7 @@ public class AutoCommands {
         return Commands.none();
     }
 
-    public Command fuckYou() {
+    public Command spitCrossLine() {
         return 
         new SequentialCommandGroup(
                 new InstantCommand(intake::autoThrottle), 
