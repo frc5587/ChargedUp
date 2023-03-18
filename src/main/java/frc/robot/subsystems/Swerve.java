@@ -62,15 +62,15 @@ public class Swerve extends SubsystemBase {
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
         // if(modsStopped()) {
-        if(lockWheels) {
-            setModuleStates(new SwerveModuleState[] {
-                new SwerveModuleState(0., Rotation2d.fromDegrees(45.)),
-                new SwerveModuleState(0., Rotation2d.fromDegrees(315.)),
-                new SwerveModuleState(0., Rotation2d.fromDegrees(-135.)),
-                new SwerveModuleState(0., Rotation2d.fromDegrees(225.)),
-            });
-            System.out.println("LOCKING");
-        } else {
+        // if(lockWheels) {
+        //     setModuleStates(new SwerveModuleState[] {
+        //         new SwerveModuleState(0., Rotation2d.fromDegrees(45.)),
+        //         new SwerveModuleState(0., Rotation2d.fromDegrees(315.)),
+        //         new SwerveModuleState(0., Rotation2d.fromDegrees(-135.)),
+        //         new SwerveModuleState(0., Rotation2d.fromDegrees(225.)),
+        //     });
+        //     System.out.println("LOCKING");
+        // } else {
             SwerveModuleState[] swerveModuleStates =
                 SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
                     fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -87,7 +87,7 @@ public class Swerve extends SubsystemBase {
             for(SwerveModule mod : mSwerveMods){
                 mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
             }
-        }
+        // }
     }    
 
     /* Used by SwerveControllerCommand in Auto */
@@ -226,7 +226,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // if the target is within 2.5 meters of the robot, factor it into pose data
         if (limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
-            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
+            // poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
         }
 
         if (DriverStation.isDisabled()) {
@@ -241,7 +241,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());
-        if(Robot.m_debugMode) {
+        // if(Robot.m_debugMode) {
             // DEBUGGING VALUES
             for (int i = 0; i < mSwerveMods.length; i++) {
                 SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
@@ -251,7 +251,7 @@ public class Swerve extends SubsystemBase {
             SmartDashboard.putNumber("Roll", getRoll());
             SmartDashboard.putNumber("Pitch", getPitch());
             SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
-        }
+        // }
 
         if(SmartDashboard.getBoolean("Swerve Brake Mode", true)) {
             for(SwerveModule mod : mSwerveMods) {

@@ -63,6 +63,10 @@ public class Intake extends SimpleMotorBase {
         motors.set(IntakeConstants.THROTTLE_AUTO);
     }
 
+    public void holdElement() {
+        motors.set(0.2);
+    }
+    
     @Override
     public void periodic() {
         if(Robot.m_debugMode) {

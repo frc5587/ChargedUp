@@ -15,20 +15,19 @@ public class DualStickSwerve extends CommandBase {
     private DoubleSupplier translationSup;
     private DoubleSupplier strafeSup;
     private DoubleSupplier rotationSup;
-    private BooleanSupplier fieldRelativeSup, openLoopSup;
+    private BooleanSupplier fieldRelativeSup;
 
     double rotation;
 
     private final PIDController headingController = 
         new PIDController(SwerveConstants.ANGLE_FPID.kP, SwerveConstants.ANGLE_FPID.kI, SwerveConstants.ANGLE_FPID.kD); // TODO Once this is working, move into constants and use for all headings
 
-    public DualStickSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier fieldRelativeSup, BooleanSupplier openLoopSup) {
+    public DualStickSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier fieldRelativeSup) {
         this.swerve = swerve;
         this.translationSup = translationSup;
         this.strafeSup = strafeSup;
         this.rotationSup = rotationSup;
         this.fieldRelativeSup = fieldRelativeSup;
-        this.openLoopSup = openLoopSup;
 
         addRequirements(swerve);
     }
@@ -36,21 +35,11 @@ public class DualStickSwerve extends CommandBase {
     @Override
     public void execute() {
         Translation2d translation = new Translation2d(translationSup.getAsDouble(), strafeSup.getAsDouble()).times(SwerveConstants.MAX_SPEED);
-        if(Math.abs(rotationSup.getAsDouble()) == 0) {
-            if(swerve.lockedHeading == null) {
-                headingController.reset();
-                swerve.lockedHeading = swerve.getYaw().getDegrees();
-            }
-
-            rotation = headingController.calculate(swerve.getYaw().getDegrees(), swerve.lockedHeading);
-        } else {
-            swerve.lockedHeading = null;
             rotation = rotationSup.getAsDouble() * SwerveConstants.MAX_ANGULAR_VELOCITY;
-        }
         
         swerve.drive(translation, rotation, 
             fieldRelativeSup.getAsBoolean(), 
-            openLoopSup.getAsBoolean()
+            true
         );
     }
 }

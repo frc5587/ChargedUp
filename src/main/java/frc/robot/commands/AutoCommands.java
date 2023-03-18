@@ -7,9 +7,13 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
@@ -21,14 +25,17 @@ public class AutoCommands {
     public final SwerveAutoBuilder autoBuilder;
     private final Map<String, Command> eventMap;
 
-    public AutoCommands(Swerve swerve, Intake intake, LEDs leds) {
+    public AutoCommands(Swerve swerve, Intake intake, LEDs leds, SemiAuto semiAuto) {
         this.intake = intake;
         this.swerve = swerve;
         this.leds = leds;
 
         this.eventMap = new HashMap<>(Map.ofEntries(
                 Map.entry("stopIntake", new InstantCommand(intake::stop)),
-                Map.entry("autoBalance", new AutoBalance(swerve, leds))));
+                Map.entry("autoBalance", new AutoBalance(swerve, leds)),
+                Map.entry("intakeIn", new IntakeIn(intake)),
+                Map.entry("autoScoreMid", semiAuto.new ScoreInGrid(GridHeight.Middle)),
+                Map.entry("autoScoreHigh", semiAuto.new ScoreInGrid(GridHeight.High))));
 
         this.autoBuilder = new SwerveAutoBuilder(
                 swerve::getPose, 
@@ -62,6 +69,15 @@ public class AutoCommands {
      */
     public Command noAuto() {
         return Commands.none();
+    }
+
+    public Command fuckYou() {
+        return 
+        new SequentialCommandGroup(
+                new InstantCommand(intake::autoThrottle), 
+                new WaitCommand(1.5), 
+                new InstantCommand(intake::stop),
+                new ParallelDeadlineGroup(new WaitCommand(4), new RunCommand(() -> swerve.crawl(-1), swerve)));
     }
 
     /**

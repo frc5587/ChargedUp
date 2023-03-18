@@ -61,10 +61,10 @@ public class RobotContainer {
     //                 () -> true, () -> false);
 
     private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
-            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> true, () -> false);
+            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> false);
 
-        public AutoCommands auto = new AutoCommands(swerve, intake, leds);
-    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds, auto);
+    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds);
+    public AutoCommands auto = new AutoCommands(swerve, intake, leds, semiAuto);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
     private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
     
@@ -79,6 +79,7 @@ public class RobotContainer {
     public RobotContainer() {
         // swerve.setDefaultCommand(dualStickSwerve);
         swerve.setDefaultCommand(dualJoystickSwerve);
+        // intake.setDefaultCommand(new RunCommand(intake::holdElement, intake));
 
         leds.setRainbow();
         configureBindings();
@@ -94,9 +95,10 @@ public class RobotContainer {
         autoChooser.addOption("MidCharge", auto.midMidCharge());
         autoChooser.addOption("CloseCharge", auto.midCloseCharge());
         autoChooser.addOption("FarCharge", auto.midFarCharge());
+        autoChooser.addOption("thing", auto.fuckYou());
         autoChooser.addOption("NO COMMAND", auto.noAuto());
-
         SmartDashboard.putData("AUTO", autoChooser);
+        SmartDashboard.putNumber("DriveToPose pose", 0);
     }
 
     /**
@@ -141,16 +143,20 @@ public class RobotContainer {
         // board.yellowButton().onTrue(new InstantCommand(leds::setYellow, leds));
         // board.balanceButton().whileTrue(autoBalance);
 
-        xb.povUp().onTrue(new InstantCommand(arm::highSetpoint, arm));
-        xb.povRight().onTrue(new InstantCommand(arm::middleSetpoint, arm));
-        xb.povDown().onTrue(new InstantCommand(arm::lowSetpoint, arm));
+        // xb.povUp().onTrue(new InstantCommand(arm::highSetpoint, arm));
+        // xb.povRight().onTrue(new InstantCommand(arm::middleSetpoint, arm));
+        // xb.povDown().onTrue(new InstantCommand(arm::lowSetpoint, arm));
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
+        xb.povUp().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
+        xb.povRight().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
+        xb.povDown().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
-        xb.x().onTrue(semiAuto.new DriveToGrid(0));
+        xb.x().onTrue(semiAuto.new DriveToGrid(((int) SmartDashboard.getNumber("DriveToPose pose", 0))));
+        xb.b().onTrue(new AutoSetArm(arm, GridHeight.Intake));
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
         xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));

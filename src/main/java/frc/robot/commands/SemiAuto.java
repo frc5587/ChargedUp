@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -35,7 +36,6 @@ public class SemiAuto {
     private final Arm arm;
     private final Intake intake;
     private final LEDs leds;
-    private final AutoCommands auto;
     public int currentGridNumber;
     // public Field2d desiredPoseField = new Field2d();
 
@@ -50,12 +50,11 @@ public class SemiAuto {
         }
     }
 
-    public SemiAuto(Swerve swerve, Arm arm, Intake intake, LEDs leds, AutoCommands auto) {
+    public SemiAuto(Swerve swerve, Arm arm, Intake intake, LEDs leds) {
         this.swerve = swerve;
         this.arm = arm;
         this.intake = intake;
         this.leds = leds;
-        this.auto = auto;
 
         // SmartDashboard.putData("Desired Pose Field", desiredPoseField);
     }
@@ -89,15 +88,31 @@ public class SemiAuto {
     public class ScoreInGrid extends SequentialCommandGroup {
         public ScoreInGrid(GridHeight height) {
             super(
+                // new DriveToPose(swerve, new Pose2d(
+                //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()+0.57 : swerve.getPose().getX()-0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
+                new ParallelDeadlineGroup(
+                        new WaitCommand(1), 
+                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? -0.7 : 0.7), swerve)),
                 new AutoSetArm(arm, height),
-                new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()-0.2, swerve.getPose().getY(), new Rotation2d())),
-                new WaitCommand(0.2), // This and following WaitCommands are arbitrary
+                new InstantCommand(arm::liftAwayFromGrid),
+                // new DriveToPose(swerve, new Pose2d(
+                //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()-0.57 : swerve.getPose().getX()+0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
+                new WaitCommand(1.2),
+                new ParallelDeadlineGroup(
+                        new WaitCommand(1), 
+                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? 0.7 : -0.7), swerve)),
+                new WaitCommand(0.5), // This and following WaitCommands are arbitrary
                 new InstantCommand(arm::lowerFromGrid),
                 new InstantCommand(intake::backward),
                 new WaitCommand(0.2),
                 new InstantCommand(arm::liftAwayFromGrid),
-                new DriveToPose(swerve, new Pose2d(swerve.getPose().getX()+0.2, swerve.getPose().getY(), new Rotation2d()))
+                // new DriveToPose(swerve, new Pose2d(DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()+0.57 : swerve.getPose().getX()-0.57, swerve.getPose().getY(), swerve.getPose().getRotation()))
+                new ParallelDeadlineGroup(
+                        new WaitCommand(1), 
+                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? -0.7 : 0.7), swerve)),
+                new AutoSetArm(arm, GridHeight.Intake)
             );
+            addRequirements(swerve);
         }
     }
 
@@ -115,9 +130,10 @@ public class SemiAuto {
                         new RunCommand(() -> swerve.crawl(0), swerve)),
                 new ParallelDeadlineGroup(
                         new WaitCommand(1), 
-                        new RunCommand(() -> swerve.crawl(.5), swerve)),
+                        new RunCommand(() -> swerve.crawl(.5))),
                 new InstantCommand(() -> leds.setColor(0, 70, 0))
             );
+            addRequirements(swerve, intake);
         }
     }
 

@@ -38,6 +38,6 @@ public class IntakeOut extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(IntakeConstants.EJECT_CRATE_RUNTIME);
+        return timer.hasElapsed(IntakeConstants.EJECT_RUNTIME);
     }
 }

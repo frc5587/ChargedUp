@@ -87,7 +87,7 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.05, 2.8884, 0., 0.); // 0.03 for P
+                0.05, 0.03, 0., 0.); // 2.8884 for P
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -97,16 +97,16 @@ public final class Constants {
         /* Drive Motor Characterization Values 
          * Divide SYSID values by 12 to convert from volts to percent output for CTRE */
         //COMMENTED VALS IN () ARE FROM BASEFALCONSWERVE, OTHER COMMENTED VALS ARE SYSID, USED VALS ARE FROM FRESTA
-        public static final double DRIVE_KS = .18576/12; // 0.23034/12; //(0.32 / 12);
-        public static final double DRIVE_KV = 2.3317/12; // 2.6998/12; // (1.51 / 12);
-        public static final double DRIVE_KA = 0.25916/12; // 0.29868/12; // (0.27 / 12);
+        public static final double DRIVE_KS = (0.32 / 12);//.18576/12; // 0.23034/12; ;
+        public static final double DRIVE_KV = (1.51 / 12);//2.3317/12; // 2.6998/12; // ;
+        public static final double DRIVE_KA = (0.27 / 12);//0.25916/12; // 0.29868/12; // 
         public static final SimpleMotorFeedforward DRIVE_FF = new SimpleMotorFeedforward(DRIVE_KS, DRIVE_KV, DRIVE_KA);
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 5.;
+        public static final double MAX_SPEED = .5;//5.;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 6.;
+        public static final double MAX_ANGULAR_VELOCITY = 1;//6.;
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -166,10 +166,10 @@ public final class Constants {
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
         public static final double CRAWL_SPEED = Units.inchesToMeters(5); //m/s
 
-        public static final double KP_X_CONTROLLER = 19.336;//126.04; // 1. // THIS AFFECTS AUTO 
+        public static final double KP_X_CONTROLLER = 1;//126.04; // 1. // THIS AFFECTS AUTO 
         public static final double KP_Y_CONTROLLER = KP_X_CONTROLLER; // THIS AFFECTS AUTO
-        public static final double KD_XY_CONTROLLER = 4.4556;
-        public static final double KP_THETA_CONTROLLER = 2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
+        public static final double KD_XY_CONTROLLER = 0;//4.4556;
+        public static final double KP_THETA_CONTROLLER = 1; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
 
         public static final double KP_DRIVE_CONTROLLER = 19.336; //2.5; // THIS AFFECTS DRIVETOPOSE
     
@@ -194,7 +194,7 @@ public final class Constants {
         public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
 
         public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-                BOT_X_CONTROLLER, BOT_Y_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
+            BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;
@@ -291,16 +291,16 @@ public final class Constants {
         public static final int SWITCH_PORT = 0;
         public static final boolean SWITCH_INVERTED = true;
         public static final TrapezoidProfile.Constraints PID_CONSTRAINTS = new TrapezoidProfile.Constraints(1, 0.8); // TODO: Verify
-        public static final double KP = 7.5857;//25.059;//12.556;
+        public static final double KP = 4.865;//7.5857;//25.059;//12.556;
         public static final double KI = 0;
-        public static final double KD = 4.6857;//15.771;
-        public static final double KS = 0.28737;
-        public static final double KG = 0.31488;
-        public static final double KV = 3.5722;
+        public static final double KD = 0.91242;//4.6857;//15.771;
+        public static final double KS = 0.17784;//0.28737;
+        public static final double KG = 0.20876;//0.31488;
+        public static final double KV = 4.0448;//3.5722;
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
-        public static final double HIGH_SETPOINT = Units.degreesToRadians(105);
-        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(85);
+        public static final double HIGH_SETPOINT = Units.degreesToRadians(108);
+        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(88);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
         public static final double HOVER_SETPOINT = Units.degreesToRadians(20);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
@@ -315,8 +315,8 @@ public final class Constants {
         public static final int LEFT_MOTOR = 30;
         public static final int RIGHT_MOTOR = 31;
 
-        public static final double THROTTLE_FORWARD = .25; // TODO
-        public static final double THROTTLE_REVERSE = 1; // TODO
+        public static final double THROTTLE_FORWARD = 1; // TODO
+        public static final double THROTTLE_REVERSE = .25; // TODO
         public static final double THROTTLE_AUTO = 1; // TODO
 
         public static final int STALL_LIMIT = 20;
@@ -327,7 +327,7 @@ public final class Constants {
 
         public static final double LEFT_VELOCITY_THRESHOLD = 10; // rotations per second
         public static final double RIGHT_VELOCITY_THRESHOLD = 10;
-        public static final double EJECT_CRATE_RUNTIME = 2; // seconds
+        public static final double EJECT_RUNTIME = 2; // seconds
     }
     
     public static final class LEDConstants {
