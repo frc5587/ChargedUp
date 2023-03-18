@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -160,6 +161,10 @@ public class Swerve extends SubsystemBase {
 
     public Rotation2d getYaw() {
         return (SwerveConstants.INVERT_GYRO) ? Rotation2d.fromDegrees(-gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
+    public Rotation2d getYawFromOdom() {
+        return odometry.getPoseMeters().getRotation();
     }
 
     public void resetModulesToAbsolute(){

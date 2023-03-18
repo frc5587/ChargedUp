@@ -28,6 +28,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.*;
 import frc.robot.util.CommandButtonBoard;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -146,25 +147,27 @@ public class RobotContainer {
         // xb.povUp().onTrue(new InstantCommand(arm::highSetpoint, arm));
         // xb.povRight().onTrue(new InstantCommand(arm::middleSetpoint, arm));
         // xb.povDown().onTrue(new InstantCommand(arm::lowSetpoint, arm));
-        xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         // board.upButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // board.middleButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // board.downButton().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
         xb.povUp().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         xb.povRight().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         xb.povDown().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
-        xb.y().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
-        xb.a().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
-        xb.x().onTrue(semiAuto.new DriveToGrid(((int) SmartDashboard.getNumber("DriveToPose pose", 0))));
-        xb.b().onTrue(new AutoSetArm(arm, GridHeight.Intake));
+        xb.y().onTrue(new AutoSetArm(arm, GridHeight.High));
+        xb.a().onTrue(new AutoSetArm(arm, GridHeight.Low));
+        xb.x().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
+        xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
         xb.rightBumper().onTrue(new ParallelCommandGroup(new InstantCommand(intake::backward))).onFalse(new InstantCommand(intake::stop));
         xb.leftBumper().onTrue(new InstantCommand(intake::forward)).onFalse(new InstantCommand(intake::stop));
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
-        // xb.rightTrigger().whileTrue(autoBalance);
-        xb.rightTrigger().whileTrue(pidAutoBalance);
+        xb.rightTrigger().whileTrue(autoBalance);
+        xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
+
+        rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
+        // xb.rightTrigger().whileTrue(pidAutoBalance);
     }
 
     /**

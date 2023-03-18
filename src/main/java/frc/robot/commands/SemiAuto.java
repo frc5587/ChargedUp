@@ -92,7 +92,7 @@ public class SemiAuto {
                 //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()+0.57 : swerve.getPose().getX()-0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
                 new ParallelDeadlineGroup(
                         new WaitCommand(1), 
-                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? -0.7 : 0.7), swerve)),
+                        new RunCommand(() -> swerve.crawl(-0.7), swerve)),
                 new AutoSetArm(arm, height),
                 new InstantCommand(arm::liftAwayFromGrid),
                 // new DriveToPose(swerve, new Pose2d(
@@ -100,7 +100,7 @@ public class SemiAuto {
                 new WaitCommand(1.2),
                 new ParallelDeadlineGroup(
                         new WaitCommand(1), 
-                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? 0.7 : -0.7), swerve)),
+                        new RunCommand(() -> swerve.crawl(0.7), swerve)),
                 new WaitCommand(0.5), // This and following WaitCommands are arbitrary
                 new InstantCommand(arm::lowerFromGrid),
                 new InstantCommand(intake::backward),
@@ -109,7 +109,7 @@ public class SemiAuto {
                 // new DriveToPose(swerve, new Pose2d(DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()+0.57 : swerve.getPose().getX()-0.57, swerve.getPose().getY(), swerve.getPose().getRotation()))
                 new ParallelDeadlineGroup(
                         new WaitCommand(1), 
-                        new RunCommand(() -> swerve.crawl(DriverStation.getAlliance() == Alliance.Blue ? -0.7 : 0.7), swerve)),
+                        new RunCommand(() -> swerve.crawl(-0.7), swerve)),
                 new AutoSetArm(arm, GridHeight.Intake)
             );
             addRequirements(swerve);
@@ -137,19 +137,40 @@ public class SemiAuto {
         }
     }
 
+    public class GrabFromSubstation extends SequentialCommandGroup {
+        public GrabFromSubstation() {
+            super(
+                // new DriveToPose(swerve, new Pose2d(
+                //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()+0.57 : swerve.getPose().getX()-0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
+                new ParallelDeadlineGroup(
+                        new WaitCommand(2), 
+                        new RunCommand(() -> swerve.crawl(-0.5), swerve)),
+                new AutoSetArm(arm, GridHeight.Substation),
+                // new DriveToPose(swerve, new Pose2d(
+                //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()-0.57 : swerve.getPose().getX()+0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
+                new WaitCommand(1.5),
+                new ParallelCommandGroup(
+                        new IntakeIn(intake),
+                        new ParallelDeadlineGroup(
+                                new WaitCommand(2), 
+                                new RunCommand(() -> swerve.crawl(0.3), swerve))),
+                new WaitCommand(1), // This and following WaitCommands are arbitrary
+                new ParallelDeadlineGroup(
+                        new WaitCommand(2), 
+                        new RunCommand(() -> swerve.crawl(-0.3), swerve)),
+                new AutoSetArm(arm, GridHeight.Low)
+            );
+            addRequirements(swerve);
+        }
+    }
+
     public class ConeFlipper extends SequentialCommandGroup {
         public ConeFlipper() {
             super(
                 new AutoSetArm(arm, GridHeight.Low),
-                new ParallelRaceGroup(
-                        new InstantCommand(intake::backward), 
-                        new RepeatCommand(new InstantCommand(() ->
-                            swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
-                            -AutoConstants.CRAWL_SPEED,
-                            0.0,
-                            0.0,
-                            swerve.getYaw())))),
-                            new WaitCommand(1)), //TODO CHANGE THIS!!!!!!
+                new ParallelDeadlineGroup(
+                        new WaitCommand(1), 
+                        new RunCommand(() -> swerve.crawl(-0.3), swerve)),
                 new InstantCommand(swerve::stop)
             );
         }
