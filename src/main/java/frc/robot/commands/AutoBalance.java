@@ -52,11 +52,10 @@ public class AutoBalance extends CommandBase {
             // swerve.stopWithLock(true);
         } else {
             System.out.println("Autobalancing");
-            swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
+            swerve.setChassisSpeeds(new ChassisSpeeds(
                 metersPerSec * (angleDegrees > 0.0 ? -1.0 : 1.0),
                 0.0,
-                0.0,
-                swerve.getYaw()));
+                0.0));
 
             // swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             //     swerve.getPitch() / angleDegrees * metersPerSec,

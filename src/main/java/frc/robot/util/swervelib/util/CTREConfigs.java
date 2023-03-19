@@ -39,10 +39,10 @@ public final class CTREConfigs {
             Constants.SwerveConstants.DRIVE_PEAK_LIMIT, 
             Constants.SwerveConstants.DRIVE_PEAK_DURATION);
 
-        // swerveDriveFXConfig.slot0.kP = Constants.SwerveConstants.DRIVE_FPID.kP;
-        // swerveDriveFXConfig.slot0.kI = Constants.SwerveConstants.DRIVE_FPID.kI;
-        // swerveDriveFXConfig.slot0.kD = Constants.SwerveConstants.DRIVE_FPID.kD;
-        // swerveDriveFXConfig.slot0.kF = Constants.SwerveConstants.DRIVE_FPID.kF;
+        swerveDriveFXConfig.slot0.kP = Constants.SwerveConstants.DRIVE_FPID.kP;
+        swerveDriveFXConfig.slot0.kI = Constants.SwerveConstants.DRIVE_FPID.kI;
+        swerveDriveFXConfig.slot0.kD = Constants.SwerveConstants.DRIVE_FPID.kD;
+        swerveDriveFXConfig.slot0.kF = Constants.SwerveConstants.DRIVE_FPID.kF;
         swerveDriveFXConfig.supplyCurrLimit = driveSupplyLimit;
         swerveDriveFXConfig.openloopRamp = Constants.SwerveConstants.OPEN_LOOP_RAMP;
         swerveDriveFXConfig.closedloopRamp = Constants.SwerveConstants.CLOSED_LOOP_RAMP;

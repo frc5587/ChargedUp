@@ -155,15 +155,15 @@ public class RobotContainer {
         // xb.povUp().onTrue(semiAuto.new ScoreInGrid(GridHeight.High)); //These are untested semiAuto commands!!!
         // xb.povRight().onTrue(semiAuto.new ScoreInGrid(GridHeight.Middle)); //These are untested semiAuto commands!!!
         // xb.povDown().onTrue(semiAuto.new ScoreInGrid(GridHeight.Low)); //These are untested semiAuto commands!!!
-        xb.y().onTrue(new AutoSetArm(arm, GridHeight.High));
-        xb.povLeft().onTrue(new AutoSetArm(arm, GridHeight.Substation));
-        xb.a().onTrue(new AutoSetArm(arm, GridHeight.Low));
+        xb.y().onTrue(new InstantCommand(arm::highSetpoint));
+        xb.povLeft().onTrue(new InstantCommand(arm::substationSetpoint));
+        xb.a().onTrue(new InstantCommand(arm::lowSetpoint));
         xb.x().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
         xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         // board.intakeButton().onTrue(new ParallelCommandGroup(new IntakeIn(intake), new AutoSetArm(arm, GridHeight.Low)));
         // board.spitButton().onTrue(new IntakeOut(intake));
-        xb.leftBumper().onTrue(new InstantCommand(intake::backward)).and(xb.rightBumper().negate()).onFalse(new InstantCommand(intake::holdElement));
-        xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::holdElement));
+        xb.leftBumper().onTrue(new InstantCommand(intake::backward)).and(xb.rightBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
+        xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         xb.rightTrigger().whileTrue(autoBalance);

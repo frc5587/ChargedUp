@@ -84,15 +84,15 @@ public class AutoCommands {
                 new PrintCommand("SPCL"),
                 new PrintCommand("SPCL"),
                 new PrintCommand("SPCL"),
-                new ParallelDeadlineGroup(new WaitCommand(4.5), new RunCommand(() -> swerve.crawl(-1.25), swerve)));
+                new ParallelDeadlineGroup(new WaitCommand(13), new RunCommand(() -> swerve.crawl(-0.25), swerve)));
     }
 
     public Command charge() {
         return new SequentialCommandGroup(
-            new InstantCommand(intake::autoThrottle),
+            // new InstantCommand(intake::autoThrottle),
             new WaitCommand(1.5),
             new InstantCommand(intake::stop),
-            new ParallelDeadlineGroup(new WaitCommand(4), new RunCommand(() -> swerve.crawl(-1), swerve)),
+            new ParallelDeadlineGroup(new WaitCommand(6), new RunCommand(() -> swerve.crawl(-.33), swerve)),
             new AutoBalance(swerve, leds));
     }
 
