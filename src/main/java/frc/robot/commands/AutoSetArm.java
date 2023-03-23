@@ -47,8 +47,8 @@ public class AutoSetArm extends CommandBase {
         }
     }
 
-    @Override
-    public boolean isFinished() {
-        return arm.getController().atSetpoint();
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return arm.getController().atSetpoint();
+    // }
 }

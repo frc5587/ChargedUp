@@ -20,7 +20,7 @@ public class AutoBalance extends CommandBase {
     private boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
     private double angleDegrees;
 
-    private final double speedInchesPerSec = 7.5;
+    private final double speedInchesPerSec = 8.5;
     private final double metersPerSec = Units.inchesToMeters(speedInchesPerSec);
     private final double positionThresholdDegrees = 3.0;
     private final double velocityThresholdDegreesPerSec = 8.0;
@@ -52,11 +52,10 @@ public class AutoBalance extends CommandBase {
             // swerve.stopWithLock(true);
         } else {
             System.out.println("Autobalancing");
-            swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
+            swerve.setChassisSpeeds(new ChassisSpeeds(
                 metersPerSec * (angleDegrees > 0.0 ? -1.0 : 1.0),
                 0.0,
-                0.0,
-                swerve.getYaw()));
+                0.0));
 
             // swerve.setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(
             //     swerve.getPitch() / angleDegrees * metersPerSec,
