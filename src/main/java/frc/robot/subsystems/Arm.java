@@ -31,7 +31,7 @@ public class Arm extends PivotingArmBase {
     private boolean shouldLower, shouldLowerOverride = false;
 
     public Arm(ColorSensor colorSensor, Supplier<Pose2d> poseSupplier) {
-        super(ArmConstants.ARM_CONSTANTS, group);
+        super("Arm", ArmConstants.ARM_CONSTANTS, group);
         this.colorSensor = colorSensor;
         this.poseSupplier = poseSupplier;
         configureMotors();

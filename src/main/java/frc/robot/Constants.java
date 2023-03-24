@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
@@ -328,6 +329,17 @@ public final class Constants {
         public static final double LEFT_VELOCITY_THRESHOLD = 10; // rotations per second
         public static final double RIGHT_VELOCITY_THRESHOLD = 10;
         public static final double EJECT_RUNTIME = 2; // seconds
+    }
+
+    public static class WristConstants {
+        //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
+        public static final Constraints CONSTRAINTS = new Constraints(1, 0.25);
+        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(1, 0, 0, CONSTRAINTS);
+        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0, 0, 0);
+        public static final double GEARING = 100;
+        public static final int ENCODER_CPR = 42;
+        public static final boolean LEFT_INVERTED = false;
+        public static final boolean RIGHT_INVERTED = true;
     }
     
     public static final class LEDConstants {
