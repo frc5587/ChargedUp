@@ -107,6 +107,7 @@ public class Arm extends PivotingArmBase {
     public void substationSetpoint() {
         shouldLowerOverride = true;
         getController().setGoal(ArmConstants.SUB_SETPOINT);
+        
     }
 
     public void liftAwayFromGrid() {
@@ -157,17 +158,17 @@ public class Arm extends PivotingArmBase {
             this.setGoal(Units.degreesToRadians(2));
         }
 
-        if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
-                && (pidController.getSetpoint().position > ArmConstants.HOVER_SETPOINT 
-                || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.HOVER_SETPOINT))) {
-            setShouldLower(true);
-        }
-        else {
-            setShouldLower(false);
-            shouldLowerOverride = false;
-        }
-        if(shouldLower) {
-            setGoal(ArmConstants.HOVER_SETPOINT);
-        }
+        // if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
+        //         && (pidController.getSetpoint().position > ArmConstants.HOVER_SETPOINT 
+        //         || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.HOVER_SETPOINT))) {
+        //     setShouldLower(true);
+        // }
+        // else {
+        //     setShouldLower(false);
+        //     shouldLowerOverride = false;
+        // }
+        // if(shouldLower) {
+        //     setGoal(ArmConstants.HOVER_SETPOINT);
+        // }
     }
 }

@@ -7,12 +7,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.WristConstants;
 
 public class Wrist extends PivotingArmBase {
     private static CANSparkMax leftMotor = new CANSparkMax(40, MotorType.kBrushless);
     private static CANSparkMax rightMotor = new CANSparkMax(41, MotorType.kBrushless);
     private Arm arm;
+    private boolean followingArm = true;
+    private boolean raisedToSubstation = false;
+
     private static PivotingArmConstants constants = new PivotingArmConstants(
         WristConstants.GEARING,
         1,
@@ -51,17 +55,49 @@ public class Wrist extends PivotingArmBase {
         rightMotor.setIdleMode(IdleMode.kBrake);
     }
 
+    public void setFollowArm(boolean following) {
+        this.followingArm = following;
+        this.raisedToSubstation = !following;
+    }
+
+    public boolean isFollowingArm() {
+        return followingArm;
+    }
+
+    public void setRaised(boolean raised) {
+        this.raisedToSubstation = raised;
+        this.followingArm = !raised;
+    }
+
+    public boolean isRaised() {
+        return raisedToSubstation;
+    }
+
     @Override
     public void periodic() {
-        super.periodic();
-
-        /** visualizer for this math at https://www.desmos.com/calculator/enkypdni1s */
-        if(arm.getMeasurement() > Units.degreesToRadians(20)) {
-            setGoal(-arm.getMeasurement());
+        if(arm.getController().getGoal().position == ArmConstants.SUB_SETPOINT) {
+            setRaised(true);
         }
-        /** visualizer for this equation at https://www.desmos.com/calculator/bgfw72pyeq */
+        
         else {
-            setGoal(-(arm.getMeasurement()*4) + Units.degreesToRadians(60));
+            setFollowArm(true);
         }
+
+        if(raisedToSubstation) {
+            setGoal(Units.degreesToRadians(-39));
+        }
+
+        else {
+            /** visualizer for this math at https://www.desmos.com/calculator/enkypdni1s */
+            if(arm.getMeasurement() > Units.degreesToRadians(20)) {
+                setGoal(-arm.getMeasurement());
+            }
+            /** visualizer for this equation at https://www.desmos.com/calculator/bgfw72pyeq */
+            else {
+                setGoal(-(arm.getMeasurement()*4) + Units.degreesToRadians(60));
+            }
+        }
+
+        super.periodic();
     }
 }
