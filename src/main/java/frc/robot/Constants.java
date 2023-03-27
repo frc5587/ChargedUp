@@ -4,7 +4,9 @@ import org.frc5587.lib.pid.FPID;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -160,8 +163,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants { // TODO Confirm
-        public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
-        public static final double MAX_ACCEL_MPS_2 = 0.5; // 3. // in m/s^2 
+        public static final double MAX_SPEED_MPS = 2; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 1; // 3. // in m/s^2 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
@@ -187,15 +190,28 @@ public final class Constants {
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER = // AUTO AND DRIVETOPOSE
                 new ProfiledPIDController(
                     KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS); // enableContinuousInput(-Math.PI, Math.PI);
-        
                     
         public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
         public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
         public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
         public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        public static final PIDController BOT_ROT_CONTROLLER = new PIDController(0, 0, 0); // TODO
+        // public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
+        //     BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
 
-        public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-            BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
+        public static final PPSwerveControllerCommand PPSwerveController(PathPlannerTrajectory traj, Swerve swerve) {
+            return new PPSwerveControllerCommand(
+                traj, 
+                swerve::getPose,
+                SwerveConstants.SWERVE_KINEMATICS,
+                BOT_X_CONTROLLER,
+                BOT_Y_CONTROLLER,
+                BOT_ROT_CONTROLLER,
+                swerve::setModuleStates,
+                true,
+                swerve
+            );
+        }
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;
