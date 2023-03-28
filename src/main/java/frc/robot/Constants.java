@@ -174,6 +174,7 @@ public final class Constants {
         public static final double KP_Y_CONTROLLER = KP_X_CONTROLLER; // THIS AFFECTS AUTO
         public static final double KD_XY_CONTROLLER = 0;//4.4556;
         public static final double KP_THETA_CONTROLLER = 1; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
+        public static final double KD_THETA_CONTROLLER = 0; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
 
         public static final double KP_DRIVE_CONTROLLER = 19.336; //2.5; // THIS AFFECTS DRIVETOPOSE
     
@@ -191,27 +192,27 @@ public final class Constants {
                 new ProfiledPIDController(
                     KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS); // enableContinuousInput(-Math.PI, Math.PI);
                     
-        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
-        public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
-        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
-        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
-        public static final PIDController BOT_ROT_CONTROLLER = new PIDController(0, 0, 0); // TODO
+        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_X_CONTROLLER, 0, 0); // AUTO // TODO Characterize using simple motor with locked straight (clamp belts??)
+        public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, KD_THETA_CONTROLLER); // AUTO // TODO Manually tune P & D for position loop
+        // public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        // public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        // public static final PIDController BOT_ROT_CONTROLLER = new PIDController(0, 0, 0); // TODO
         // public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
         //     BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
 
-        public static final PPSwerveControllerCommand PPSwerveController(PathPlannerTrajectory traj, Swerve swerve) {
-            return new PPSwerveControllerCommand(
-                traj, 
-                swerve::getPose,
-                SwerveConstants.SWERVE_KINEMATICS,
-                BOT_X_CONTROLLER,
-                BOT_Y_CONTROLLER,
-                BOT_ROT_CONTROLLER,
-                swerve::setModuleStates,
-                true,
-                swerve
-            );
-        }
+        // public static final PPSwerveControllerCommand PPSwerveController(PathPlannerTrajectory traj, Swerve swerve) {
+        //     return new PPSwerveControllerCommand(
+        //         traj, 
+        //         swerve::getPose,
+        //         SwerveConstants.SWERVE_KINEMATICS,
+        //         BOT_X_CONTROLLER,
+        //         BOT_Y_CONTROLLER,
+        //         BOT_ROT_CONTROLLER,
+        //         swerve::setModuleStates,
+        //         true,
+        //         swerve
+        //     );
+        // }
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;

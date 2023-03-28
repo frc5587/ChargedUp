@@ -45,7 +45,7 @@ public class RobotContainer {
     // private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
     // private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
-    // public CommandButtonBoard board = new CommandButtonBoard(4);
+    // private CommandButtonBoard board = new CommandButtonBoard(4);
 
     // SUBSYSTEMS
     public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
@@ -68,7 +68,7 @@ public class RobotContainer {
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds);
     public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds, semiAuto);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
-    private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
+    // private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
     
 
     // Other

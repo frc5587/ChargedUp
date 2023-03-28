@@ -63,6 +63,10 @@ public class Intake extends SimpleMotorBase {
         motors.set(IntakeConstants.THROTTLE_AUTO);
     }
 
+    public void shootCube() {
+        motors.set(-5); // TODO Tune this
+    }
+
     public void holdElement() {
         motors.set(0.1);
     }

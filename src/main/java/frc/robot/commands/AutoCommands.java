@@ -6,11 +6,17 @@ import java.util.Map;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,24 +44,25 @@ public class AutoCommands {
 
     // Auto Paths
     private PathPlannerTrajectory p_pos1SpitAndCross = PathPlanner.loadPath("pos1SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
-
+    private PathPlannerTrajectory p_pos3SpitAndCross = PathPlanner.loadPath("pos3SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
+    private PathPlannerTrajectory p_pos4LinkAndCharge = PathPlanner.loadPath("pos4LinkAndCharge", AutoConstants.PATH_CONSTRAINTS); // TODO this shit is not gonna work
 
     private NetworkTableEntry chooseAutoPath = SmartDashboard.getEntry("Choose Auto Path");
     private Notifier chooseAutoNotifier = new Notifier(this::blinkIfNoPath);
 
     /** Starting with 1 pre-loaded game piece in position 1, spit into hybrid, then leave the community. */
-    public final FollowPathWithEvents c_pos1SpitAndCross;
+    public final Command c_pos1SpitAndCross;
 
-    /** Starting with 1 pre-loaded game piece in position 2, spit into hybrid, then leave the community. */
-    // public final Command pos2SpitAndCross;
+    /** Starting with 1 pre-loaded game piece in position 2, spit into hybrid.*/
+    public final Command c_pos2Spit;
 
     /** Starting with 1 pre-loaded game piece in position 3, spit into hybrid, then leave the community. */
-    // public final Command pos3SpitAndCross;
+    public final Command c_pos3SpitAndCross;
 
     /**
      * Starting with 1 pre-loaded cube in position 4, shoot into hybrid, 
      */
-    // public final Command pos4LinkAndCharge;
+    public final Command c_pos4LinkAndCharge;
 
 
     public final SwerveAutoBuilder autoBuilder;
@@ -76,9 +83,15 @@ public class AutoCommands {
         //         Map.entry("autoScoreMid", semiAuto.new ScoreInGrid(GridHeight.Middle)),
         //         Map.entry("autoScoreHigh", semiAuto.new ScoreInGrid(GridHeight.High))));
 
+        eventMap.put("intake", new IntakeIn(intake));
+        eventMap.put("spit", new IntakeOut(intake));
+        eventMap.put("shootCube", new InstantCommand(intake::shootCube));
         eventMap.put("stopIntake", new InstantCommand(intake::stop));
-        // eventMap.put("autoBalance", new AutoBalance(swerve, leds));
-        eventMap.put("intakeIn", new IntakeIn(intake));
+        eventMap.put("stowSetpoint", new InstantCommand(arm::stow));
+        eventMap.put("intakeSetpoint", new InstantCommand(arm::intakeSetpoint));
+        eventMap.put("lowSetpoint", new InstantCommand(arm::lowSetpoint));
+        eventMap.put("midSetpoint", new InstantCommand(arm::middleSetpoint));
+        eventMap.put("autoEngage", new AutoBalance(swerve, leds));
 
         this.autoBuilder = new SwerveAutoBuilder(
                 swerve::getPose, 
@@ -90,9 +103,19 @@ public class AutoCommands {
                 true, 
                 swerve);
 
-        this.c_pos1SpitAndCross = new FollowPathWithEvents(AutoConstants.PPSwerveController(p_pos1SpitAndCross, swerve), p_pos1SpitAndCross.getMarkers(), eventMap);
+        // this.c_pos1SpitAndCross = new FollowPathWithEvents(AutoConstants.PPSwerveController(p_pos1SpitAndCross, swerve), p_pos1SpitAndCross.getMarkers(), eventMap);
+        this.c_pos1SpitAndCross = autoBuilder.fullAuto(p_pos1SpitAndCross);
+        this.c_pos2Spit = new ParallelCommandGroup(
+                new InstantCommand(() -> swerve.resetOdometry(DriverStation.getAlliance() == Alliance.Blue
+                        ? (new Pose2d(1.82, 2.73, new Rotation2d(Units.degreesToRadians(180))))
+                        : new Pose2d(14.71, 2.73, new Rotation2d(Units.degreesToRadians(0))))),
+                new IntakeOut(intake));
+        this.c_pos3SpitAndCross = autoBuilder.fullAuto(p_pos3SpitAndCross);
+        this.c_pos4LinkAndCharge = autoBuilder.fullAuto(p_pos4LinkAndCharge);
         
         autoChooser.addOption("1st Position with Spit & Cross", c_pos1SpitAndCross);
+        autoChooser.addOption("2nd Position with Spit", c_pos2Spit);
+        autoChooser.addOption("3rd Position with Spit & Cross", c_pos3SpitAndCross);
         SmartDashboard.putData(autoChooser);
             
         chooseAutoNotifier.startPeriodic(0.1);
