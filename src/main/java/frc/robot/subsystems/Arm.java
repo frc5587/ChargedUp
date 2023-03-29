@@ -149,7 +149,7 @@ public class Arm extends PivotingArmBase {
     public void periodic() {
         super.periodic();
         if(Robot.m_debugMode) {
-            SmartDashboard.putBoolean("Limit Switch", getLimitSwitchValue());
+            SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitchValue());
             SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
             SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
         }

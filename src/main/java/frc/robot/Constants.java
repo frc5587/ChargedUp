@@ -340,6 +340,7 @@ public final class Constants {
         public static final int ENCODER_CPR = 42;
         public static final boolean LEFT_INVERTED = false;
         public static final boolean RIGHT_INVERTED = true;
+        public static final int SWITCH_PORT = 1;
     }
     
     public static final class LEDConstants {
