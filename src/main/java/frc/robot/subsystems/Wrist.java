@@ -113,12 +113,11 @@ public class Wrist extends PivotingArmBase {
             setGoal(Units.degreesToRadians(-39));
         }
 
+        /** wrist visualizer https://www.desmos.com/calculator/e7so30mh0r */
         else {
-            /** visualizer for this math at https://www.desmos.com/calculator/enkypdni1s */
             if(arm.getMeasurement() > Units.degreesToRadians(20)) {
                 setGoal(-arm.getMeasurement());
             }
-            /** visualizer for this equation at https://www.desmos.com/calculator/ugfgabk2cz */
             else {
                 setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
             }
