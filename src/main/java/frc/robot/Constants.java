@@ -334,8 +334,8 @@ public final class Constants {
     public static class WristConstants {
         //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
         public static final Constraints CONSTRAINTS = new Constraints(3.14, 3.14);
-        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(58.393, 0, 6.5536, CONSTRAINTS); //12pm
-        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.071581, 2.5095, 0.54141);
+        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(7.9302, 0, 1.3388, CONSTRAINTS); //12pm
+        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.69535, 0.37846, 0.4485);
         public static final double GEARING = 100;
         public static final int ENCODER_CPR = 42;
         public static final boolean LEFT_INVERTED = true;

@@ -119,7 +119,8 @@ public class Wrist extends PivotingArmBase {
                 setGoal(-arm.getMeasurement());
             }
             else {
-                setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
+                // setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
+                setGoal(Units.degreesToRadians(20));
             }
         }
 
