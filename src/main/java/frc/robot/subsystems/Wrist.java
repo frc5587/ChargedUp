@@ -34,12 +34,13 @@ public class Wrist extends PivotingArmBase {
         super("Intake", constants, new MotorControllerGroup(leftMotor, rightMotor));
         this.arm = arm;
         configureMotors();
+        setEncoderPosition(0);
         this.enable();
     }
 
     @Override
     public double getEncoderPosition() {
-        return leftMotor.getEncoder().getPosition();
+        return leftMotor.getEncoder().getPosition() * 42;
     }
     @Override
     public double getEncoderVelocity() {
@@ -47,7 +48,7 @@ public class Wrist extends PivotingArmBase {
     }
     @Override
     public void setEncoderPosition(double position) {
-        leftMotor.getEncoder().setPosition(position);        
+        leftMotor.getEncoder().setPosition(position * 42);        
     }
     @Override
     public void configureMotors() {
@@ -117,9 +118,9 @@ public class Wrist extends PivotingArmBase {
             if(arm.getMeasurement() > Units.degreesToRadians(20)) {
                 setGoal(-arm.getMeasurement());
             }
-            /** visualizer for this equation at https://www.desmos.com/calculator/bgfw72pyeq */
+            /** visualizer for this equation at https://www.desmos.com/calculator/ugfgabk2cz */
             else {
-                setGoal(-(arm.getMeasurement()*4) + Units.degreesToRadians(60));
+                setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
             }
         }
 

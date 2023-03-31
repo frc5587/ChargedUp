@@ -52,6 +52,7 @@ public class RobotContainer {
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm(colorSensor, swerve::getPose);
+    private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
     public LEDs leds = new LEDs();
 
