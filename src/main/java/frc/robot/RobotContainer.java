@@ -41,7 +41,7 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class RobotContainer {
     // INPUTS
-    private DeadbandCommandXboxController driveXb = new DeadbandCommandXboxController(0, .05);
+    private DeadbandCommandXboxController driveXb = new DeadbandCommandXboxController(0, .02);
     // private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
     // private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
@@ -57,9 +57,9 @@ public class RobotContainer {
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-            swerve, () -> -Math.pow(driveXb.getRightY(), 3), 
-                    () -> Math.pow(driveXb.getRightX(), 3), 
-                    () -> Math.pow(driveXb.getLeftX(), 3), 
+            swerve, () -> -Math.pow(driveXb.getRightY(), 5), 
+                    () -> Math.pow(driveXb.getRightX(), 5), 
+                    () -> Math.pow(driveXb.getLeftX(), 5), 
                     () -> false);
 
     // private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
@@ -151,7 +151,7 @@ public class RobotContainer {
         xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
-        xb.rightTrigger().whileTrue(autoBalance);
+        driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
 
         // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());

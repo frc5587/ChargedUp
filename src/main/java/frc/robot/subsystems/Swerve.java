@@ -101,7 +101,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
@@ -236,9 +236,9 @@ public class Swerve extends SubsystemBase {
 
         if (DriverStation.isDisabled()) {
             // TODO Check if robot is outside of community. If so, set motors to coast mode with 0.1 second left
-            if(!inCommunity()) {
-                SmartDashboard.putBoolean("Swerve Brake Mode", true);
-            }
+            // if(!inCommunity()) {
+            //     SmartDashboard.putBoolean("Swerve Brake Mode", true);
+            // }
             // resetModulesToAbsolute(); // TODO Maybe remove to fix random wheel positions
         }
 
