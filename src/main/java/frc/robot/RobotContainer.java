@@ -57,7 +57,7 @@ public class RobotContainer {
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-            swerve, () -> -Math.pow(driveXb.getRightY(), 3), 
+            swerve, () -> Math.pow(driveXb.getRightY(), 3), // -Math.pow(driveXb.getRightY(), 3), 
                     () -> Math.pow(driveXb.getRightX(), 3), 
                     () -> Math.pow(driveXb.getLeftX(), 3), 
                     () -> false);

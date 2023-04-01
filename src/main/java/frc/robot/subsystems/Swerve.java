@@ -80,7 +80,7 @@ public class Swerve extends SubsystemBase {
                             rotation, 
                             getYaw())
                         : new ChassisSpeeds(
-                            -translation.getX(), //TODO invert getX????
+                            translation.getX(), // -translation.getX(), //TODO invert getX????
                             translation.getY(), 
                             rotation));
             SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
@@ -101,7 +101,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void setChassisSpeeds(ChassisSpeeds speeds) {
-        speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        // speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        speeds = new ChassisSpeeds(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
         setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
