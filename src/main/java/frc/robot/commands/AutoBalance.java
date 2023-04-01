@@ -75,10 +75,10 @@ public class AutoBalance extends CommandBase {
         leds.setAlliance();
     }
 
-    @Override
-    public boolean isFinished() {
-        return Math.abs(angleDegrees) < 6.5;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return Math.abs(angleDegrees) < 6.5;
+    // }
 
     // @Override
     // public boolean isFinished() {

@@ -2,8 +2,24 @@ package frc.robot.commands;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.ctre.phoenix.platform.can.AutocacheState;
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -15,19 +31,55 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.commands.AutoSetArm.GridHeight;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
 
 public class AutoCommands {
-    private Intake intake;
-    private Swerve swerve;
-    private LEDs leds;
-    public final SwerveAutoBuilder autoBuilder;
-    private final Map<String, Command> eventMap;
+    // subsystems
+    private final Intake intake;
+    private final Arm arm;
+    private final Swerve swerve;
+    private final LEDs leds;
 
-    public AutoCommands(Swerve swerve, Intake intake, LEDs leds, SemiAuto semiAuto) {
+    // Auto Paths
+    // private PathPlannerTrajectory p_pos1SpitAndCross = PathPlanner.loadPath("pos1SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
+    // private PathPlannerTrajectory p_pos3SpitAndCross = PathPlanner.loadPath("pos3SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
+    // private PathPlannerTrajectory p_pos4LinkAndCharge = PathPlanner.loadPath("pos4LinkAndCharge", AutoConstants.PATH_CONSTRAINTS); // TODO this shit is not gonna work
+    private PathPlannerTrajectory p_startClose = PathPlanner.loadPath("StartClose", AutoConstants.PATH_CONSTRAINTS);
+    private PathPlannerTrajectory p_startFar = PathPlanner.loadPath("StartFar", AutoConstants.PATH_CONSTRAINTS);
+
+    private NetworkTableEntry chooseAutoPath = SmartDashboard.getEntry("Choose Auto Path");
+    private Notifier chooseAutoNotifier = new Notifier(this::blinkIfNoPath);
+
+    /** Starting with 1 pre-loaded game piece in position 1, spit into hybrid, then leave the community. */
+    // public final Command c_pos1SpitAndCross;
+
+    /** Starting with 1 pre-loaded game piece in position 2, spit into hybrid.*/
+    // public final Command c_pos2Spit;
+
+    /** Starting with 1 pre-loaded game piece in position 3, spit into hybrid, then leave the community. */
+    // public final Command c_pos3SpitAndCross;
+
+    public final Command c_startClose;
+
+    public final Command c_startFar;
+
+    /**
+     * Starting with 1 pre-loaded cube in position 4, shoot into hybrid, 
+     */
+    // public final Command c_pos4LinkAndCharge;
+
+
+    public final SwerveAutoBuilder autoBuilder;
+    private HashMap<String, Command> eventMap;
+    
+    SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+    public AutoCommands(Intake intake, Arm arm, Swerve swerve, LEDs leds, SemiAuto semiAuto) {
         this.intake = intake;
+        this.arm = arm;
         this.swerve = swerve;
         this.leds = leds;
 
@@ -38,6 +90,16 @@ public class AutoCommands {
                 Map.entry("autoScoreMid", semiAuto.new ScoreInGrid(GridHeight.Middle)),
                 Map.entry("autoScoreHigh", semiAuto.new ScoreInGrid(GridHeight.High))));
 
+        // eventMap.put("intake", new IntakeIn(intake));
+        // eventMap.put("spit", new IntakeOut(intake));
+        // eventMap.put("shootCube", new InstantCommand(intake::shootCube));
+        // eventMap.put("stopIntake", new InstantCommand(intake::stop));
+        // eventMap.put("stowSetpoint", new InstantCommand(arm::stow));
+        // eventMap.put("intakeSetpoint", new InstantCommand(arm::intakeSetpoint));
+        // eventMap.put("lowSetpoint", new InstantCommand(arm::lowSetpoint));
+        // eventMap.put("midSetpoint", new InstantCommand(arm::middleSetpoint));
+        // eventMap.put("autoEngage", new AutoBalance(swerve, leds));
+
         this.autoBuilder = new SwerveAutoBuilder(
                 swerve::getPose, 
                 swerve::resetOdometry,
@@ -47,6 +109,29 @@ public class AutoCommands {
                 eventMap, 
                 true, 
                 swerve);
+
+        // this.c_pos1SpitAndCross = new FollowPathWithEvents(AutoConstants.PPSwerveController(p_pos1SpitAndCross, swerve), p_pos1SpitAndCross.getMarkers(), eventMap);
+        // this.c_pos1SpitAndCross = autoBuilder.fullAuto(p_pos1SpitAndCross);
+        // this.c_pos2Spit = new ParallelCommandGroup(
+        //         new InstantCommand(() -> swerve.resetOdometry(DriverStation.getAlliance() == Alliance.Blue
+        //                 ? (new Pose2d(1.82, 2.73, new Rotation2d(Units.degreesToRadians(180))))
+        //                 : new Pose2d(14.71, 2.73, new Rotation2d(Units.degreesToRadians(0))))),
+        //         new IntakeOut(intake));
+        // this.c_pos3SpitAndCross = autoBuilder.fullAuto(p_pos3SpitAndCross);
+        // this.c_pos4LinkAndCharge = autoBuilder.fullAuto(p_pos4LinkAndCharge);
+
+        this.c_startClose = autoBuilder.fullAuto(p_startClose);
+        this.c_startFar = autoBuilder.fullAuto(p_startFar);
+        
+        // autoChooser.addOption("1st Position with Spit & Cross", c_pos1SpitAndCross);
+        // autoChooser.addOption("2nd Position with Spit", c_pos2Spit);
+        // autoChooser.addOption("3rd Position with Spit & Cross", c_pos3SpitAndCross);
+        autoChooser.addOption("StartClose", close());
+        autoChooser.addOption("StartMid", midMidCharge());
+        autoChooser.setDefaultOption("StartFar", far());
+        SmartDashboard.putData("Auto Path", autoChooser);
+            
+        chooseAutoNotifier.startPeriodic(0.1);
     }
 
     /**
@@ -153,5 +238,17 @@ public class AutoCommands {
      */
     public Command justSpit() {
         return new InstantCommand(intake::autoThrottle, intake);
+    }
+
+    public Command getSelectedCommand() {
+        return autoChooser.getSelected();
+    }
+
+    private void blinkIfNoPath() {
+        if(getSelectedCommand() == null) {
+            chooseAutoPath.setBoolean(!chooseAutoPath.getBoolean(false));
+        } else {
+            chooseAutoPath.setBoolean(true);
+        }
     }
 }

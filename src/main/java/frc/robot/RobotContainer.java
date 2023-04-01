@@ -41,11 +41,11 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class RobotContainer {
     // INPUTS
-    private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(0, .05);
-    private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
-    private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
-    private DeadbandCommandXboxController driveXb = new DeadbandCommandXboxController(3);
-    // public CommandButtonBoard board = new CommandButtonBoard(4);
+    private DeadbandCommandXboxController driveXb = new DeadbandCommandXboxController(0, .02);
+    // private DeadbandCommandJoystick leftJoy = new DeadbandCommandJoystick(1, 3, 0.05);
+    // private DeadbandCommandJoystick rightJoy = new DeadbandCommandJoystick(2, 3, 0.05);
+    private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
+    // private CommandButtonBoard board = new CommandButtonBoard(4);
 
     // SUBSYSTEMS
     public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
@@ -57,31 +57,30 @@ public class RobotContainer {
     public LEDs leds = new LEDs();
 
     // COMMANDS
-    // private DualStickSwerve dualStickSwerve = new DualStickSwerve(
-    //         swerve, () -> -Math.pow(xb.getRightY(), 3), 
-    //                 () -> Math.pow(xb.getRightX(), 3), 
-    //                 () -> Math.pow(xb.getLeftX(), 3), 
-    //                 () -> false);
+    private DualStickSwerve dualStickSwerve = new DualStickSwerve(
+            swerve, () -> Math.pow(driveXb.getRightY(), 3), // -Math.pow(driveXb.getRightY(), 3), 
+                    () -> Math.pow(driveXb.getRightX(), 3), 
+                    () -> Math.pow(driveXb.getLeftX(), 3), 
+                    () -> false);
 
-    private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
-            swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> false);
+    // private DualStickSwerve dualJoystickSwerve = new DualStickSwerve(
+    //         swerve, () -> -rightJoy.getY(), () -> rightJoy.getX(), () -> leftJoy.getX(), () -> false);
 
     private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds);
-    public AutoCommands auto = new AutoCommands(swerve, intake, leds, semiAuto);
+    public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds, semiAuto);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);
-    private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
+    // private PIDAutoBalance pidAutoBalance = new PIDAutoBalance(swerve);
     
 
     // Other
     private PowerDistribution pdh = new PowerDistribution();
-    private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        // swerve.setDefaultCommand(dualStickSwerve);
-        swerve.setDefaultCommand(dualJoystickSwerve);
+        swerve.setDefaultCommand(dualStickSwerve);
+        // swerve.setDefaultCommand(dualJoystickSwerve);
         // intake.setDefaultCommand(new InstantCommand(intake::holdElement, intake));
 
         leds.setRainbow();
@@ -89,20 +88,6 @@ public class RobotContainer {
         
         pdh.clearStickyFaults();
         pdh.close();
-
-        autoChooser.setDefaultOption("just spit", auto.justSpit());
-        autoChooser.addOption("CloseToSub", auto.close());
-        autoChooser.addOption("FarFromSub", auto.far());
-        autoChooser.addOption("MiddleToClose", auto.midToClose());
-        autoChooser.addOption("MiddleToFar", auto.midToFar());
-        autoChooser.addOption("MidCharge", auto.midMidCharge());
-        autoChooser.addOption("CloseCharge", auto.midCloseCharge());
-        autoChooser.addOption("FarCharge", auto.midFarCharge());
-        autoChooser.addOption("thing", auto.spitCrossLine());
-        autoChooser.addOption("charge", auto.charge());
-        autoChooser.addOption("NO COMMAND", auto.noAuto());
-        SmartDashboard.putData("AUTO", autoChooser);
-        // SmartDashboard.putNumber("DriveToPose pose", 0);
     }
 
     /**
@@ -167,7 +152,7 @@ public class RobotContainer {
         xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
         xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
-        xb.rightTrigger().whileTrue(autoBalance);
+        driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
 
         // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
@@ -182,6 +167,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return auto.getSelectedCommand();
     }
 }
