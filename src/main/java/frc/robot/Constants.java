@@ -304,7 +304,7 @@ public final class Constants {
         public static final double GEARING = 240;
         public static final double VELOCITY_DENOMINATOR = 0.1;
         public static final double[] SOFT_LIMITS = {0, Units.degreesToRadians(100)};
-        public static final int ENCODER_CPR = 2048;
+        public static final int ENCODER_CPR = 1;
         public static final int ZERO_OFFSET = Math.round((float) (Units.degreesToRadians(-2) * GEARING * ENCODER_CPR / 2 / Math.PI)); // TODO: Find
         public static final int SWITCH_PORT = 0;
         public static final boolean SWITCH_INVERTED = true;

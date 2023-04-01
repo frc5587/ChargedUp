@@ -106,7 +106,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
-        Trigger armLimitSwitch = new Trigger(arm::getLimitSwitchValue);
+        // Trigger armLimitSwitch = new Trigger(arm::getLimitSwitchValue);
 
         // armLimitSwitch.onTrue(new InstantCommand(() -> arm.resetEncoders()));
 
@@ -154,6 +154,7 @@ public class RobotContainer {
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
+        xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle()));
 
         // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
         // rightJoy.button(3).whileTrue(new RunCommand(() -> swerve.crawl(0.4)));

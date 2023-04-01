@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -25,7 +26,8 @@ public class Arm extends PivotingArmBase {
     private static WPI_TalonFX leader = new WPI_TalonFX(ArmConstants.LEADER_PORT);
     private static WPI_TalonFX follower = new WPI_TalonFX(ArmConstants.FOLLOWER_PORT);
     private static MotorControllerGroup group = new MotorControllerGroup(leader, follower);
-    private static DigitalInput limitSwitch = new DigitalInput(ArmConstants.SWITCH_PORT);
+    // private static DigitalInput limitSwitch = new DigitalInput(ArmConstants.SWITCH_PORT);
+    private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
     private final ColorSensor colorSensor;
     private final Supplier<Pose2d> poseSupplier;
     private boolean shouldLower, shouldLowerOverride = false;
@@ -36,11 +38,18 @@ public class Arm extends PivotingArmBase {
         this.poseSupplier = poseSupplier;
         configureMotors();
         this.enable();
+
+        SmartDashboard.putBoolean("Arm Brake Mode", true);
     }
+
+    // @Override
+    // public double getEncoderPosition() {
+    //     return leader.getSelectedSensorPosition();
+    // }
 
     @Override
     public double getEncoderPosition() {
-        return leader.getSelectedSensorPosition();
+        return throughBore.get();
     }
 
     @Override
@@ -63,21 +72,21 @@ public class Arm extends PivotingArmBase {
         follower.setInverted(false);
     }
 
-    /**
-     * @param switchPort the port of the limit switch we want the value of
-     * @return the limit switch's state, inverted if necessary.
-     */
-    public boolean getLimitSwitchValue() {
-        return ArmConstants.SWITCH_INVERTED ? !limitSwitch.get() : limitSwitch.get();
-    }
+    // /**
+    //  * @param switchPort the port of the limit switch we want the value of
+    //  * @return the limit switch's state, inverted if necessary.
+    //  */
+    // public boolean getLimitSwitchValue() {
+    //     return ArmConstants.SWITCH_INVERTED ? !limitSwitch.get() : limitSwitch.get();
+    // }
 
-    /**
-     * @param switchPort the port of the limit switch you want to get
-     * @return the DigitalInput of the switch
-     */
-    public DigitalInput getLimitSwitchObject() {
-        return limitSwitch;
-    }
+    // /**
+    //  * @param switchPort the port of the limit switch you want to get
+    //  * @return the DigitalInput of the switch
+    //  */
+    // public DigitalInput getLimitSwitchObject() {
+    //     return limitSwitch;
+    // }
     
     public void highSetpoint() {
         shouldLowerOverride = true;
@@ -149,14 +158,15 @@ public class Arm extends PivotingArmBase {
     public void periodic() {
         super.periodic();
         if(Robot.m_debugMode) {
-            SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitchValue());
+            // SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitchValue());
+            SmartDashboard.putNumber("Arm Position", getEncoderPosition());
             SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
             SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
         }
-        if(getLimitSwitchValue()) {
-            this.resetEncoders();
-            this.setGoal(Units.degreesToRadians(2));
-        }
+        // if(getLimitSwitchValue()) {
+        //     this.resetEncoders();
+        //     this.setGoal(Units.degreesToRadians(2));
+        // }
 
         // if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
         //         && (pidController.getSetpoint().position > ArmConstants.HOVER_SETPOINT 
@@ -170,5 +180,13 @@ public class Arm extends PivotingArmBase {
         // if(shouldLower) {
         //     setGoal(ArmConstants.HOVER_SETPOINT);
         // }
+
+        if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
+                leader.setNeutralMode(NeutralMode.Brake);
+                follower.setNeutralMode(NeutralMode.Brake);
+        } else {
+                leader.setNeutralMode(NeutralMode.Coast);
+                follower.setNeutralMode(NeutralMode.Coast);
+        }
     }
 }
