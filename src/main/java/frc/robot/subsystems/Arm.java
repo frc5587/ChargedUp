@@ -42,13 +42,9 @@ public class Arm extends PivotingArmBase {
         SmartDashboard.putBoolean("Arm Brake Mode", true);
     }
 
-    // @Override
-    // public double getEncoderPosition() {
-    //     return leader.getSelectedSensorPosition();
-    // }
-
     @Override
     public double getEncoderPosition() {
+        // return leader.getSelectedSensorPosition();
         return throughBore.get();
     }
 

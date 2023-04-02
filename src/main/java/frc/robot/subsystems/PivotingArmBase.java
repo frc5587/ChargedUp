@@ -108,7 +108,8 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
      *         accounting for gearing and encoder counts per revolution.
      */
     public double getRotations() {
-        return applyCPR(applyGearing(getEncoderPosition()));
+        // return applyCPR(applyGearing(getEncoderPosition()));
+        return applyCPR(getEncoderPosition());
     }
 
     /**

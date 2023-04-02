@@ -354,7 +354,7 @@ public final class Constants {
         public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(7.9302, 0, 1.3388, CONSTRAINTS); //12pm
         public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.69535, 0.37846, 0.4485);
         public static final double GEARING = 100;
-        public static final int ENCODER_CPR = 42;
+        public static final int ENCODER_CPR = 1;
         public static final boolean LEFT_INVERTED = true;
         public static final boolean RIGHT_INVERTED = false;
         public static final int SWITCH_PORT = 1;
