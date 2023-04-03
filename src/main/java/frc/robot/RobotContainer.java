@@ -55,6 +55,7 @@ public class RobotContainer {
     private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
     public LEDs leds = new LEDs();
+    private Rumbler rumbler = new Rumbler(driveXb, swerve);
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(

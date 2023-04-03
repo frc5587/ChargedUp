@@ -76,6 +76,7 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        public static final int RUMBLE_THRESHOLD = 20;
         
         public static final double SLEW_RATE = 3; // m/s^2 // TODO CHANGE AFTER ARM IS ADDED
 
