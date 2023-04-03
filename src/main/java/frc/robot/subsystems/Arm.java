@@ -39,13 +39,15 @@ public class Arm extends PivotingArmBase {
         configureMotors();
         this.enable();
 
+        throughBore.setDutyCycleRange(1./1024., 1023./1024.);
+
         SmartDashboard.putBoolean("Arm Brake Mode", true);
     }
 
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return throughBore.get();
+        return -(throughBore.getAbsolutePosition() - 0.650);
     }
 
     @Override
@@ -182,6 +184,9 @@ public class Arm extends PivotingArmBase {
         //     setGoal(ArmConstants.HOVER_SETPOINT);
         // }
 
+        SmartDashboard.putBoolean("ThroughBore Connected", throughBore.isConnected());
+        SmartDashboard.putNumber("ThroughBore Freq", throughBore.getFrequency());
+            
         if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
                 leader.setNeutralMode(NeutralMode.Brake);
                 follower.setNeutralMode(NeutralMode.Brake);

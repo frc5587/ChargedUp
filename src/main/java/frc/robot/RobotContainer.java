@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.frc5587.lib.control.DeadbandCommandJoystick;
 import org.frc5587.lib.control.DeadbandCommandXboxController;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -108,6 +110,10 @@ public class RobotContainer {
      */
     private void configureBindings() {
         boolean usingRedPoses = DriverStation.getAlliance().equals(Alliance.Red);
+        Trigger wristUp = new Trigger(() -> -xb.getRightY() > 0.1);
+        Trigger wristDown = new Trigger(() -> -xb.getRightY() < -0.1);
+        Trigger resetWristCommand = new Trigger(() -> xb.getLeftY() > 0.1);
+
         // Trigger armLimitSwitch = new Trigger(arm::getLimitSwitchValue);
 
         // armLimitSwitch.onTrue(new InstantCommand(() -> arm.resetEncoders()));
@@ -156,7 +162,11 @@ public class RobotContainer {
         xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
-        xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle()));
+        xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));
+        wristUp.onTrue(new InstantCommand(() -> {wrist.setFollowArm(false); System.out.println("UPPPPPPP"); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(5));}));
+        wristDown.onTrue(new InstantCommand(() -> {wrist.setFollowArm(false); System.out.println("DOWNNNNNN"); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(5));}));
+        resetWristCommand.onTrue(new InstantCommand(() -> wrist.setFollowArm(true)));
+        
 
         // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
         // rightJoy.button(3).whileTrue(new RunCommand(() -> swerve.crawl(0.4)));

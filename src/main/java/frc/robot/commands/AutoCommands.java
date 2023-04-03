@@ -130,7 +130,7 @@ public class AutoCommands {
         autoChooser.addOption("3rd Position with Spit & Cross", c_pos3SpitAndCross);
         autoChooser.addOption("4th Position with Link & Charge", c_pos4LinkAndCharge);
         // autoChooser.addOption("StartMid", midMidCharge());
-        autoChooser.setDefaultOption(null, null);
+        autoChooser.setDefaultOption("null", null);
         SmartDashboard.putData("Auto Path", autoChooser);
             
         chooseAutoNotifier.startPeriodic(0.1);

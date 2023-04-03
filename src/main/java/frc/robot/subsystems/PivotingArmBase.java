@@ -108,8 +108,8 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
      *         accounting for gearing and encoder counts per revolution.
      */
     public double getRotations() {
-        // return applyCPR(applyGearing(getEncoderPosition()));
-        return applyCPR(getEncoderPosition());
+        return applyCPR(applyGearing(getEncoderPosition()));
+        // return applyCPR(getEncoderPosition());
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
     * @return the angle of the arm in radians
     */
     public double getAngleRadians() {
-        return getRotations() * 2 * Math.PI;
+        return Units.degreesToRadians(getAngleDegrees());
     }
 
     /**
