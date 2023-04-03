@@ -21,6 +21,7 @@ public class Wrist extends PivotingArmBase {
     private Arm arm;
     private boolean followingArm = true;
     private boolean raisedToSubstation = false;
+    private boolean manualOverride = false;
 
     private static PivotingArmConstants constants = new PivotingArmConstants(
         WristConstants.GEARING,
@@ -96,6 +97,12 @@ public class Wrist extends PivotingArmBase {
         return raisedToSubstation;
     }
 
+    public void setManualOverride(boolean overridden) {
+        this.manualOverride = overridden;
+        // this.followingArm = false;
+        // this.raisedToSubstation = false;
+    }
+
     @Override
     public void periodic() {
         // SmartDashboard.putBoolean("Wrist Limit Switch", getLimitSwitchValue());
@@ -106,7 +113,7 @@ public class Wrist extends PivotingArmBase {
             this.setGoal(Units.degreesToRadians(0)); //TODO
         }
 
-        if(arm.getController().getGoal().position == ArmConstants.SUB_SETPOINT) {
+        if(arm.getController().getGoal().position == ArmConstants.SUB_SETPOINT && !manualOverride) {
             setRaised(true);
         }
         
@@ -114,11 +121,11 @@ public class Wrist extends PivotingArmBase {
         //     setFollowArm(true);
         // }
 
-        if(raisedToSubstation) {
+        if(isRaised() && !manualOverride) {
             setGoal(Units.degreesToRadians(-39));
         }
 
-        if(isFollowingArm()) {
+        if(isFollowingArm() && !manualOverride) {
 
         /** wrist visualizer https://www.desmos.com/calculator/9ievw4kltq */
             // else {
