@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
         m_robotContainer = new RobotContainer();
         SmartDashboard.putBoolean("Debug Mode On?", m_debugMode);
         SmartDashboard.putBoolean("PPLibServer On?", false);
+        SmartDashboard.putBoolean("Clear Command Scheduler", false);
     }
 
     /**
@@ -69,6 +70,12 @@ public class Robot extends TimedRobot {
         } else {
             // PathPlannerServer.stop();
             SmartDashboard.putBoolean("PPLibServer On?", true); // TODO remove this after figuring out how to stop server
+        }
+
+        if(SmartDashboard.getBoolean("Clear Command Scheduler?", false)) { // TODO TEST THIS
+            CommandScheduler.getInstance().cancelAll();
+            m_robotContainer.swerve.setDefaultCommand(m_robotContainer.currentDrive);
+            SmartDashboard.putBoolean("Clear Command Scheduler?", false);
         }
         
     }

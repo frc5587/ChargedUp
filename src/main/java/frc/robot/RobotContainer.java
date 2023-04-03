@@ -75,11 +75,13 @@ public class RobotContainer {
     // Other
     private PowerDistribution pdh = new PowerDistribution();
 
+    public Command currentDrive = dualStickSwerve;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        swerve.setDefaultCommand(dualStickSwerve);
+        swerve.setDefaultCommand(currentDrive);
         // swerve.setDefaultCommand(dualJoystickSwerve);
         // intake.setDefaultCommand(new InstantCommand(intake::holdElement, intake));
 
