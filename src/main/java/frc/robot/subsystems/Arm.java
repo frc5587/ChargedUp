@@ -96,6 +96,11 @@ public class Arm extends PivotingArmBase {
 
     public void lowSetpoint() {
         shouldLowerOverride = true;
+        getController().setGoal(ArmConstants.HOVER_SETPOINT); // TODO
+    }
+
+    public void hoverSetpoint() {
+        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.HOVER_SETPOINT);
     }
 
