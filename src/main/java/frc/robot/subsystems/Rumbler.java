@@ -50,6 +50,13 @@ public class Rumbler extends SubsystemBase {
             xb.getHID().setRumble(RumbleType.kBothRumble, 1);
         }
 
+        if(avg <= SwerveConstants.RUMBLE_THRESHOLD) {
+            isRumbling = false;
+            timeRumbling = 0;
+            strongRumbleTime = 0;
+            xb.getHID().setRumble(RumbleType.kBothRumble, 0);
+        }
+
         SmartDashboard.putNumber("RumbleTime", timeRumbling);
         SmartDashboard.putNumber("StrongTime", strongRumbleTime);
 
