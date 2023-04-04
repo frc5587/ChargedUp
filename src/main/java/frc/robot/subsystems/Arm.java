@@ -161,8 +161,6 @@ public class Arm extends PivotingArmBase {
     public void periodic() {
         super.periodic();
         if(Robot.m_debugMode) {
-            // SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitchValue());
-            SmartDashboard.putNumber("Arm Position", getEncoderPosition());
             SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
             SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
         }
@@ -183,9 +181,6 @@ public class Arm extends PivotingArmBase {
         // if(shouldLower) {
         //     setGoal(ArmConstants.HOVER_SETPOINT);
         // }
-
-        SmartDashboard.putBoolean("ThroughBore Connected", throughBore.isConnected());
-        SmartDashboard.putNumber("ThroughBore Freq", throughBore.getFrequency());
             
         if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
                 leader.setNeutralMode(NeutralMode.Brake);

@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.server.PathPlannerServer;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +25,7 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
-    public static boolean m_debugMode = false;
+    public static boolean m_debugMode = true;
     public static boolean m_startedPPLServer = false;
 
     /**
@@ -72,11 +73,13 @@ public class Robot extends TimedRobot {
             SmartDashboard.putBoolean("PPLibServer On?", true); // TODO remove this after figuring out how to stop server
         }
 
-        if(SmartDashboard.getBoolean("Clear Command Scheduler?", false)) { // TODO TEST THIS
+        if(SmartDashboard.getBoolean("Clear Command Scheduler", false)) { // TODO TEST THIS
             CommandScheduler.getInstance().cancelAll();
             m_robotContainer.swerve.setDefaultCommand(m_robotContainer.currentDrive);
-            SmartDashboard.putBoolean("Clear Command Scheduler?", false);
+            SmartDashboard.putBoolean("Clear Command Scheduler", false);
         }
+
+        SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
         
     }
 
