@@ -76,6 +76,7 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        public static final int RUMBLE_THRESHOLD = 35;
         
         public static final double SLEW_RATE = 3; // m/s^2 // TODO CHANGE AFTER ARM IS ADDED
 
@@ -108,9 +109,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 3;//5.;
+        public static final double MAX_SPEED = 2.5;//5.;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 6.28;//6.;
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI;//6.;
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -301,7 +302,7 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int LEADER_PORT = 20;
         public static final int FOLLOWER_PORT = 21;
-        public static final double GEARING = 240;
+        public static final double GEARING = 1;//240;
         public static final double VELOCITY_DENOMINATOR = 0.1;
         public static final double[] SOFT_LIMITS = {0, Units.degreesToRadians(100)};
         public static final int ENCODER_CPR = 1;
@@ -318,11 +319,11 @@ public final class Constants {
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
         public static final double HIGH_SETPOINT = Units.degreesToRadians(108);
-        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(88);
-        public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
-        public static final double HOVER_SETPOINT = Units.degreesToRadians(20);
+        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(108);
+        public static final double INTAKE_SETPOINT = Units.degreesToRadians(24);
+        public static final double HOVER_SETPOINT = Units.degreesToRadians(30);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
-        public static final double SUB_SETPOINT = Units.degreesToRadians(74.7);
+        public static final double SUB_SETPOINT = Units.degreesToRadians(80);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
@@ -351,13 +352,13 @@ public final class Constants {
     public static class WristConstants {
         //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
         public static final Constraints CONSTRAINTS = new Constraints(3.14, 3.14);
-        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(7.9302, 0, 1.3388, CONSTRAINTS); //12pm
+        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(6, 0, 0, CONSTRAINTS); //12pm // 7.9302
         public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.69535, 0.37846, 0.4485);
         public static final double GEARING = 100;
-        public static final int ENCODER_CPR = 1;
+        public static final int ENCODER_CPR = 42;
         public static final boolean LEFT_INVERTED = true;
         public static final boolean RIGHT_INVERTED = false;
-        public static final int SWITCH_PORT = 1;
+        public static final int SWITCH_PORT = 0;
     }
     
     public static final class LEDConstants {

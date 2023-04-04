@@ -39,13 +39,15 @@ public class Arm extends PivotingArmBase {
         configureMotors();
         this.enable();
 
+        throughBore.setDutyCycleRange(1./1024., 1023./1024.);
+
         SmartDashboard.putBoolean("Arm Brake Mode", true);
     }
 
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return throughBore.get();
+        return -(throughBore.getAbsolutePosition() - 0.650);
     }
 
     @Override
@@ -159,8 +161,6 @@ public class Arm extends PivotingArmBase {
     public void periodic() {
         super.periodic();
         if(Robot.m_debugMode) {
-            // SmartDashboard.putBoolean("Arm Limit Switch", getLimitSwitchValue());
-            SmartDashboard.putNumber("Arm Position", getEncoderPosition());
             SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
             SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
         }
@@ -181,7 +181,7 @@ public class Arm extends PivotingArmBase {
         // if(shouldLower) {
         //     setGoal(ArmConstants.HOVER_SETPOINT);
         // }
-
+            
         if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
                 leader.setNeutralMode(NeutralMode.Brake);
                 follower.setNeutralMode(NeutralMode.Brake);

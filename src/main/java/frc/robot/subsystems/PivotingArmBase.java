@@ -51,7 +51,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         this.subsystemName = subsystemName;
         this.ffController = constants.ff;
         
-        SmartDashboard.putBoolean(subsystemName + " OUTPUT ON?", true);
+        SmartDashboard.putBoolean(subsystemName + " Output On?", true);
     }
 
     /**
@@ -108,8 +108,8 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
      *         accounting for gearing and encoder counts per revolution.
      */
     public double getRotations() {
-        // return applyCPR(applyGearing(getEncoderPosition()));
-        return applyCPR(getEncoderPosition());
+        return applyCPR(applyGearing(getEncoderPosition()));
+        // return applyCPR(getEncoderPosition());
     }
 
     /**
@@ -139,7 +139,7 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
     * @return the angle of the arm in radians
     */
     public double getAngleRadians() {
-        return getRotations() * 2 * Math.PI;
+        return Units.degreesToRadians(getAngleDegrees());
     }
 
     /**
@@ -177,16 +177,16 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
         double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
         //TODO: remove debug prints once we know this code works
         if(Robot.m_debugMode) {
-            SmartDashboard.putNumber(subsystemName + " FEEDFORWARD", ff);
-            SmartDashboard.putNumber(subsystemName + " OUTPUT USED", output);
-            SmartDashboard.putNumber(subsystemName + " VOLTAGE", motor.get());
-            SmartDashboard.putNumber(subsystemName + " SETPOINT USED", Units.radiansToDegrees(setpoint.position));
-            SmartDashboard.putNumber(subsystemName + " POSITION", getAngleDegrees());
-            SmartDashboard.putBoolean(subsystemName + " AT SETPOINT", pidController.atGoal());
+            SmartDashboard.putNumber(subsystemName + " FF", ff);
+            SmartDashboard.putNumber(subsystemName + " PID", output);
+            SmartDashboard.putNumber(subsystemName + " Percent", motor.get());
+            SmartDashboard.putNumber(subsystemName + " Setpoint", Units.radiansToDegrees(setpoint.position));
+            SmartDashboard.putNumber(subsystemName + " Position", getAngleDegrees());
+            SmartDashboard.putBoolean(subsystemName + " At Setpoint", pidController.atGoal());
         }
         
         /** if the driver has set output on, useOutput. */
-        if(SmartDashboard.getBoolean(subsystemName + " OUTPUT ON?", true)) {
+        if(SmartDashboard.getBoolean(subsystemName + " Output On?", true)) {
             setVoltage(output + ff);
         }
         /** otherwise, set output to 0 */
