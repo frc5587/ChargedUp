@@ -49,6 +49,8 @@ public class AutoCommands {
     private PathPlannerTrajectory p_pos2SpitAndCharge = PathPlanner.loadPath("pos2SpitAndCharge", new PathConstraints(1.25, 2)); // TODO
     private PathPlannerTrajectory p_pos2SpitCrossAndCharge = PathPlanner.loadPath("pos2SpitCrossAndCharge", new PathConstraints(1.25, 2)); // TODO
     private PathPlannerTrajectory p_pos4LinkAndCharge = PathPlanner.loadPath("pos4LinkAndCharge", AutoConstants.PATH_CONSTRAINTS); // TODO this shit is not gonna work
+    private PathPlannerTrajectory p_pos5LinkCrossAndCharge = PathPlanner.loadPath("pos5LinkCrossAndCharge", AutoConstants.PATH_CONSTRAINTS);
+    private PathPlannerTrajectory p_pos6TwoMidAndCross = PathPlanner.loadPath("pos6TwoMidAndCross", AutoConstants.PATH_CONSTRAINTS);
     // private PathPlannerTrajectory p_startClose = PathPlanner.loadPath("StartClose", AutoConstants.PATH_CONSTRAINTS);
     // private PathPlannerTrajectory p_startFar = PathPlanner.loadPath("StartFar", AutoConstants.PATH_CONSTRAINTS);
 
@@ -73,6 +75,12 @@ public class AutoCommands {
     /** Starting with 1 pre-loaded cube in position 4, shoot into hybrid ... */
     public final Command c_pos4LinkAndCharge;
 
+    /** Starting with 1 pre-loaded cone... */
+    public final Command c_pos5LinkCrossAndCharge;
+
+    /** Starting with 1 pre-loaded cone in position 6, put it on mid, cross line to get a cube, put it on mid. */
+    public final Command c_pos6TwoMidAndCross;
+
 
     public final SwerveAutoBuilder autoBuilder;
     private HashMap<String, Command> eventMap;
@@ -94,12 +102,11 @@ public class AutoCommands {
 
                 Map.entry("spitCone", new InstantCommand(intake::spitCone)),
                 Map.entry("spitCube", new InstantCommand(intake::spitCube)),
-                Map.entry("stopIntake", new InstantCommand(intake::stop)),
-
+                
                 Map.entry("autoBalance", new AutoBalance(swerve, leds)),
 
                 Map.entry("intakeIn", new InstantCommand(intake::forward)),
-                Map.entry("autoScoreMid", semiAuto.new ScoreInGrid(GridHeight.Middle))
+                Map.entry("stopIntake", new InstantCommand(intake::stop))
         ));
 
         this.autoBuilder = new SwerveAutoBuilder(
@@ -122,6 +129,8 @@ public class AutoCommands {
         this.c_pos2SpitCrossAndCharge = autoBuilder.fullAuto(p_pos2SpitCrossAndCharge);
         this.c_pos3SpitAndCross = autoBuilder.fullAuto(p_pos3SpitAndCross);
         this.c_pos4LinkAndCharge = autoBuilder.fullAuto(p_pos4LinkAndCharge);
+        this.c_pos5LinkCrossAndCharge = autoBuilder.fullAuto(p_pos5LinkCrossAndCharge);
+        this.c_pos6TwoMidAndCross = autoBuilder.fullAuto(p_pos6TwoMidAndCross);
         
         autoChooser.addOption("1st Position with Spit & Cross", c_pos1SpitAndCross);
         autoChooser.addOption("2nd Position with Spit", c_pos2Spit);
@@ -129,6 +138,8 @@ public class AutoCommands {
         autoChooser.addOption("2nd Position with Spit, Cross, & Charge", c_pos2SpitCrossAndCharge);
         autoChooser.addOption("3rd Position with Spit & Cross", c_pos3SpitAndCross);
         autoChooser.addOption("4th Position with Link & Charge", c_pos4LinkAndCharge);
+        autoChooser.addOption("5th Position with Link, Cross, & Charge", c_pos5LinkCrossAndCharge);
+        autoChooser.addOption("6th Position with 2 Piece Mid", c_pos6TwoMidAndCross);
         // autoChooser.addOption("StartMid", midMidCharge());
         autoChooser.setDefaultOption("null", null);
         SmartDashboard.putData("Auto Path", autoChooser);
