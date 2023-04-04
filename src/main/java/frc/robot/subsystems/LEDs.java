@@ -16,8 +16,8 @@ public class LEDs extends SubsystemBase {
     private final AddressableLED leds;
     public final AddressableLEDBuffer buffer;
     private final RainbowLEDPattern rainbowLEDPattern = new RainbowLEDPattern(90, LEDConstants.STRIP_LENGTH, LEDConstants.STRIP_LENGTH, 20);
-    private final PurpleYellowChaseAndBlink purpleyellow = new PurpleYellowChaseAndBlink(3, 60, LEDConstants.STRIP_LENGTH, 0.04);
-    private final RedBlueChaseAndBlink redblue = new RedBlueChaseAndBlink(10, 105, LEDConstants.STRIP_LENGTH, 20);
+    // private final PurpleYellowChaseAndBlink purpleyellow = new PurpleYellowChaseAndBlink(3, 60, LEDConstants.STRIP_LENGTH, 0.04);
+    // private final RedBlueChaseAndBlink redblue = new RedBlueChaseAndBlink(10, 105, LEDConstants.STRIP_LENGTH, 20);
     private final RedBlueChase allianceChase = new RedBlueChase(60, LEDConstants.STRIP_LENGTH, 20);
     private boolean isRunningPY = true;
     private boolean isRunningRainbow, isRunningRB, isRunningAlliance = false;
@@ -150,17 +150,23 @@ public class LEDs extends SubsystemBase {
                 leds.setData(buffer);
             }
             else if(isRunningPY) {
-                leds.setData(purpleyellow.step(0, buffer));
+                // leds.setData(purpleyellow.step(0, buffer));
+                leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
+                patternIndexer++;
             }
             else if(isRunningRainbow) {
                 leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
                 patternIndexer++;
             }
             else if(isRunningRB) {
-                leds.setData(redblue.step(0, buffer));
+                // leds.setData(redblue.step(0, buffer));
+                leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
+                patternIndexer++;
             }
             else if(isRunningAlliance) {
-                leds.setData(allianceChase.step(patternIndexer, buffer));
+                // leds.setData(allianceChase.step(patternIndexer, buffer));
+                leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
+                patternIndexer++;
             }
         // }
         // else {

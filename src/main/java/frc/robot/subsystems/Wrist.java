@@ -26,7 +26,7 @@ public class Wrist extends PivotingArmBase {
         1,
         0,
         new double[]{},
-        30*100, //TODO CHANGE ZERO OFFSET!!!!!!! this val is in encoder ticks
+        25*100, //TODO CHANGE ZERO OFFSET!!!!!!! this val is in encoder ticks
         WristConstants.ENCODER_CPR,
         WristConstants.PID_CONTROLLER,
         WristConstants.FF_CONTROLLER);
@@ -41,16 +41,16 @@ public class Wrist extends PivotingArmBase {
 
     @Override
     public double getEncoderPosition() {
-        return rightMotor.getEncoder().getPosition() * 42;
+        return leftMotor.getEncoder().getPosition() * 42;
         // return throughBore.get();
     }
     @Override
     public double getEncoderVelocity() {
-        return rightMotor.getEncoder().getVelocity();
+        return leftMotor.getEncoder().getVelocity();
     }
     @Override
     public void setEncoderPosition(double position) {
-        rightMotor.getEncoder().setPosition(position/360);        
+        leftMotor.getEncoder().setPosition(position/360);        
     }
     
     @Override
@@ -127,12 +127,12 @@ public class Wrist extends PivotingArmBase {
 
         /** wrist visualizer https://www.desmos.com/calculator/9ievw4kltq */
             // else {
-                if(arm.getMeasurement() > Units.degreesToRadians(20)) {
-                    setGoal(-arm.getMeasurement());
+                if(arm.getMeasurement() > Units.degreesToRadians(22)) {
+                    setGoal((-arm.getMeasurement())+Units.degreesToRadians(5));
                 }
                 else {
                     // setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
-                    setGoal(Units.degreesToRadians(20));
+                    setGoal(Units.degreesToRadians(25));
                 }
             // }
         }

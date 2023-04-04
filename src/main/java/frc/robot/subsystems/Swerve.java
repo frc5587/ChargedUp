@@ -230,7 +230,7 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         // if the target is within 2.5 meters of the robot, factor it into pose data
         if (limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
-            // poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
+            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
         }
 
         if (DriverStation.isDisabled()) {

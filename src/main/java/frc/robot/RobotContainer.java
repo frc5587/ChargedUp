@@ -91,7 +91,7 @@ public class RobotContainer {
     private void configureBindings() {
         Trigger wristUp = new Trigger(() -> xb.getRightY() > 0.1);
         Trigger wristDown = new Trigger(() -> xb.getRightY() < -0.1);
-        Trigger resetWristCommand = new Trigger(() -> xb.getLeftY() > 0.1);
+        Trigger resetWristCommand = new Trigger(() -> xb.getLeftY() < -0.1);
 
         xb.y().onTrue(new InstantCommand(arm::highSetpoint));
         xb.povLeft().onTrue(new InstantCommand(arm::substationSetpoint));
@@ -105,8 +105,8 @@ public class RobotContainer {
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));
-        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.2));}));
-        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.2));}));
+        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.45));}));
+        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.45));}));
         resetWristCommand.onTrue(new InstantCommand(() -> {wrist.setManualOverride(false); wrist.setFollowArm(true); wrist.setRaised(false);}));
     }
 

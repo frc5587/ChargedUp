@@ -40,7 +40,7 @@ public class Arm extends PivotingArmBase {
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return -(throughBore.getAbsolutePosition() - 0.650);
+        return -(throughBore.getAbsolutePosition() - 0.676);
     }
 
     @Override
@@ -181,6 +181,11 @@ public class Arm extends PivotingArmBase {
         } else {
                 leader.setNeutralMode(NeutralMode.Coast);
                 follower.setNeutralMode(NeutralMode.Coast);
+        }
+
+        if(!throughBore.isConnected()) {
+            this.disable();
+            this.stop();
         }
     }
 }
