@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.ArmConstants;
-
 public class ArmStateMachine {
     public double positionRadians;
     public double setpointRadians;

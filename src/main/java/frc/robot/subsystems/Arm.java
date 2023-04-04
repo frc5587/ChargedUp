@@ -1,10 +1,5 @@
 package frc.robot.subsystems;
 
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
-
 import java.util.function.Supplier;
 
 // import org.frc5587.lib.subsystems.PivotingArmBase;
@@ -13,14 +8,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.IterativeRobotBase;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Robot;
 
 public class Arm extends PivotingArmBase {
     private static WPI_TalonFX leader = new WPI_TalonFX(ArmConstants.LEADER_PORT);
@@ -28,13 +23,11 @@ public class Arm extends PivotingArmBase {
     private static MotorControllerGroup group = new MotorControllerGroup(leader, follower);
     // private static DigitalInput limitSwitch = new DigitalInput(ArmConstants.SWITCH_PORT);
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
-    private final ColorSensor colorSensor;
     private final Supplier<Pose2d> poseSupplier;
     private boolean shouldLower, shouldLowerOverride = false;
 
     public Arm(ColorSensor colorSensor, Supplier<Pose2d> poseSupplier) {
         super("Arm", ArmConstants.ARM_CONSTANTS, group);
-        this.colorSensor = colorSensor;
         this.poseSupplier = poseSupplier;
         configureMotors();
         this.enable();

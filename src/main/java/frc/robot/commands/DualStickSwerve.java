@@ -19,8 +19,8 @@ public class DualStickSwerve extends CommandBase {
 
     double rotation;
 
-    private final PIDController headingController = 
-        new PIDController(SwerveConstants.ANGLE_FPID.kP, SwerveConstants.ANGLE_FPID.kI, SwerveConstants.ANGLE_FPID.kD); // TODO Once this is working, move into constants and use for all headings
+    // private final PIDController headingController = 
+    //     new PIDController(SwerveConstants.ANGLE_FPID.kP, SwerveConstants.ANGLE_FPID.kI, SwerveConstants.ANGLE_FPID.kD); // TODO Once this is working, move into constants and use for all headings
 
     public DualStickSwerve(Swerve swerve, DoubleSupplier translationSup, DoubleSupplier strafeSup, DoubleSupplier rotationSup, BooleanSupplier fieldRelativeSup) {
         this.swerve = swerve;

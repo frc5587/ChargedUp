@@ -24,7 +24,6 @@ public class Rumbler extends SubsystemBase {
     public void periodic() {
         double[] driveCurrents = new double[4];
         double avg = 0;
-        double rumbleVal = 0;
 
         for(int i = 0; i < swerve.mSwerveMods.length; i++) {
             driveCurrents[i] = swerve.mSwerveMods[i].mDriveMotor.getStatorCurrent();
