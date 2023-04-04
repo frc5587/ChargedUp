@@ -163,9 +163,9 @@ public class RobotContainer {
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));
-        wristUp.onTrue(new InstantCommand(() -> {wrist.setManualOverride(true); System.out.println("UPPPPPPP"); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(5));}));
-        wristDown.onTrue(new InstantCommand(() -> {wrist.setManualOverride(true); System.out.println("DOWNNNNNN"); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(5));}));
-        resetWristCommand.onTrue(new InstantCommand(() -> {System.out.println("RESETTEDD"); wrist.setManualOverride(false); wrist.setFollowArm(true); wrist.setRaised(false);}));
+        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.2));}));
+        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.2));}));
+        resetWristCommand.onTrue(new InstantCommand(() -> {wrist.setManualOverride(false); wrist.setFollowArm(true); wrist.setRaised(false);}));
         
 
         // rightJoy.button(3).onTrue(semiAuto.new GrabFromSubstation());
