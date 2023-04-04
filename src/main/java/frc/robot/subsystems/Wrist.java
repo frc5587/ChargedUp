@@ -117,9 +117,9 @@ public class Wrist extends PivotingArmBase {
             setRaised(true);
         }
         
-        // else {
-        //     setFollowArm(true);
-        // }
+        else {
+            setFollowArm(true);
+        }
 
         if(isRaised() && !manualOverride) {
             setGoal(Units.degreesToRadians(-39));
