@@ -26,7 +26,7 @@ public class Wrist extends PivotingArmBase {
         1,
         0,
         new double[]{},
-        25*100, //TODO CHANGE ZERO OFFSET!!!!!!! this val is in encoder ticks
+        15*100, //TODO CHANGE ZERO OFFSET!!!!!!! this val is in encoder ticks
         WristConstants.ENCODER_CPR,
         WristConstants.PID_CONTROLLER,
         WristConstants.FF_CONTROLLER);
@@ -39,6 +39,7 @@ public class Wrist extends PivotingArmBase {
         this.enable();
 
         SmartDashboard.putBoolean("Wrist Brake Mode", true);
+        getController().setTolerance(Units.degreesToRadians(1));
     }
 
     @Override
@@ -137,12 +138,12 @@ public class Wrist extends PivotingArmBase {
 
         /** wrist visualizer https://www.desmos.com/calculator/9ievw4kltq */
             // else {
-                if(arm.getMeasurement() > Units.degreesToRadians(22)) {
-                    setGoal((-arm.getMeasurement())+Units.degreesToRadians(5));
+                if(arm.getMeasurement() > Units.degreesToRadians(15)) {
+                    setGoal((-arm.getMeasurement()));
                 }
                 else {
                     // setGoal(-(arm.getMeasurement()*2) + Units.degreesToRadians(20));
-                    setGoal(Units.degreesToRadians(25));
+                    setGoal(Units.degreesToRadians(15));
                 }
             // }
         }
