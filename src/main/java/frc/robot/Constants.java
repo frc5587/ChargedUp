@@ -150,7 +150,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(39.727); // 194.169;
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(306.474); // 194.169;
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -314,7 +314,7 @@ public final class Constants {
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
         public static final double HIGH_SETPOINT = Units.degreesToRadians(108);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(108);
-        public static final double INTAKE_SETPOINT = Units.degreesToRadians(24);
+        public static final double INTAKE_SETPOINT = Units.degreesToRadians(17);
         public static final double HOVER_SETPOINT = Units.degreesToRadians(30);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
         public static final double SUB_SETPOINT = Units.degreesToRadians(80);
@@ -345,7 +345,7 @@ public final class Constants {
 
     public static class WristConstants {
         //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
-        public static final Constraints CONSTRAINTS = new Constraints(3.14, 3.14);
+        public static final Constraints CONSTRAINTS = new Constraints(5, 5);
         public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(6, 0, 0, CONSTRAINTS); //12pm // 7.9302
         public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.69535, 0.37846, 0.4485);
         public static final double GEARING = 100;
