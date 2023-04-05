@@ -37,6 +37,8 @@ public class Wrist extends PivotingArmBase {
         configureMotors();
         resetEncoders();
         this.enable();
+
+        SmartDashboard.putBoolean("Wrist Brake Mode", true);
     }
 
     @Override
@@ -105,6 +107,14 @@ public class Wrist extends PivotingArmBase {
     public void periodic() {
         // SmartDashboard.putBoolean("Wrist Limit Switch", getLimitSwitchValue());
         SmartDashboard.putNumber("Wrist Position", getEncoderPosition());
+
+        if(SmartDashboard.getBoolean("Wrist Brake Mode", true)) {
+            leftMotor.setIdleMode(IdleMode.kBrake);
+            rightMotor.setIdleMode(IdleMode.kBrake);
+        } else {
+            leftMotor.setIdleMode(IdleMode.kCoast);
+            rightMotor.setIdleMode(IdleMode.kCoast);
+        }
 
         if(getLimitSwitchValue()) {
             this.resetEncoders();
