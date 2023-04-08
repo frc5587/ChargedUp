@@ -18,6 +18,7 @@
       "stopEvent": {
         "names": [
           "armIntake",
+          "waitForArm",
           "spitCone"
         ],
         "executionBehavior": "sequential",
@@ -27,16 +28,16 @@
     },
     {
       "anchorPoint": {
-        "x": 5.430354062564273,
-        "y": 2.73
+        "x": 6.028906779639522,
+        "y": 2.7102035373828235
       },
       "prevControl": {
-        "x": 4.388157766970196,
-        "y": 2.73
+        "x": 4.986710484045445,
+        "y": 2.7102035373828235
       },
       "nextControl": {
-        "x": 6.472550358158351,
-        "y": 2.73
+        "x": 7.0711030752336,
+        "y": 2.7102035373828235
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -54,31 +55,6 @@
     },
     {
       "anchorPoint": {
-        "x": 6.408969105641228,
-        "y": 2.6649308983072726
-      },
-      "prevControl": {
-        "x": 6.408969105641228,
-        "y": 2.6457423680508616
-      },
-      "nextControl": {
-        "x": 6.408969105641228,
-        "y": 2.6841194285636836
-      },
-      "holonomicAngle": -39.80557109226519,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
         "x": 3.9144601723078156,
         "y": 2.6841194285636836
       },
@@ -87,7 +63,7 @@
         "y": 2.7033079588200946
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -107,7 +83,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.13636363636363624,
+      "position": 0.15,
       "names": [
         "stopIntake",
         "armStow"
@@ -118,13 +94,6 @@
       "names": [
         "armIntake",
         "intakeIn"
-      ]
-    },
-    {
-      "position": 2.2363636363636323,
-      "names": [
-        "stopIntake",
-        "armStow"
       ]
     }
   ]

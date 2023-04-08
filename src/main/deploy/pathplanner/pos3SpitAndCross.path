@@ -18,21 +18,22 @@
       "stopEvent": {
         "names": [
           "armLow",
+          "waitForArm",
           "spitCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "deadline",
-        "waitTime": 3.0
+        "waitTime": 3.5
       }
     },
     {
       "anchorPoint": {
-        "x": 5.641427895384793,
-        "y": 0.8803975844610621
+        "x": 6.223309565021413,
+        "y": 0.8805302632003253
       },
       "prevControl": {
-        "x": 4.060624266410995,
-        "y": 0.8803975844610621
+        "x": 4.642505936047615,
+        "y": 0.8805302632003253
       },
       "nextControl": null,
       "holonomicAngle": 0.0,
@@ -53,7 +54,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.05454545454545451,
+      "position": 0.2763636363636331,
       "names": [
         "stopIntake",
         "armIntake"

@@ -229,44 +229,44 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         // if the target is within 2.5 meters of the robot, factor it into pose data
-        if (limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
-            poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
-        }
+        // if (limelight.hasTarget() && limelight.calculateDistance() < 2.5) { // TODO: tune distance requirement
+        //     poseEstimator.addVisionMeasurement(limelight.getLimelightPose(), Timer.getFPGATimestamp());
+        // }
 
-        if (DriverStation.isDisabled()) {
-            // TODO Check if robot is outside of community. If so, set motors to coast mode with 0.1 second left
-            // if(!inCommunity()) {
-            //     SmartDashboard.putBoolean("Swerve Brake Mode", true);
-            // }
-            // resetModulesToAbsolute(); // TODO Maybe remove to fix random wheel positions
-        }
+        // if (DriverStation.isDisabled()) {
+        //     // TODO Check if robot is outside of community. If so, set motors to coast mode with 0.1 second left
+        //     // if(!inCommunity()) {
+        //     //     SmartDashboard.putBoolean("Swerve Brake Mode", true);
+        //     // }
+        //     // resetModulesToAbsolute(); // TODO Maybe remove to fix random wheel positions
+        // }
 
         odometry.update(getYaw(), getModulePositions());
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());
-        if(Robot.m_debugMode) {
-            // DEBUGGING VALUES
-            for (int i = 0; i < mSwerveMods.length; i++) {
-                SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
-                SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
-            }
+        // if(Robot.m_debugMode) {
+        //     // DEBUGGING VALUES
+        //     for (int i = 0; i < mSwerveMods.length; i++) {
+        //         SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
+        //         SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
+        //     }
 
-            SmartDashboard.putNumber("Roll", getRoll());
-            SmartDashboard.putNumber("Pitch", getPitch());
-            SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
-        }
+        //     SmartDashboard.putNumber("Roll", getRoll());
+        //     SmartDashboard.putNumber("Pitch", getPitch());
+        //     SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
+        // }
 
-        if(SmartDashboard.getBoolean("Swerve Brake Mode", true)) {
-            for(SwerveModule mod : mSwerveMods) {
-                mod.mAngleMotor.setNeutralMode(NeutralMode.Brake);
-                mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
-            }
-        } else {
-            for(SwerveModule mod : mSwerveMods) {
-                mod.mAngleMotor.setNeutralMode(NeutralMode.Coast);
-                mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
-            }
-        }
+        // if(SmartDashboard.getBoolean("Swerve Brake Mode", true)) {
+        //     for(SwerveModule mod : mSwerveMods) {
+        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Brake);
+        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Brake);
+        //     }
+        // } else {
+        //     for(SwerveModule mod : mSwerveMods) {
+        //         mod.mAngleMotor.setNeutralMode(NeutralMode.Coast);
+        //         mod.mDriveMotor.setNeutralMode(NeutralMode.Coast);
+        //     }
+        // }
     }
 }

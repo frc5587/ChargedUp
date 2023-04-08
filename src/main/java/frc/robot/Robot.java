@@ -64,23 +64,22 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
-        if(SmartDashboard.getBoolean("PPLibServer On?", false) && !m_startedPPLServer) {
-            PathPlannerServer.startServer(5811);
-            m_startedPPLServer = true;
-        } else {
-            // PathPlannerServer.stop();
-            SmartDashboard.putBoolean("PPLibServer On?", true); // TODO remove this after figuring out how to stop server
-        }
+        // m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
+        // if(SmartDashboard.getBoolean("PPLibServer On?", false) && !m_startedPPLServer) {
+        //     PathPlannerServer.startServer(5811);
+        //     m_startedPPLServer = true;
+        // } else {
+        //     // PathPlannerServer.stop();
+        //     SmartDashboard.putBoolean("PPLibServer On?", true); // TODO remove this after figuring out how to stop server
+        // }
 
-        if(SmartDashboard.getBoolean("Clear Command Scheduler", false)) { // TODO TEST THIS
-            CommandScheduler.getInstance().cancelAll();
-            m_robotContainer.swerve.setDefaultCommand(m_robotContainer.currentDrive);
-            SmartDashboard.putBoolean("Clear Command Scheduler", false);
-        }
+        // if(SmartDashboard.getBoolean("Clear Command Scheduler", false)) { // TODO TEST THIS
+        //     CommandScheduler.getInstance().cancelAll();
+        //     m_robotContainer.swerve.setDefaultCommand(m_robotContainer.currentDrive);
+        //     SmartDashboard.putBoolean("Clear Command Scheduler", false);
+        // }
 
-        SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
-        
+        // SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

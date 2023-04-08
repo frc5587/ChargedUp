@@ -64,15 +64,15 @@ public class Intake extends SimpleMotorBase {
     }
 
     public void spitCube() {
-        motors.set(0.25); // TODO
+        motors.set(-0.25); // TODO
     }
 
     public void spitCone() {
-        motors.set(0.25); // TODO
+        motors.set(-0.25); // TODO
     }
     
     public void dropCone() {
-        motors.set(0.1); // TODO
+        motors.set(-0.1); // TODO
     }
 
     public void shootCube() {

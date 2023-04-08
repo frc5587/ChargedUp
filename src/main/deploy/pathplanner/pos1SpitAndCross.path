@@ -18,11 +18,12 @@
       "stopEvent": {
         "names": [
           "armLow",
+          "waitForArm",
           "spitCone"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "deadline",
-        "waitTime": 4.0
+        "waitTime": 3.5
       }
     },
     {
@@ -53,7 +54,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.03,
+      "position": 0.05,
       "names": [
         "stopIntake",
         "armIntake"

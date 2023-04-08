@@ -100,13 +100,15 @@ public class AutoCommands {
                 Map.entry("armLow", new InstantCommand(arm::lowSetpoint)),
                 Map.entry("armMid", new InstantCommand(arm::middleSetpoint)),
 
+                // Map.entry("spitCone", new SpitAuto(intake, arm, GamePiece.CONE)),
                 Map.entry("spitCone", new InstantCommand(intake::spitCone)),
-                Map.entry("spitCube", new InstantCommand(intake::spitCube)),
+                Map.entry("spitCube", new SpitAuto(intake, arm, GamePiece.CUBE)),
                 
                 Map.entry("autoBalance", new AutoBalance(swerve, leds)),
 
                 Map.entry("intakeIn", new InstantCommand(intake::forward)),
-                Map.entry("stopIntake", new InstantCommand(intake::stop))
+                Map.entry("stopIntake", new InstantCommand(intake::stop)),
+                Map.entry("waitForArm", new WaitCommand(2))
         ));
 
         this.autoBuilder = new SwerveAutoBuilder(

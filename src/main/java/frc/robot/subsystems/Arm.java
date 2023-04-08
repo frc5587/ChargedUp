@@ -183,9 +183,12 @@ public class Arm extends PivotingArmBase {
                 follower.setNeutralMode(NeutralMode.Coast);
         }
 
-        if(!throughBore.isConnected()) {
-            this.disable();
-            this.stop();
-        }
+        // if(!throughBore.isConnected()) {
+        //     this.disable();
+        //     this.stop();
+        // }
+        // else {
+        //     this.enable();
+        // }
     }
 }

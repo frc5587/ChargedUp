@@ -312,12 +312,12 @@ public final class Constants {
         public static final double KV = 4.0448;//3.5722;
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
-        public static final double HIGH_SETPOINT = Units.degreesToRadians(108);
+        public static final double HIGH_SETPOINT = Units.degreesToRadians(120);
         public static final double MEDIUM_SETPOINT = Units.degreesToRadians(108);
         public static final double INTAKE_SETPOINT = Units.degreesToRadians(17);
-        public static final double HOVER_SETPOINT = Units.degreesToRadians(30);
+        public static final double HOVER_SETPOINT = Units.degreesToRadians(25);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
-        public static final double SUB_SETPOINT = Units.degreesToRadians(80);
+        public static final double SUB_SETPOINT = Units.degreesToRadians(90);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
@@ -346,10 +346,11 @@ public final class Constants {
     public static class WristConstants {
         //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
         public static final Constraints CONSTRAINTS = new Constraints(5, 5);
-        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(6, 0, 0, CONSTRAINTS); //12pm // 7.9302
-        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.69535, 0.37846, 0.4485);
-        public static final double GEARING = 100;
-        public static final int ENCODER_CPR = 42;
+        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(5.5, 0, 0, CONSTRAINTS); //12pm // kD 1.9861
+        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.7635, 2.0434, 0.074894);
+        public static final ArmFeedforward HIGH_FF = new ArmFeedforward(0.55044, 2.2877, 0.3263);
+        public static final double GEARING = 1;
+        public static final int ENCODER_CPR = 1;
         public static final boolean LEFT_INVERTED = true;
         public static final boolean RIGHT_INVERTED = false;
         public static final int SWITCH_PORT = 0;
@@ -357,6 +358,6 @@ public final class Constants {
     
     public static final class LEDConstants {
         public static final int PORT = 0;
-        public static final int STRIP_LENGTH = 83;
+        public static final int STRIP_LENGTH = 84;
     }
 }

@@ -93,8 +93,9 @@ public class RobotContainer {
         Trigger wristDown = new Trigger(() -> xb.getRightY() < -0.1);
         Trigger resetWristCommand = new Trigger(() -> xb.getLeftY() < -0.1);
 
-        xb.y().onTrue(new InstantCommand(arm::highSetpoint));
+        xb.y().onTrue(new InstantCommand(arm::middleSetpoint));
         xb.povLeft().onTrue(new InstantCommand(arm::substationSetpoint));
+        xb.povRight().onTrue(new InstantCommand(arm::highSetpoint));
         xb.a().onTrue(new InstantCommand(arm::lowSetpoint));
         xb.x().onTrue(new InstantCommand(arm::lowerFromGrid, arm));
         xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));

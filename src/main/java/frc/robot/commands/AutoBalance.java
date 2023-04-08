@@ -49,11 +49,13 @@ public class AutoBalance extends CommandBase {
 
         if(shouldStop) {
             System.out.println("Within angle threshold");
+            swerve.stop();
+            swerve.setChassisSpeeds(new ChassisSpeeds());
             // swerve.stopWithLock(true);
         } else {
             System.out.println("Autobalancing");
             swerve.setChassisSpeeds(new ChassisSpeeds(
-                metersPerSec * (angleDegrees > 0.0 ? -1.0 : 1.0),
+                metersPerSec * (angleDegrees > 0.0 ? -0.8 : 0.8),
                 0.0,
                 0.0));
 
