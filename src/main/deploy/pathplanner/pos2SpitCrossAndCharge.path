@@ -1,0 +1,100 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.82,
+        "y": 2.73
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.803721844102621,
+        "y": 2.722496489076504
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "armIntake",
+          "waitForArm",
+          "spitCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.028906779639522,
+        "y": 2.7102035373828235
+      },
+      "prevControl": {
+        "x": 4.986710484045445,
+        "y": 2.7102035373828235
+      },
+      "nextControl": {
+        "x": 7.0711030752336,
+        "y": 2.7102035373828235
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": 1.0,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "autoBalance"
+        ],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 3.9144601723078156,
+        "y": 2.6841194285636836
+      },
+      "prevControl": {
+        "x": 3.9144601723078156,
+        "y": 2.7033079588200946
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "autoBalance"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 1.25,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.15,
+      "names": [
+        "stopIntake",
+        "armStow"
+      ]
+    },
+    {
+      "position": 1.2000000000000002,
+      "names": [
+        "armIntake",
+        "intakeIn"
+      ]
+    }
+  ]
+}

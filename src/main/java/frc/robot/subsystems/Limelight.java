@@ -1,16 +1,15 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants.LimelightConstants;
+import org.frc5587.lib.subsystems.LimelightBase;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.frc5587.lib.subsystems.LimelightBase;
+import frc.robot.Constants.LimelightConstants;
 
 public class Limelight extends LimelightBase {
     SendableChooser<LedValues> ledChooser = new SendableChooser<LedValues>();
-    private final Field2d field = new Field2d();
 
     public Limelight() {
         super(LimelightConstants.MOUNT_ANGLE, LimelightConstants.LENS_HEIGHT, LimelightConstants.GOAL_HEIGHT, LimelightConstants.DISTANCE_OFFSET);
@@ -20,7 +19,6 @@ public class Limelight extends LimelightBase {
         ledChooser.addOption("OFF", LedValues.OFF);
         ledChooser.addOption("BLINK", LedValues.BLINK);
         SmartDashboard.putData("Limelight LEDs", ledChooser);
-        // SmartDashboard.putData("Limelight Pose Field", field);
     }
 
     public Pose2d getLimelightPose() {
@@ -31,6 +29,5 @@ public class Limelight extends LimelightBase {
     @Override
     public void periodic() {
         setLEDs(ledChooser.getSelected());
-        // field.setRobotPose(getLimelightPose());
     }
 }

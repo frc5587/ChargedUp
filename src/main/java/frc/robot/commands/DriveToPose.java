@@ -1,19 +1,17 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.Swerve;
-
-import java.util.function.Supplier;
 
 public class DriveToPose extends CommandBase {
     private final Swerve swerve;
@@ -71,8 +69,6 @@ public class DriveToPose extends CommandBase {
         swerve.setChassisSpeeds(
                 new ChassisSpeeds(
                         -driveVelocity.getX(), driveVelocity.getY(), thetaVelocity));
-        // speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-        // setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
     @Override

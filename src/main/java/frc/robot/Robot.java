@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,7 +25,8 @@ public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
-    public static boolean m_debugMode = false;
+    public static boolean m_debugMode = true;
+    public static boolean m_startedPPLServer = false;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -36,6 +40,8 @@ public class Robot extends TimedRobot {
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
         SmartDashboard.putBoolean("Debug Mode On?", m_debugMode);
+        SmartDashboard.putBoolean("PPLibServer On?", false);
+        SmartDashboard.putBoolean("Clear Command Scheduler", false);
     }
 
     /**
@@ -58,7 +64,22 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
+        // m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
+        // if(SmartDashboard.getBoolean("PPLibServer On?", false) && !m_startedPPLServer) {
+        //     PathPlannerServer.startServer(5811);
+        //     m_startedPPLServer = true;
+        // } else {
+        //     // PathPlannerServer.stop();
+        //     SmartDashboard.putBoolean("PPLibServer On?", true); // TODO remove this after figuring out how to stop server
+        // }
+
+        // if(SmartDashboard.getBoolean("Clear Command Scheduler", false)) { // TODO TEST THIS
+        //     CommandScheduler.getInstance().cancelAll();
+        //     m_robotContainer.swerve.setDefaultCommand(m_robotContainer.currentDrive);
+        //     SmartDashboard.putBoolean("Clear Command Scheduler", false);
+        // }
+
+        // SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
     }
 
     /** This function is called once each time the robot enters Disabled mode. */

@@ -6,22 +6,20 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.auto.PIDConstants;
 
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
-import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -72,6 +70,7 @@ public final class Constants {
         public static final int DRIVE_PEAK_LIMIT = 40;
         public static final double DRIVE_PEAK_DURATION = 0.1;
         public static final boolean DRIVE_LIMIT_ENABLED = true;
+        public static final int RUMBLE_THRESHOLD = 35;
         
         public static final double SLEW_RATE = 3; // m/s^2 // TODO CHANGE AFTER ARM IS ADDED
 
@@ -87,7 +86,7 @@ public final class Constants {
 
         /* Drive Motor PID Values */
         public static final FPID DRIVE_FPID = new FPID(
-                0.05, 0.03, 0., 0.); // 2.8884 for P
+            0.02, 0.1, 0, 0);//0.05, 0.03, 0., 0.); // //2.8884 for P
 
         /* Angle Motor PID Values */
         public static final FPID ANGLE_FPID = new FPID(
@@ -104,9 +103,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 4;//5.;
+        public static final double MAX_SPEED = 2.5;//5.;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = 6 ;//6.;
+        public static final double MAX_ANGULAR_VELOCITY = Math.PI;//6.;
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -151,7 +150,7 @@ public final class Constants {
             public static final int DRIVE_ID = 13;
             public static final int ANGLE_ID = 18;
             public static final int CANCODER_ID = 53;
-            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(39.727); // 194.169;
+            public static final Rotation2d ANGLE_OFFSET = Rotation2d.fromDegrees(306.474); // 194.169;
             public static final boolean ENCODER_INVERTED = false;
             public static final SwerveModuleConstants MODULECONSTANTS = 
                 new SwerveModuleConstants(DRIVE_ID, ANGLE_ID, CANCODER_ID, ANGLE_OFFSET);
@@ -160,16 +159,17 @@ public final class Constants {
 
     public static final class AutoConstants { // TODO Confirm
         public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
-        public static final double MAX_ACCEL_MPS_2 = 0.5; // 3. // in m/s^2 
+        public static final double MAX_ACCEL_MPS_2 = 0.25; // 3. // in m/s^2 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 
         public static final double CRAWL_SPEED = Units.inchesToMeters(5); //m/s
 
         public static final double KP_X_CONTROLLER = 1;//126.04; // 1. // THIS AFFECTS AUTO 
-        public static final double KP_Y_CONTROLLER = KP_X_CONTROLLER; // THIS AFFECTS AUTO
+        public static final double KP_Y_CONTROLLER = 1; // THIS AFFECTS AUTO
         public static final double KD_XY_CONTROLLER = 0;//4.4556;
-        public static final double KP_THETA_CONTROLLER = 1; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
+        public static final double KP_THETA_CONTROLLER = 0.001; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
+        public static final double KD_THETA_CONTROLLER = 0; //2.; // 7.; // 0.02; // THIS AFFECTS AUTO AND DRIVETOPOSE
 
         public static final double KP_DRIVE_CONTROLLER = 19.336; //2.5; // THIS AFFECTS DRIVETOPOSE
     
@@ -186,15 +186,28 @@ public final class Constants {
         public static final ProfiledPIDController BOT_ANGLE_CONTROLLER = // AUTO AND DRIVETOPOSE
                 new ProfiledPIDController(
                     KP_THETA_CONTROLLER, 0.0, 0.0, K_THETA_CONSTRAINTS); // enableContinuousInput(-Math.PI, Math.PI);
-        
                     
-        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_Y_CONTROLLER, 0, 0); // AUTO
-        public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, 0); // AUTO
-        public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
-        public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        public static final PIDConstants TRANSL_CONSTANTS = new PIDConstants(KP_X_CONTROLLER, 0, 0); // AUTO // TODO Characterize using simple motor with locked straight (clamp belts??)
+        public static final PIDConstants THETA_CONSTANTS = new PIDConstants(KP_THETA_CONTROLLER, 0, KD_THETA_CONTROLLER); // AUTO // TODO Manually tune P & D for position loop
+        // public static final PIDController BOT_X_CONTROLLER = new PIDController(KP_X_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        // public static final PIDController BOT_Y_CONTROLLER = new PIDController(KP_Y_CONTROLLER, 0, KD_XY_CONTROLLER); // AUTO
+        // public static final PIDController BOT_ROT_CONTROLLER = new PIDController(0, 0, 0); // TODO
+        // public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
+        //     BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
 
-        public static final HolonomicDriveController DRIVE_CONTROLLER = new HolonomicDriveController(
-            BOT_Y_CONTROLLER, BOT_X_CONTROLLER, BOT_ANGLE_CONTROLLER); // AUTO
+        // public static final PPSwerveControllerCommand PPSwerveController(PathPlannerTrajectory traj, Swerve swerve) {
+        //     return new PPSwerveControllerCommand(
+        //         traj, 
+        //         swerve::getPose,
+        //         SwerveConstants.SWERVE_KINEMATICS,
+        //         BOT_X_CONTROLLER,
+        //         BOT_Y_CONTROLLER,
+        //         BOT_ROT_CONTROLLER,
+        //         swerve::setModuleStates,
+        //         true,
+        //         swerve
+        //     );
+        // }
 
         public static final class GridLocationGroup {
             public final Pose2d greaterPose, poseLeft, poseRight;
@@ -283,10 +296,10 @@ public final class Constants {
     public static final class ArmConstants {
         public static final int LEADER_PORT = 20;
         public static final int FOLLOWER_PORT = 21;
-        public static final double GEARING = 240;
+        public static final double GEARING = 1;//240;
         public static final double VELOCITY_DENOMINATOR = 0.1;
         public static final double[] SOFT_LIMITS = {0, Units.degreesToRadians(100)};
-        public static final int ENCODER_CPR = 2048;
+        public static final int ENCODER_CPR = 1;
         public static final int ZERO_OFFSET = Math.round((float) (Units.degreesToRadians(-2) * GEARING * ENCODER_CPR / 2 / Math.PI)); // TODO: Find
         public static final int SWITCH_PORT = 0;
         public static final boolean SWITCH_INVERTED = true;
@@ -299,12 +312,12 @@ public final class Constants {
         public static final double KV = 4.0448;//3.5722;
         public static final ProfiledPIDController ARM_PID = new ProfiledPIDController(KP, KI, KD, PID_CONSTRAINTS);
         public static final ArmFeedforward ARM_FF = new ArmFeedforward(KS, KG, KV);
-        public static final double HIGH_SETPOINT = Units.degreesToRadians(108);
-        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(88);
-        public static final double INTAKE_SETPOINT = Units.degreesToRadians(15);
-        public static final double HOVER_SETPOINT = Units.degreesToRadians(20);
+        public static final double HIGH_SETPOINT = Units.degreesToRadians(120);
+        public static final double MEDIUM_SETPOINT = Units.degreesToRadians(108);
+        public static final double INTAKE_SETPOINT = Units.degreesToRadians(17);
+        public static final double HOVER_SETPOINT = Units.degreesToRadians(25);
         public static final double STOW_SETPOINT = Units.degreesToRadians(-2);
-        public static final double SUB_SETPOINT = Units.degreesToRadians(74.7);
+        public static final double SUB_SETPOINT = Units.degreesToRadians(90);
         public static final double FF_ANGLE_OFFSET = -Units.degreesToRadians(90);
 
         public static final PivotingArmConstants ARM_CONSTANTS = new PivotingArmConstants(
@@ -329,9 +342,22 @@ public final class Constants {
         public static final double RIGHT_VELOCITY_THRESHOLD = 10;
         public static final double EJECT_RUNTIME = 2; // seconds
     }
+
+    public static class WristConstants {
+        //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
+        public static final Constraints CONSTRAINTS = new Constraints(5, 5);
+        public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(5.5, 0, 0, CONSTRAINTS); //12pm // kD 1.9861
+        public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.7635, 2.0434, 0.074894);
+        public static final ArmFeedforward HIGH_FF = new ArmFeedforward(0.55044, 2.2877, 0.3263);
+        public static final double GEARING = 1;
+        public static final int ENCODER_CPR = 1;
+        public static final boolean LEFT_INVERTED = true;
+        public static final boolean RIGHT_INVERTED = false;
+        public static final int SWITCH_PORT = 0;
+    }
     
     public static final class LEDConstants {
         public static final int PORT = 0;
-        public static final int STRIP_LENGTH = 210;
+        public static final int STRIP_LENGTH = 84;
     }
 }
