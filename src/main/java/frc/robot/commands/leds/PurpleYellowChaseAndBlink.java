@@ -1,32 +1,36 @@
-package frc.robot.commands;
+package frc.robot.commands.leds;
 
 import org.frc5587.lib.advanced.CustomLEDPattern;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
-public class RedBlueChaseAndBlink implements CustomLEDPattern {
+public class PurpleYellowChaseAndBlink implements CustomLEDPattern {
     private static final double stepTime = 0.02;
     private double idx = 0;
-    private int blinkSpeed, chaseSpeed, brightness, length;
-    private int[] redLEDs, blueLEDs;
+    private int blinkSpeed, chaseSpeed, length;
+    private int[] redLEDs, blueLEDs, yellow, purple;
 
     /**
      * @param blinkSpeed how fast the pattern blinks, in blinks per second
      * @param chaseSpeed how fast the pattern chases, in pixels per second
      * @param length length of LED strip, in pixels
-     * @param brightnessPercent from 0 to 255, the brightness of the LED strip
+     * @param brightnessPercent from 0 to 1, the brightness of the LED strip
      */
-    public RedBlueChaseAndBlink(int blinkSpeed, int chaseSpeed, int length, int brightness) {
+    public PurpleYellowChaseAndBlink(int blinkSpeed, int chaseSpeed, int length, double brightnessPercent) {
         this.blinkSpeed = blinkSpeed;
         this.chaseSpeed = chaseSpeed;
-        this.brightness = brightness;
         this.length = length;
+
+        int[] boundYellow = {(int) (255 * brightnessPercent), (int) (255 * brightnessPercent), 0};
+        int[] boundPurple = {(int) (178 * brightnessPercent), (int) (37 * brightnessPercent), (int) (188 * brightnessPercent)};
+        yellow = boundYellow;
+        purple = boundPurple;
     }
 
     @Override
     public AddressableLEDBuffer step(int stepNumber, AddressableLEDBuffer ledBuffer) {
         double usedSpeed;
 
-        if(idx > length) {
+        if(idx > length + 7) {
             idx = 0;
         }
         
@@ -41,18 +45,18 @@ public class RedBlueChaseAndBlink implements CustomLEDPattern {
 
         for (int i = 0; i < redLEDs.length; i++) {
             if(((int) idx % 2 == 0) || ((int) idx < length)) {
-                ledBuffer.setRGB(redLEDs[i], brightness, 0, 0);
+                ledBuffer.setRGB(redLEDs[i], purple[0], purple[1], purple[2]);
             }
             else {
-                ledBuffer.setRGB(redLEDs[i], 0, 0, brightness);
+                ledBuffer.setRGB(redLEDs[i], yellow[0], yellow[1], yellow[2]);
             }
         }
         for (int i = 0; i < blueLEDs.length; i++) {
             if(((int) idx % 2 == 0) || ((int) idx < length)) {
-                ledBuffer.setRGB(blueLEDs[i], 0, 0, brightness);
+                ledBuffer.setRGB(blueLEDs[i], yellow[0], yellow[1], yellow[2]);
             }
             else {
-                ledBuffer.setRGB(blueLEDs[i], brightness, 0, 0);
+                ledBuffer.setRGB(blueLEDs[i], purple[0], purple[1], purple[2]);
             }
         }
         
@@ -67,7 +71,7 @@ public class RedBlueChaseAndBlink implements CustomLEDPattern {
         int redArrSetterIndex = 0;
         int blueArrSetterIndex = 0;
         for (int i = 0; i < length; i++) {
-            if(((i <= (60))) || ((i <= (length*0.75)) && (i > (length / 2)-5)) || i == 0) {
+            if(((i <= (60))) || ((i <= (length*0.75)-14) && (i > (length / 2)-5))) {
                 redLEDs[redArrSetterIndex] = i;
                 redArrSetterIndex++;
             }

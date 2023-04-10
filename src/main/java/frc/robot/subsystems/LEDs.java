@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
-import frc.robot.commands.PurpleYellowChaseAndBlink;
-import frc.robot.commands.RedBlueChase;
-import frc.robot.commands.RedBlueChaseAndBlink;
+import frc.robot.commands.leds.PurpleYellowChaseAndBlink;
+import frc.robot.commands.leds.RedBlueChase;
+import frc.robot.commands.leds.RedBlueChaseAndBlink;
 
 public class LEDs extends SubsystemBase {
     private final AddressableLED leds;

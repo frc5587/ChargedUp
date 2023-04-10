@@ -38,7 +38,7 @@ public class RobotContainer {
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
 
     // SUBSYSTEMS
-    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
+    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kMXP);
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm(colorSensor, swerve::getPose);

@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.leds;
 
 import org.frc5587.lib.advanced.CustomLEDPattern;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;

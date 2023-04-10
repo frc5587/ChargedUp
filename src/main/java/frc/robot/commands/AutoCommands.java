@@ -35,6 +35,7 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
+import frc.robot.util.GamePiece;
 
 public class AutoCommands {
     // subsystems
