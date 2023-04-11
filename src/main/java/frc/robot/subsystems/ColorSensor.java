@@ -33,25 +33,26 @@ public class ColorSensor extends SubsystemBase {
     }
 
     public boolean hasCone() {
-        if(getClosestColor() == coneColor) return true;
-
-        return false;
+        return hasElementProximity() && getClosestColor() == coneColor;
     }
 
     public boolean hasCube() {
-        if(getClosestColor() == cubeColor) return true;
-
-        return false;
+        return hasElementProximity() && getClosestColor() == cubeColor;
     }
 
-    public boolean hasElement() {
+    public boolean hasElementProximity() {
+        return sensor.getProximity() < 150; // 15 cm?
+    }
+
+    public boolean hasElementColor() {
         return hasCone() || hasCube();
     }
 
     @Override
     public void periodic() {
         if(Robot.m_debugMode) {
-            SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());
+            SmartDashboard.putString("ColorSensor ClosestColor", sensor.getColor().toString());
+            SmartDashboard.putBoolean("Haselement", hasElementColor());
         }
     }
 }
