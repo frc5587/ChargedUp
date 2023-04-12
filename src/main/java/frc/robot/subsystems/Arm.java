@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.util.titanlib.PivotingArmBase;
 import frc.robot.Robot;
 
 public class Arm extends PivotingArmBase {
@@ -91,7 +92,7 @@ public class Arm extends PivotingArmBase {
 
     public void lowSetpoint() {
         shouldLowerOverride = true;
-        getController().setGoal(ArmConstants.HOVER_SETPOINT); // TODO
+        getController().setGoal(ArmConstants.HOVER_SETPOINT);
     }
 
     public void hoverSetpoint() {

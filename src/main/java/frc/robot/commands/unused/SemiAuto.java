@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.unused;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.AutoSetArm.GridHeight;
+import frc.robot.commands.unused.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
@@ -111,7 +111,7 @@ public class SemiAuto {
                                 : AutoConstants.BLUE_SUBS[sub.value]),
                         new AutoSetArm(arm, GridHeight.Substation)),
                 new ParallelDeadlineGroup(
-                        new IntakeIn(intake),
+                        new InstantCommand(intake::forward),
                         new RunCommand(() -> swerve.crawl(0), swerve)),
                 new ParallelDeadlineGroup(
                         new WaitCommand(1), 
@@ -135,7 +135,7 @@ public class SemiAuto {
                 //         DriverStation.getAlliance() == Alliance.Blue ? swerve.getPose().getX()-0.57 : swerve.getPose().getX()+0.57, swerve.getPose().getY(), swerve.getPose().getRotation())),
                 new WaitCommand(1.5),
                 new ParallelCommandGroup(
-                        new IntakeIn(intake),
+                        new InstantCommand(intake::forward),
                         new ParallelDeadlineGroup(
                                 new WaitCommand(2), 
                                 new RunCommand(() -> swerve.crawl(0.3), swerve))),

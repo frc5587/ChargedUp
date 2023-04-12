@@ -17,9 +17,9 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.subsystems.PivotingArmBase.PivotingArmConstants;
 import frc.robot.util.swervelib.util.COTSFalconSwerveConstants;
 import frc.robot.util.swervelib.util.SwerveModuleConstants;
+import frc.robot.util.titanlib.PivotingArmBase.PivotingArmConstants;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -344,7 +344,6 @@ public final class Constants {
     }
 
     public static class WristConstants {
-        //TODO CHANGE ONCE WE KNOW THE WRIST DOESNT KILL ITSELF
         public static final Constraints CONSTRAINTS = new Constraints(5, 5);
         public static final ProfiledPIDController PID_CONTROLLER = new ProfiledPIDController(5.5, 0, 0, CONSTRAINTS); //12pm // kD 1.9861
         public static final ArmFeedforward FF_CONTROLLER = new ArmFeedforward(0.7635, 2.0434, 0.074894);

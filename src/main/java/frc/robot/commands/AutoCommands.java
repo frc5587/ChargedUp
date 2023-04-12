@@ -3,13 +3,10 @@ package frc.robot.commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ctre.phoenix.platform.can.AutocacheState;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,34 +18,21 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.commands.AutoSetArm.GridHeight;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.Swerve;
-import frc.robot.util.GamePiece;
 
 public class AutoCommands {
-    // subsystems
-    private final Intake intake;
-    private final Arm arm;
-    private final Swerve swerve;
-    private final LEDs leds;
-
     // Auto Paths
     private PathPlannerTrajectory p_pos1SpitAndCross = PathPlanner.loadPath("pos1SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
     private PathPlannerTrajectory p_pos3SpitAndCross = PathPlanner.loadPath("pos3SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
-    private PathPlannerTrajectory p_pos2SpitAndCharge = PathPlanner.loadPath("pos2SpitAndCharge", new PathConstraints(1.25, 2)); // TODO
-    private PathPlannerTrajectory p_pos2SpitCrossAndCharge = PathPlanner.loadPath("pos2SpitCrossAndCharge", new PathConstraints(1.25, 2)); // TODO
+    private PathPlannerTrajectory p_pos2SpitAndCharge = PathPlanner.loadPath("pos2SpitAndCharge", new PathConstraints(1.25, 2));
+    private PathPlannerTrajectory p_pos2SpitCrossAndCharge = PathPlanner.loadPath("pos2SpitCrossAndCharge", new PathConstraints(1.25, 2));
     private PathPlannerTrajectory p_pos4LinkAndCharge = PathPlanner.loadPath("pos4LinkAndCharge", AutoConstants.PATH_CONSTRAINTS); // TODO this shit is not gonna work
     private PathPlannerTrajectory p_pos5LinkCrossAndCharge = PathPlanner.loadPath("pos5LinkCrossAndCharge", AutoConstants.PATH_CONSTRAINTS);
     private PathPlannerTrajectory p_pos6TwoMidAndCross = PathPlanner.loadPath("pos6TwoMidAndCross", AutoConstants.PATH_CONSTRAINTS);
@@ -88,12 +72,7 @@ public class AutoCommands {
     
     SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-    public AutoCommands(Intake intake, Arm arm, Swerve swerve, LEDs leds, SemiAuto semiAuto) {
-        this.intake = intake;
-        this.arm = arm;
-        this.swerve = swerve;
-        this.leds = leds;
-
+    public AutoCommands(Intake intake, Arm arm, Swerve swerve, LEDs leds) {
         this.eventMap = new HashMap<>(Map.ofEntries(
                 Map.entry("armStow", new InstantCommand(arm::stow)),
                 Map.entry("armHover", new InstantCommand(arm::hoverSetpoint)),
@@ -101,9 +80,8 @@ public class AutoCommands {
                 Map.entry("armLow", new InstantCommand(arm::lowSetpoint)),
                 Map.entry("armMid", new InstantCommand(arm::middleSetpoint)),
 
-                // Map.entry("spitCone", new SpitAuto(intake, arm, GamePiece.CONE)),
                 Map.entry("spitCone", new InstantCommand(intake::spitCone)),
-                Map.entry("spitCube", new SpitAuto(intake, arm, GamePiece.CUBE)),
+                Map.entry("spitCube", new InstantCommand(intake::spitCube)),
                 
                 Map.entry("autoBalance", new AutoBalance(swerve, leds)),
 
@@ -127,7 +105,7 @@ public class AutoCommands {
                 new InstantCommand(() -> swerve.resetOdometry(DriverStation.getAlliance() == Alliance.Blue
                         ? (new Pose2d(1.82, 2.73, new Rotation2d(Units.degreesToRadians(180))))
                         : new Pose2d(14.71, 2.73, new Rotation2d(Units.degreesToRadians(0))))),
-                new IntakeOut(intake));
+                new InstantCommand(intake::spitCone));
         this.c_pos2SpitAndCharge = autoBuilder.fullAuto(p_pos2SpitAndCharge);
         this.c_pos2SpitCrossAndCharge = autoBuilder.fullAuto(p_pos2SpitCrossAndCharge);
         this.c_pos3SpitAndCross = autoBuilder.fullAuto(p_pos3SpitAndCross);

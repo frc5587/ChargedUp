@@ -10,18 +10,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoBalance;
-import frc.robot.commands.AutoCommands;
-import frc.robot.commands.DualStickSwerve;
-import frc.robot.commands.SemiAuto;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ColorSensor;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Rumbler;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Wrist;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,7 +35,6 @@ public class RobotContainer {
     private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
     public LEDs leds = new LEDs();
-    Rumbler rumbler = new Rumbler(driveXb, swerve);
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
@@ -54,8 +43,7 @@ public class RobotContainer {
                     () -> Math.pow(driveXb.getLeftX(), 3), 
                     () -> false);
 
-    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds);
-    public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds, semiAuto);
+    public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);    
 
     // Other
@@ -67,11 +55,12 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        swerve.setDefaultCommand(currentDrive);
         leds.setRainbow();
-        configureBindings();
         pdh.clearStickyFaults();
         pdh.close();
+        
+        swerve.setDefaultCommand(currentDrive);
+        configureBindings();
     }
 
     /**

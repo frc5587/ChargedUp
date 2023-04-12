@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -16,8 +15,6 @@ public class Intake extends SimpleMotorBase {
     private static final CANSparkMax leftIntake = new CANSparkMax(IntakeConstants.LEFT_MOTOR, MotorType.kBrushless);
     private static final CANSparkMax rightIntake = new CANSparkMax(IntakeConstants.RIGHT_MOTOR, MotorType.kBrushless);
 
-    private final RelativeEncoder leftEncoder = leftIntake.getEncoder();
-    private final RelativeEncoder rightEncoder = rightIntake.getEncoder();
     private final ColorSensor colorSensor;
 
     public Intake(ColorSensor colorSensor) {
@@ -46,16 +43,7 @@ public class Intake extends SimpleMotorBase {
         rightIntake.setIdleMode(IdleMode.kBrake);
     }
 
-    private double leftVelocity() {
-        return leftEncoder.getVelocity();
-    }
-
-    private double rightVelocity() {
-        return rightEncoder.getVelocity();
-    }
-
     public boolean hasElement() {
-        // return rightVelocity() > IntakeConstants.RIGHT_VELOCITY_THRESHOLD && leftVelocity() < IntakeConstants.LEFT_VELOCITY_THRESHOLD;
         return colorSensor.hasElementColor();
     }
 
@@ -64,19 +52,19 @@ public class Intake extends SimpleMotorBase {
     }
 
     public void spitCube() {
-        motors.set(-0.25); // TODO
+        motors.set(-0.25);
     }
 
     public void spitCone() {
-        motors.set(-0.25); // TODO
+        motors.set(-0.25);
     }
     
     public void dropCone() {
-        motors.set(-0.1); // TODO
+        motors.set(-0.1);
     }
 
     public void shootCube() {
-        motors.set(-5); // TODO Tune this
+        motors.set(-5);
     }
 
     public void holdElement() {
@@ -88,7 +76,5 @@ public class Intake extends SimpleMotorBase {
         if(Robot.m_debugMode) {
             SmartDashboard.putBoolean("Has Game Piece", hasElement());
         }
-        // SmartDashboard.putNumber("Left Velocity", leftVelocity());
-        // SmartDashboard.putNumber("Right Velocity", rightVelocity());
     }
 }
