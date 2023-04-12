@@ -13,8 +13,6 @@ public class AutoBalance extends CommandBase {
     private LEDs leds;
 
     private Notifier blinkLeds = new Notifier(this::blinkLeds);
-
-    private boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
     private double angleDegrees;
 
     private final double metersPerSec = 0.8;
@@ -56,7 +54,7 @@ public class AutoBalance extends CommandBase {
     public void end(boolean interrupted) {
         blinkLeds.stop();
         blinkLeds.close();
-        leds.setAlliance();
+        leds.setRainbow();
     }
 
     boolean ledStatus = false;
@@ -67,7 +65,7 @@ public class AutoBalance extends CommandBase {
             ledStatus = false;
         } 
         else {
-            if(isRedAlliance) {
+            if(DriverStation.getAlliance() == Alliance.Red) {
                 leds.setColor(255, 0, 0); 
             }
             else {

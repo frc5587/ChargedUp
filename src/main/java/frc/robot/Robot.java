@@ -66,13 +66,13 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", false);
+        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", true);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        m_robotContainer.leds.setRB();
+        m_robotContainer.leds.setRainbow();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.schedule();
         }
 
-        m_robotContainer.leds.setRB();
+        m_robotContainer.leds.setRainbow();
     }
 
     /** This function is called periodically during autonomous. */
@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
             m_autonomousCommand.cancel();
         }
 
-        m_robotContainer.leds.setRB();
+        m_robotContainer.leds.setRainbow();
     }
 
     /** This function is called periodically during operator control. */

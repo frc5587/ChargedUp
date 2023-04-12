@@ -78,9 +78,6 @@ public class SwerveModule {
     }
 
     public Rotation2d getCanCoder(){
-        // if(angleEncoder.configGetSensorInitializationStrategy() == SensorInitializationStrategy.BootToAbsolutePosition && angleEncoder.getLastError().value == 0) {
-        //     return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
-        // }
         return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
     }
 

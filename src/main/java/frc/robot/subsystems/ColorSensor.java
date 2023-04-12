@@ -14,8 +14,8 @@ public class ColorSensor extends SubsystemBase {
     private final ColorSensorV3 sensor;
     private final ColorMatch colorMatcher = new ColorMatch();
 
-    private final Color cubeColor = Color.kYellow; //new Color(0, 0, 0); // TODO
-    private final Color coneColor = Color.kPurple;//new Color(0, 0, 0); // TODO
+    private final Color cubeColor = Color.kYellow;
+    private final Color coneColor = Color.kPurple;
 
     public ColorSensor(I2C.Port port) {
         sensor = new ColorSensorV3(port);
