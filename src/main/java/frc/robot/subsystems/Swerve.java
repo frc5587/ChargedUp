@@ -232,7 +232,7 @@ public class Swerve extends SubsystemBase {
         //     }
 
         //     SmartDashboard.putNumber("Roll", getRoll());
-        //     SmartDashboard.putNumber("Pitch", getPitch());
+            SmartDashboard.putNumber("Pitch", getPitch());
         //     SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
         // }
 

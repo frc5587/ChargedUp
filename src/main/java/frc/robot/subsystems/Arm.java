@@ -40,7 +40,7 @@ public class Arm extends PivotingArmBase {
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return -(throughBore.getAbsolutePosition() - 0.717);
+        return -(throughBore.getAbsolutePosition() - 0.717+0.084);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Wrist extends PivotingArmBase {
         resetEncoders();
         this.enable();
 
-        throughBore.setZeroOffset(0.5-.225);
+        throughBore.setZeroOffset(0.5);
 
         SmartDashboard.putBoolean("Wrist Brake Mode", true);
         getController().setTolerance(Units.degreesToRadians(1));
@@ -64,8 +64,8 @@ public class Wrist extends PivotingArmBase {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
 
-        leftMotor.setSmartCurrentLimit(20, 20);
-        rightMotor.setSmartCurrentLimit(20, 20);
+        // leftMotor.setSmartCurrentLimit(40, 40);
+        // rightMotor.setSmartCurrentLimit(40, 40);
     }
 
     public void setFollowArm(boolean following) {
@@ -102,8 +102,11 @@ public class Wrist extends PivotingArmBase {
 
         if(isFollowingArm() && !manualOverride) {
             /** wrist visualizer https://www.desmos.com/calculator/9ievw4kltq */
-            if(arm.getMeasurement() > Units.degreesToRadians(15)) {
+            if(arm.getMeasurement() > Units.degreesToRadians(15) && arm.getMeasurement() < Units.degreesToRadians(75)) {
                 setGoal((-arm.getMeasurement()));
+            }
+            else if(arm.getMeasurement() > Units.degreesToRadians(75)) {
+                setGoal((-arm.getMeasurement()) + Units.degreesToRadians(15));
             }
             else {
                 setGoal(Units.degreesToRadians(25));
