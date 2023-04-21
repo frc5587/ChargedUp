@@ -4,6 +4,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -53,16 +54,19 @@ public class ColorSensor extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if(Robot.m_debugMode) {
-            SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());
-            SmartDashboard.putString("Color", sensor.getColor().toString());
-            SmartDashboard.putBoolean("Has Cone", hasCone());
-            SmartDashboard.putBoolean("Has Cube", hasCube());
-            SmartDashboard.putBoolean("Haselement", hasElementColor());
-            SmartDashboard.putNumber("Proximity", sensor.getProximity());
-        }
+        // if(Robot.m_debugMode) {
+        //     SmartDashboard.putString("ColorSensor ClosestColor", getClosestColor().toString());
+        //     SmartDashboard.putString("Color", sensor.getColor().toString());
+        //     SmartDashboard.putBoolean("Has Cone", hasCone());
+        //     SmartDashboard.putBoolean("Has Cube", hasCube());
+        //     SmartDashboard.putBoolean("Haselement", hasElementColor());
+        //     SmartDashboard.putNumber("Proximity", sensor.getProximity());
+        // }
 
-        if(hasCone()) {
+        if(DriverStation.isDisabled()) {
+            leds.setRainbow();
+        }
+        else if(hasCone()) {
             leds.setYellow();
         }
         else if(hasCube()) {

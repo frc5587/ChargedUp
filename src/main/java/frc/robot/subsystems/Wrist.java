@@ -37,7 +37,7 @@ public class Wrist extends PivotingArmBase {
         resetEncoders();
         this.enable();
 
-        rightMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(0.5-0.127+0.086-0.347+0.4-0.01);
+        rightMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(0.5+0.002);//0.127+0.086-0.347+0.4-0.01);
 
         SmartDashboard.putBoolean("Wrist Brake Mode", true);
         getController().setTolerance(Units.degreesToRadians(1));
@@ -94,7 +94,6 @@ public class Wrist extends PivotingArmBase {
     
     @Override
     public void periodic() {
-        System.out.println(throughBore.getZeroOffset());
         if(arm.getController().getGoal().position == ArmConstants.SUB_SETPOINT && !isRaised()) {
             setRaised(true);
         }
