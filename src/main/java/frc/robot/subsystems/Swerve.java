@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.SwerveConstants;
 
@@ -224,12 +225,13 @@ public class Swerve extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());
-        // if(Robot.m_debugMode) {
-        //     // DEBUGGING VALUES
-        //     for (int i = 0; i < mSwerveMods.length; i++) {
-        //         SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
-        //         SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
-        //     }
+        if(Robot.m_debugMode) {
+            // DEBUGGING VALUES
+            for (int i = 0; i < mSwerveMods.length; i++) {
+                SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
+                SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
+            }
+        }
 
         //     SmartDashboard.putNumber("Roll", getRoll());
             SmartDashboard.putNumber("Pitch", getPitch());

@@ -37,7 +37,7 @@ public class Wrist extends PivotingArmBase {
         resetEncoders();
         this.enable();
 
-        throughBore.setZeroOffset(0.5);
+        rightMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).setZeroOffset(0.5-0.127+0.086-0.347+0.4-0.01);
 
         SmartDashboard.putBoolean("Wrist Brake Mode", true);
         getController().setTolerance(Units.degreesToRadians(1));
@@ -45,15 +45,16 @@ public class Wrist extends PivotingArmBase {
 
     @Override
     public double getEncoderPosition() {
-        return throughBore.getPosition()-0.5;
+        // return throughBore.getPosition()-0.5;
+        return rightMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle).getPosition()-0.5;
     }
     @Override
     public double getEncoderVelocity() {
-        return leftMotor.getEncoder().getVelocity();
+        return rightMotor.getEncoder().getVelocity();
     }
     @Override
     public void setEncoderPosition(double position) {
-        leftMotor.getEncoder().setPosition(position/360);        
+        rightMotor.getEncoder().setPosition(position/360);        
     }
     
     @Override
@@ -64,8 +65,8 @@ public class Wrist extends PivotingArmBase {
         leftMotor.setIdleMode(IdleMode.kBrake);
         rightMotor.setIdleMode(IdleMode.kBrake);
 
-        // leftMotor.setSmartCurrentLimit(40, 40);
-        // rightMotor.setSmartCurrentLimit(40, 40);
+        leftMotor.setSmartCurrentLimit(20, 20);
+        rightMotor.setSmartCurrentLimit(20, 20);
     }
 
     public void setFollowArm(boolean following) {
@@ -93,6 +94,7 @@ public class Wrist extends PivotingArmBase {
     
     @Override
     public void periodic() {
+        System.out.println(throughBore.getZeroOffset());
         if(arm.getController().getGoal().position == ArmConstants.SUB_SETPOINT && !isRaised()) {
             setRaised(true);
         }
@@ -109,7 +111,7 @@ public class Wrist extends PivotingArmBase {
                 setGoal((-arm.getMeasurement()) + Units.degreesToRadians(15));
             }
             else {
-                setGoal(Units.degreesToRadians(25));
+                setGoal(Units.degreesToRadians(20));
             }
         }
 

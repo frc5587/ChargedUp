@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a
@@ -28,13 +30,13 @@ public class RobotContainer {
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
 
     // SUBSYSTEMS
-    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kMXP);
+    public LEDs leds = new LEDs();
+    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kMXP, leds);
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm(colorSensor, swerve::getPose);
     private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
-    public LEDs leds = new LEDs();
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
@@ -54,6 +56,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         leds.setRainbow();
+        DriverStation.silenceJoystickConnectionWarning(true);
         pdh.clearStickyFaults();
         pdh.close();
         
@@ -88,8 +91,8 @@ public class RobotContainer {
         xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.leftBumper().onTrue(new InstantCommand(intake::backward)).and(xb.rightBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
         xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
-        xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
-        xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
+        xb.start().onTrue(new InstantCommand(leds::setPurpleBlink, leds));
+        xb.back().onTrue(new InstantCommand(leds::setYellowBlink, leds));
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));

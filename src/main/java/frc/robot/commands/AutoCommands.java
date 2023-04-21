@@ -32,7 +32,9 @@ public class AutoCommands {
     private PathPlannerTrajectory p_pos1SpitAndCross = PathPlanner.loadPath("pos1SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
     private PathPlannerTrajectory p_pos3SpitAndCross = PathPlanner.loadPath("pos3SpitAndCross", AutoConstants.PATH_CONSTRAINTS);
     private PathPlannerTrajectory p_pos2SpitAndCharge = PathPlanner.loadPath("pos2SpitAndCharge", new PathConstraints(1.25, 2));
-    private PathPlannerTrajectory p_pos2SpitCrossAndCharge = PathPlanner.loadPath("pos2SpitCrossAndCharge", new PathConstraints(1.25, 2));
+    private PathPlannerTrajectory p_pos2SpitCrossAndCharge = PathPlanner.loadPath("pos2SpitCrossAndCharge", new PathConstraints(1.25, 1));
+    // private PathPlannerTrajectory p_pos2SpitCrossAndChargeReverse = PathPlanner.loadPath("pos2SpitCrossAndChargeReverse", new PathConstraints(1.25, 2));
+    private PathPlannerTrajectory p_pos2SpitCrossAndChargeReverse = PathPlanner.loadPath("pos2SpitCrossAndChargeReverse", new PathConstraints(1.25, 1));
     private PathPlannerTrajectory p_pos4LinkAndCharge = PathPlanner.loadPath("pos4LinkAndCharge", AutoConstants.PATH_CONSTRAINTS); // TODO this shit is not gonna work
     private PathPlannerTrajectory p_pos5LinkCrossAndCharge = PathPlanner.loadPath("pos5LinkCrossAndCharge", AutoConstants.PATH_CONSTRAINTS);
     private PathPlannerTrajectory p_pos6TwoMidAndCross = PathPlanner.loadPath("pos6TwoMidAndCross", AutoConstants.PATH_CONSTRAINTS);
@@ -56,6 +58,8 @@ public class AutoCommands {
 
     /** Starting with 1 pre-loaded game piece in position 2, spit into hybrid, then cross line, and engage on the charge station. */
     public final Command c_pos2SpitCrossAndCharge;
+
+    public final Command c_pos2SpitCrossAndChargeReverse;
 
     /** Starting with 1 pre-loaded cube in position 4, shoot into hybrid ... */
     public final Command c_pos4LinkAndCharge;
@@ -108,6 +112,7 @@ public class AutoCommands {
                 new InstantCommand(intake::spitCone));
         this.c_pos2SpitAndCharge = autoBuilder.fullAuto(p_pos2SpitAndCharge);
         this.c_pos2SpitCrossAndCharge = autoBuilder.fullAuto(p_pos2SpitCrossAndCharge);
+        this.c_pos2SpitCrossAndChargeReverse = autoBuilder.fullAuto(p_pos2SpitCrossAndChargeReverse);
         this.c_pos3SpitAndCross = autoBuilder.fullAuto(p_pos3SpitAndCross);
         this.c_pos4LinkAndCharge = autoBuilder.fullAuto(p_pos4LinkAndCharge);
         this.c_pos5LinkCrossAndCharge = autoBuilder.fullAuto(p_pos5LinkCrossAndCharge);
@@ -117,6 +122,7 @@ public class AutoCommands {
         autoChooser.addOption("2nd Position with Spit", c_pos2Spit);
         autoChooser.addOption("2nd Position with Spit & Charge", c_pos2SpitAndCharge);
         autoChooser.addOption("2nd Position with Spit, Cross, & Charge", c_pos2SpitCrossAndCharge);
+        autoChooser.addOption("2nd Position REVERSED", c_pos2SpitCrossAndChargeReverse);
         autoChooser.addOption("3rd Position with Spit & Cross", c_pos3SpitAndCross);
         autoChooser.addOption("4th Position with Link & Charge", c_pos4LinkAndCharge);
         autoChooser.addOption("5th Position with Link, Cross, & Charge", c_pos5LinkCrossAndCharge);
