@@ -37,6 +37,8 @@ public final class Constants {
     public static final class SwerveConstants {
         public static final boolean INVERT_GYRO = true; // Always ensure Gyro is CCW+ CW-
 
+        public static final boolean TUNING = false;
+
         public static final COTSFalconSwerveConstants CHOSEN_MODULE = 
             COTSFalconSwerveConstants.SDSMK4i(COTSFalconSwerveConstants.driveGearRatios.SDSMK4i_L1);
 
@@ -103,9 +105,9 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 2.5;//5.;
+        public static final double MAX_SPEED = 10.;//5.;
         /** Radians per Second */
-        public static final double MAX_ANGULAR_VELOCITY = Math.PI;//6.;
+        public static final double MAX_ANGULAR_VELOCITY = 6.;
 
         /* Neutral Modes */
         public static final NeutralMode ANGLE_NEUTRAL_MODE = NeutralMode.Coast;
@@ -158,8 +160,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants { // TODO Confirm
-        public static final double MAX_SPEED_MPS = 0.5; // 3.  // in m/s 
-        public static final double MAX_ACCEL_MPS_2 = 0.25; // 3. // in m/s^2 
+        public static final double MAX_SPEED_MPS = 4; // 3.  // in m/s 
+        public static final double MAX_ACCEL_MPS_2 = 2; // 3. // in m/s^2 
         public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(MAX_SPEED_MPS, MAX_ACCEL_MPS_2);
         public static final double MAX_ANGULAR_SPEED_R_S = Math.PI; // Math.PI / 4.; // in radians/s 
         public static final double MAX_ANGULAR_ACCEL_R_S_2 = Math.PI; // Math.PI / 4.; // in radians/s^2 

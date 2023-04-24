@@ -149,25 +149,4 @@ public class SwerveModule {
                         SwerveConstants.WHEEL_CIRCUMFERENCE_METERS, SwerveConstants.DRIVE_GEAR_RATIO), // TODO Remove -
                 getAngle());
     }
-
-    // @Override
-    // public void simulationPeriodic() {
-    //     moduleRotationSimModel.setInputVoltage(
-    //             m_turnOutput / kMaxModuleAngularSpeedRadiansPerSecond * RobotController.getBatteryVoltage());
-    //     moduleThrottleSimModel.setInputVoltage(m_driveOutput / Constants.DriveConstants.kMaxSpeedMetersPerSecond
-    //             * RobotController.getBatteryVoltage());
-
-    //     moduleRotationSimModel.update(0.02);
-    //     moduleThrottleSimModel.update(0.02);
-
-    //     simTurnEncoderDistance += moduleRotationSimModel.getAngularVelocityRadPerSec() * 0.02;
-    //     simulationTurnEncoderSim.setDistance(simTurnEncoderDistance);
-    //     simulationTurnEncoderSim.setRate(moduleRotationSimModel.getAngularVelocityRadPerSec());
-
-    //     simThrottleEncoderDistance += moduleThrottleSimModel.getAngularVelocityRadPerSec() * 0.02;
-    //     simulationThrottleEncoderSim.setDistance(simThrottleEncoderDistance);
-    //     simulationThrottleEncoderSim.setRate(moduleThrottleSimModel.getAngularVelocityRadPerSec());
-
-    //     // System.out.println("Module " + mModuleNumber + " State: " + getState());
-    // }
 }
