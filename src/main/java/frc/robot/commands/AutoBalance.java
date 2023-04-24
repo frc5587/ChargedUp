@@ -15,8 +15,8 @@ public class AutoBalance extends CommandBase {
     private Notifier blinkLeds = new Notifier(this::blinkLeds);
     private double angleDegrees;
 
-    private final double metersPerSec = 0.8;
-    private final double positionThresholdDegrees = 6.5;
+    private final double metersPerSec = 0.5;
+    private final double positionThresholdDegrees = 6;
 
     public AutoBalance(Swerve swerve, LEDs leds) {
         this.swerve = swerve;

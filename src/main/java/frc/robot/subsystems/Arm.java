@@ -40,7 +40,7 @@ public class Arm extends PivotingArmBase {
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return -(throughBore.getAbsolutePosition() - 0.717);
+        return -(throughBore.getAbsolutePosition() - 0.717+0.084);
     }
 
     @Override
@@ -123,10 +123,6 @@ public class Arm extends PivotingArmBase {
     @Override
     public void periodic() {
         super.periodic();
-        if(Robot.m_debugMode) {
-            SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
-            SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
-        }
             
         if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
                 leader.setNeutralMode(NeutralMode.Brake);

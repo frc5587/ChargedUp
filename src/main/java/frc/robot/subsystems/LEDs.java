@@ -8,12 +8,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
+import frc.robot.commands.leds.GamePieceBlink;
+import frc.robot.util.GamePiece;
 
 public class LEDs extends SubsystemBase {
     private final AddressableLED leds;
     public final AddressableLEDBuffer buffer;
     private final RainbowLEDPattern rainbowLEDPattern = new RainbowLEDPattern(90, LEDConstants.STRIP_LENGTH, LEDConstants.STRIP_LENGTH, 20);
-    private boolean isRunningRainbow = true;
+    private final GamePieceBlink blinkPurple = new GamePieceBlink(GamePiece.CUBE);
+    private final GamePieceBlink blinkYellow = new GamePieceBlink(GamePiece.CONE);
+    public boolean isRunningYellowBlink = false;
+    public boolean isRunningPurpleBlink = false;
+    public boolean isRunningRainbow = true;
     private int patternIndexer = 0;
     private double timeSinceSetSeconds = 0;
     private enum LEDPattern {
@@ -37,6 +43,8 @@ public class LEDs extends SubsystemBase {
 
     public void setColor(int r, int g, int b) {
         isRunningRainbow = false;
+        isRunningYellowBlink = false;
+        isRunningPurpleBlink = false;
         timeSinceSetSeconds = 0;
         for(int i = 0; i < buffer.getLength(); i++) {
             buffer.setRGB(i, r, g, b);
@@ -69,7 +77,21 @@ public class LEDs extends SubsystemBase {
 
     public void setRainbow() {
         isRunningRainbow = true;
+        isRunningYellowBlink = false;
+        isRunningPurpleBlink = false;
         patternIndexer = 0;
+    }
+
+    public void setYellowBlink() {
+        isRunningYellowBlink = true;
+        isRunningPurpleBlink = false;
+        isRunningRainbow = false;
+    }
+
+    public void setPurpleBlink() {
+        isRunningYellowBlink = false;
+        isRunningPurpleBlink = true;
+        isRunningRainbow = false;
     }
 
     @Override
@@ -92,12 +114,23 @@ public class LEDs extends SubsystemBase {
                 setRainbow();
                 break;
         }
-        if(!isRunningRainbow) {
+        if(!isRunningRainbow && !isRunningPurpleBlink && !isRunningYellowBlink) {
             leds.setData(buffer);
         }
-        else {
+        else if(isRunningRainbow) {
             leds.setData(rainbowLEDPattern.step(patternIndexer, buffer));
             patternIndexer++;
+        }
+        else if(isRunningPurpleBlink) {
+            leds.setData(blinkPurple.step(patternIndexer, buffer));
+            patternIndexer++;
+        }
+        else if(isRunningYellowBlink) {
+            leds.setData(blinkYellow.step(patternIndexer, buffer));
+            patternIndexer++;
+        }
+        else {
+            leds.setData(buffer);
         }
     }
 }
