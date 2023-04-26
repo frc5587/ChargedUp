@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,7 +32,6 @@ public class Swerve extends SubsystemBase {
     public TimeInterpolatableBuffer<Pose2d> poseHistory = TimeInterpolatableBuffer.createBuffer(1.5); 
     
     public Field2d field = new Field2d();
-    private boolean lockWheels = false;
     public Double lockedHeading = null;
     // private SlewRateLimiter slew = new SlewRateLimiter(SwerveConstants.SLEW_RATE);
 
@@ -61,33 +59,22 @@ public class Swerve extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
-        // if(modsStopped()) {
-        // if(lockWheels) {
-        //     setModuleStates(new SwerveModuleState[] {
-        //         new SwerveModuleState(0., Rotation2d.fromDegrees(45.)),
-        //         new SwerveModuleState(0., Rotation2d.fromDegrees(315.)),
-        //         new SwerveModuleState(0., Rotation2d.fromDegrees(-135.)),
-        //         new SwerveModuleState(0., Rotation2d.fromDegrees(225.)),
-        //     });
-        //     System.out.println("LOCKING");
-        // } else {
-            SwerveModuleState[] swerveModuleStates =
-                SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
-                    fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                            translation.getX(), //TODO invert getX??????
-                            translation.getY(), 
-                            rotation, 
-                            getYaw())
-                        : new ChassisSpeeds(
-                            translation.getX(), // -translation.getX(), //TODO invert getX????
-                            translation.getY(), 
-                            rotation));
-            SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
-            
-            for(SwerveModule mod : mSwerveMods){
-                mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
-            }
-        // }
+        SwerveModuleState[] swerveModuleStates =
+            SwerveConstants.SWERVE_KINEMATICS.toSwerveModuleStates(
+                fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                        translation.getX(), //TODO invert getX??????
+                        translation.getY(), 
+                        rotation, 
+                        getYaw())
+                    : new ChassisSpeeds(
+                        translation.getX(), // -translation.getX(), //TODO invert getX????
+                        translation.getY(), 
+                        rotation));
+        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, SwerveConstants.MAX_SPEED);
+        
+        for(SwerveModule mod : mSwerveMods){
+            mod.setDesiredState(swerveModuleStates[mod.moduleNumber], isOpenLoop);
+        }
     }    
 
     /* Used by SwerveControllerCommand in Auto */
@@ -176,13 +163,6 @@ public class Swerve extends SubsystemBase {
         setChassisSpeeds(new ChassisSpeeds());
     }
 
-    public void stopWithLock(boolean lockWheels) {
-        this.lockWheels = lockWheels;
-        if(lockWheels) {
-            stop();
-        }
-    }
-
     /**
      * Set the robot's X speed in m/s.
      * @param speedMetersPerSecond speed to crawl at in m/s. Set to 0 to use speed from constants.
@@ -245,15 +225,16 @@ public class Swerve extends SubsystemBase {
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());
-        // if(Robot.m_debugMode) {
-        //     // DEBUGGING VALUES
-        //     for (int i = 0; i < mSwerveMods.length; i++) {
-        //         SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
-        //         SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
-        //     }
+        if(Robot.m_debugMode) {
+            // DEBUGGING VALUES
+            for (int i = 0; i < mSwerveMods.length; i++) {
+                SmartDashboard.putNumber("mod " + i + "degrees", mSwerveMods[i].getCanCoder().getDegrees());
+                SmartDashboard.putNumber("Adjusted " + i, mSwerveMods[i].getPosition().angle.getDegrees());
+            }
+        }
 
         //     SmartDashboard.putNumber("Roll", getRoll());
-        //     SmartDashboard.putNumber("Pitch", getPitch());
+            SmartDashboard.putNumber("Pitch", getPitch());
         //     SmartDashboard.putNumber("Yaw", getYaw().getDegrees());
         // }
 

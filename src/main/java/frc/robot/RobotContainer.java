@@ -10,18 +10,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.AutoBalance;
-import frc.robot.commands.AutoCommands;
-import frc.robot.commands.DualStickSwerve;
-import frc.robot.commands.SemiAuto;
-import frc.robot.subsystems.Arm;
-import frc.robot.subsystems.ColorSensor;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LEDs;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Rumbler;
-import frc.robot.subsystems.Swerve;
-import frc.robot.subsystems.Wrist;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -38,14 +30,13 @@ public class RobotContainer {
     private DeadbandCommandXboxController xb = new DeadbandCommandXboxController(3);
 
     // SUBSYSTEMS
-    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kOnboard);
+    public LEDs leds = new LEDs();
+    public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kMXP, leds);
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
     private Arm arm = new Arm(colorSensor, swerve::getPose);
     private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
-    public LEDs leds = new LEDs();
-    Rumbler rumbler = new Rumbler(driveXb, swerve);
 
     // COMMANDS
     private DualStickSwerve dualStickSwerve = new DualStickSwerve(
@@ -54,24 +45,23 @@ public class RobotContainer {
                     () -> Math.pow(driveXb.getLeftX(), 3), 
                     () -> false);
 
-    private SemiAuto semiAuto = new SemiAuto(swerve, arm, intake, leds);
-    public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds, semiAuto);
+    public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);    
 
     // Other
     private PowerDistribution pdh = new PowerDistribution();
 
-    public Command currentDrive = dualStickSwerve;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        swerve.setDefaultCommand(currentDrive);
         leds.setRainbow();
-        configureBindings();
+        DriverStation.silenceJoystickConnectionWarning(true);
         pdh.clearStickyFaults();
         pdh.close();
+        
+        swerve.setDefaultCommand(dualStickSwerve);
+        configureBindings();
     }
 
     /**
@@ -101,8 +91,8 @@ public class RobotContainer {
         xb.b().onTrue(new InstantCommand(arm::liftAwayFromGrid, arm));
         xb.leftBumper().onTrue(new InstantCommand(intake::backward)).and(xb.rightBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
         xb.rightBumper().onTrue(new InstantCommand(intake::forward)).and(xb.leftBumper().negate()).onFalse(new InstantCommand(intake::stop));//holdElement));
-        xb.start().onTrue(new InstantCommand(leds::setPurple, leds));
-        xb.back().onTrue(new InstantCommand(leds::setYellow, leds));
+        xb.start().onTrue(new InstantCommand(leds::setPurpleBlink, leds));
+        xb.back().onTrue(new InstantCommand(leds::setYellowBlink, leds));
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));

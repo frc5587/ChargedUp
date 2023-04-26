@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.util.titanlib.PivotingArmBase;
 import frc.robot.Robot;
 
 public class Arm extends PivotingArmBase {
@@ -24,7 +25,6 @@ public class Arm extends PivotingArmBase {
     // private static DigitalInput limitSwitch = new DigitalInput(ArmConstants.SWITCH_PORT);
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
     private final Supplier<Pose2d> poseSupplier;
-    private boolean shouldLower, shouldLowerOverride = false;
 
     public Arm(ColorSensor colorSensor, Supplier<Pose2d> poseSupplier) {
         super("Arm", ArmConstants.ARM_CONSTANTS, group);
@@ -40,7 +40,7 @@ public class Arm extends PivotingArmBase {
     @Override
     public double getEncoderPosition() {
         // return leader.getSelectedSensorPosition();
-        return -(throughBore.getAbsolutePosition() - 0.676+.041);
+        return -(throughBore.getAbsolutePosition() - 0.717+0.084);
     }
 
     @Override
@@ -62,55 +62,32 @@ public class Arm extends PivotingArmBase {
         leader.setInverted(true);
         follower.setInverted(false);
     }
-
-    // /**
-    //  * @param switchPort the port of the limit switch we want the value of
-    //  * @return the limit switch's state, inverted if necessary.
-    //  */
-    // public boolean getLimitSwitchValue() {
-    //     return ArmConstants.SWITCH_INVERTED ? !limitSwitch.get() : limitSwitch.get();
-    // }
-
-    // /**
-    //  * @param switchPort the port of the limit switch you want to get
-    //  * @return the DigitalInput of the switch
-    //  */
-    // public DigitalInput getLimitSwitchObject() {
-    //     return limitSwitch;
-    // }
     
     public void highSetpoint() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.HIGH_SETPOINT);
     }
 
     public void middleSetpoint() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.MEDIUM_SETPOINT);
     }
 
     public void lowSetpoint() {
-        shouldLowerOverride = true;
-        getController().setGoal(ArmConstants.HOVER_SETPOINT); // TODO
+        getController().setGoal(ArmConstants.HOVER_SETPOINT);
     }
 
     public void hoverSetpoint() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.HOVER_SETPOINT);
     }
 
     public void intakeSetpoint() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.INTAKE_SETPOINT);
     }
 
     public void stow() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.STOW_SETPOINT);
     }
 
     public void substationSetpoint() {
-        shouldLowerOverride = true;
         getController().setGoal(ArmConstants.SUB_SETPOINT);
         
     }
@@ -121,13 +98,6 @@ public class Arm extends PivotingArmBase {
     
     public void lowerFromGrid() {
         this.setGoal(pidController.getGoal().position-Units.degreesToRadians(5));
-    }
-
-    public void setShouldLower(boolean shouldLower) {
-        if(shouldLowerOverride) {
-            shouldLower = false;
-        }
-        this.shouldLower = shouldLower;
     }
 
     public boolean inSubstation(Pose2d pose) {
@@ -153,27 +123,6 @@ public class Arm extends PivotingArmBase {
     @Override
     public void periodic() {
         super.periodic();
-        if(Robot.m_debugMode) {
-            SmartDashboard.putBoolean("In Substation", inSubstation(poseSupplier.get()));
-            SmartDashboard.putBoolean("In Lowering Area", inLoweringArea(poseSupplier.get()));
-        }
-        // if(getLimitSwitchValue()) {
-        //     this.resetEncoders();
-        //     this.setGoal(Units.degreesToRadians(2));
-        // }
-
-        // if((inLoweringArea(poseSupplier.get()) && !inSubstation(poseSupplier.get()))
-        //         && (pidController.getSetpoint().position > ArmConstants.HOVER_SETPOINT 
-        //         || (colorSensor.hasElement() && pidController.getSetpoint().position < ArmConstants.HOVER_SETPOINT))) {
-        //     setShouldLower(true);
-        // }
-        // else {
-        //     setShouldLower(false);
-        //     shouldLowerOverride = false;
-        // }
-        // if(shouldLower) {
-        //     setGoal(ArmConstants.HOVER_SETPOINT);
-        // }
             
         if(SmartDashboard.getBoolean("Arm Brake Mode", true)) {
                 leader.setNeutralMode(NeutralMode.Brake);
@@ -183,12 +132,11 @@ public class Arm extends PivotingArmBase {
                 follower.setNeutralMode(NeutralMode.Coast);
         }
 
-        // if(!throughBore.isConnected()) {
-        //     this.disable();
-        //     this.stop();
-        // }
-        // else {
-        //     this.enable();
-        // }
+        // note that we cannot do the else condition here to re-enable, as enabling every 
+        // period causes issues in the pid controller.
+        if(!throughBore.isConnected()) {
+            this.disable();
+            this.stop();
+        }
     }
 }

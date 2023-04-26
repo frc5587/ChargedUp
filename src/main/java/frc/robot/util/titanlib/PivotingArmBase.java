@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.util.titanlib;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -175,7 +175,6 @@ public abstract class PivotingArmBase extends ProfiledPIDSubsystem {
     @Override
     public void useOutput(double output, TrapezoidProfile.State setpoint) {
         double ff = ffController.calculate(setpoint.position+constants.offsetFromHorizontalRadians, setpoint.velocity);
-        //TODO: remove debug prints once we know this code works
         if(Robot.m_debugMode) {
             SmartDashboard.putNumber(subsystemName + " FF", ff);
             SmartDashboard.putNumber(subsystemName + " PID", output);
