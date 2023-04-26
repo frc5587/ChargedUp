@@ -105,7 +105,7 @@ public final class Constants {
 
         /* Swerve Profiling Values */
         /** Meters per Second */
-        public static final double MAX_SPEED = 10.;//5.;
+        public static final double MAX_SPEED = 6.;//5.;
         /** Radians per Second */
         public static final double MAX_ANGULAR_VELOCITY = 6.;
 

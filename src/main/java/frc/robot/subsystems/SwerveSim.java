@@ -94,7 +94,7 @@ public class SwerveSim extends SubsystemBase {
         }
 
         // Calculate max angular speed
-        maxAngularSpeed = 9;//maxLinearSpeed / Arrays.stream(getModuleTranslations())
+        maxAngularSpeed = 6.;//maxLinearSpeed / Arrays.stream(getModuleTranslations())
                 //.map(translation -> translation.getNorm()).max(Double::compare).get();
     }
 

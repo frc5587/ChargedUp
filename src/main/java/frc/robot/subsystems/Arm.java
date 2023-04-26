@@ -2,17 +2,26 @@ package frc.robot.subsystems;
 
 import java.util.function.Supplier;
 
+import org.littletonrobotics.junction.Logger;
+
 // import org.frc5587.lib.subsystems.PivotingArmBase;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.util.titanlib.PivotingArmBase;
@@ -25,6 +34,12 @@ public class Arm extends PivotingArmBase {
     // private static DigitalInput limitSwitch = new DigitalInput(ArmConstants.SWITCH_PORT);
     private final DutyCycleEncoder throughBore = new DutyCycleEncoder(1);
     private final Supplier<Pose2d> poseSupplier;
+    private final Mechanism2d armMechanism2d = new Mechanism2d(2, 2);
+    private final MechanismRoot2d armRoot = armMechanism2d.getRoot("armRoot", 0, Units.inchesToMeters(31.5));
+    private final MechanismLigament2d structureLigament = armRoot.append(new MechanismLigament2d("structure", Units.inchesToMeters(31.5), 90));
+    private final MechanismLigament2d armLigament = structureLigament.append(new MechanismLigament2d("structure", Units.inchesToMeters(31.5), 182));
+    public final MechanismLigament2d wristLigament = armLigament.append(new MechanismLigament2d("wristLigament", Units.inchesToMeters(9.7), 90, 6., new Color8Bit(Color.kBlue)));
+    public Pose3d armPose3d = new Pose3d();
 
     public Arm(ColorSensor colorSensor, Supplier<Pose2d> poseSupplier) {
         super("Arm", ArmConstants.ARM_CONSTANTS, group);
@@ -35,6 +50,7 @@ public class Arm extends PivotingArmBase {
         throughBore.setDutyCycleRange(1./1024., 1023./1024.);
 
         SmartDashboard.putBoolean("Arm Brake Mode", true);
+        SmartDashboard.putData("Arm Mech", armMechanism2d);
     }
 
     @Override
@@ -138,5 +154,12 @@ public class Arm extends PivotingArmBase {
             this.disable();
             this.stop();
         }
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        armLigament.setAngle(180 + Units.radiansToDegrees(getController().getGoal().position));
+        armPose3d = new Pose3d(0.2,0,0.85,new Rotation3d(0,-getController().getGoal().position,0));
+        Logger.getInstance().recordOutput("Arm Pose", armPose3d);
     }
 }
