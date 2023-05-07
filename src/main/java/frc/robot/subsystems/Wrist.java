@@ -120,13 +120,20 @@ public class Wrist extends PivotingArmBase {
             }
         }
 
+        if(getController().getGoal().position > Units.degreesToRadians(21)) {
+            setGoal(Units.degreesToRadians(20));
+        }
+        if(getController().getGoal().position < Units.degreesToRadians(-111)) {
+            setGoal(Units.degreesToRadians(-111));
+        }
+
         super.periodic();
     }
 
     @Override
     public void simulationPeriodic() {
         arm.wristLigament.setAngle(75+Units.radiansToDegrees(getController().getGoal().position));
-        wristPose3d = new Pose3d(arm.armPose3d.getX()+(Math.sin(arm.getController().getGoal().position)*0.8) ,0,(arm.armPose3d.getZ()-(Math.cos(arm.getController().getGoal().position)*0.75)), arm.armPose3d.getRotation().minus(new Rotation3d(0,getController().getGoal().position,0)));
+        wristPose3d = new Pose3d(arm.armPose3d.getX()+(Math.sin(arm.getController().getGoal().position)*0.8)-0.08 ,0,(arm.armPose3d.getZ()-(Math.cos(arm.getController().getGoal().position)*0.8))-0.08, arm.armPose3d.getRotation().minus(new Rotation3d(0,getController().getGoal().position,0)));
         Logger.getInstance().recordOutput("Wrist Pose", wristPose3d);
     }
 }

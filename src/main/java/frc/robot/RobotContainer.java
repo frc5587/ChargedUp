@@ -119,8 +119,8 @@ public class RobotContainer {
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));
-        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.45));}));
-        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.45));}));
+        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.75));}));
+        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.75));}));
         resetWristCommand.onTrue(new InstantCommand(() -> {wrist.setManualOverride(false); wrist.setFollowArm(true); wrist.setRaised(false);}));
     }
 
