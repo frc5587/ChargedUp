@@ -4,7 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
+import com.pathplanner.lib.server.PathPlannerServer;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -17,10 +24,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
+    public static boolean m_debugMode = true;
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -29,10 +37,18 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        Logger logger = Logger.getInstance();
+        logger.addDataReceiver(new NT4Publisher());
+        logger.start();
         // Instantiate our RobotContainer. This will perform all our button bindings,
         // and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
+        SmartDashboard.putBoolean("Debug Mode On?", m_debugMode);
+
+        if(!DriverStation.isFMSAttached()) {
+            PathPlannerServer.startServer(5811);
+        }
     }
 
     /**
@@ -55,11 +71,14 @@ public class Robot extends TimedRobot {
         // robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        m_debugMode = SmartDashboard.getBoolean("Debug Mode On?", true);
     }
 
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
+        m_robotContainer.leds.setRainbow();
     }
 
     @Override
@@ -78,6 +97,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.schedule();
         }
+
+        m_robotContainer.leds.setRainbow();
     }
 
     /** This function is called periodically during autonomous. */
@@ -94,6 +115,8 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
+
+        m_robotContainer.leds.setRainbow();
     }
 
     /** This function is called periodically during operator control. */

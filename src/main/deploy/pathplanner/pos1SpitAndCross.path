@@ -1,0 +1,64 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.81,
+        "y": 4.471264063783477
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.8207139476923966,
+        "y": 4.718103635743234
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "armLow",
+          "waitForArm",
+          "spitCone"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "deadline",
+        "waitTime": 3.5
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.547681670769374,
+        "y": 4.814046287025289
+      },
+      "prevControl": {
+        "x": 3.5331151560691954,
+        "y": 4.858157874620948
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.5,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.05,
+      "names": [
+        "stopIntake",
+        "armIntake"
+      ]
+    }
+  ]
+}
