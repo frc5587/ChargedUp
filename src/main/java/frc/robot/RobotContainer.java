@@ -10,8 +10,21 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.*;
-import frc.robot.subsystems.*;
+import frc.robot.commands.AutoBalance;
+import frc.robot.commands.AutoCommands;
+import frc.robot.commands.AutoSim;
+import frc.robot.commands.DualStickSwerve;
+import frc.robot.commands.DualStickSwerveSim;
+import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.ColorSensor;
+import frc.robot.subsystems.GyroSim;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.SwerveModuleSim;
+import frc.robot.subsystems.SwerveSim;
+import frc.robot.subsystems.Wrist;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -34,6 +47,8 @@ public class RobotContainer {
     public final ColorSensor colorSensor = new ColorSensor(I2C.Port.kMXP, leds);
     private Limelight limelight = new Limelight();
     public Swerve swerve = new Swerve(limelight);
+    public SwerveSim swerveSim = new SwerveSim(
+            new GyroSim() {}, new SwerveModuleSim() {}, new SwerveModuleSim() {}, new SwerveModuleSim() {}, new SwerveModuleSim() {});
     private Arm arm = new Arm(colorSensor, swerve::getPose);
     private Wrist wrist = new Wrist(arm);
     public Intake intake = new Intake(colorSensor);
@@ -45,7 +60,14 @@ public class RobotContainer {
                     () -> Math.pow(driveXb.getLeftX(), 3), 
                     () -> false);
 
+    private DualStickSwerveSim dualStickSwerveSim = new DualStickSwerveSim(
+        swerveSim, () -> -Math.pow(driveXb.getRightY(), 3), // -Math.pow(driveXb.getRightY(), 3), 
+                () -> -Math.pow(driveXb.getRightX(), 3), 
+                () -> -Math.pow(driveXb.getLeftX(), 3), 
+                () -> true);
+
     public AutoCommands auto = new AutoCommands(intake, arm, swerve, leds);
+    public AutoSim autoSim = new AutoSim(intake, arm, swerveSim, leds);
     private AutoBalance autoBalance = new AutoBalance(swerve, leds);    
 
     // Other
@@ -61,6 +83,7 @@ public class RobotContainer {
         pdh.close();
         
         swerve.setDefaultCommand(dualStickSwerve);
+        swerveSim.setDefaultCommand(dualStickSwerveSim);
         configureBindings();
     }
 
@@ -96,8 +119,8 @@ public class RobotContainer {
         driveXb.rightTrigger().whileTrue(autoBalance);
         xb.leftTrigger().onTrue(new InstantCommand(arm::stow));
         xb.povUp().onTrue(new InstantCommand(() -> intake.autoThrottle())).onFalse(new InstantCommand(intake::stop));
-        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.45));}));
-        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.45));}));
+        wristUp.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position - Units.degreesToRadians(0.75));}));
+        wristDown.whileTrue(new RunCommand(() -> {wrist.setManualOverride(true); wrist.setGoal(wrist.getController().getGoal().position + Units.degreesToRadians(0.75));}));
         resetWristCommand.onTrue(new InstantCommand(() -> {wrist.setManualOverride(false); wrist.setFollowArm(true); wrist.setRaised(false);}));
     }
 
@@ -107,6 +130,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return auto.getSelectedCommand();
+        return autoSim.getSelectedCommand();
     }
 }

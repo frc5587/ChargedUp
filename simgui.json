@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "RoboRIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Timing": {
       "window": {
         "visible": false
@@ -9,9 +14,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Arm Mech": "Mechanism2d",
       "/SmartDashboard/Auto Path": "String Chooser",
       "/SmartDashboard/LED Pattern:": "String Chooser",
       "/SmartDashboard/Limelight LEDs": "String Chooser",
+      "/SmartDashboard/Sim Path": "String Chooser",
       "/SmartDashboard/Swerve Pose Field": "Field2d"
     }
   },
@@ -19,5 +26,29 @@
     "Retained Values": {
       "open": false
     }
+  },
+  "NetworkTables Info": {
+    "AdvantageScope@1": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "Clients": {
+      "open": true
+    },
+    "Server": {
+      "Publishers": {
+        "open": true
+      },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "visible": true
   }
 }

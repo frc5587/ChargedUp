@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,8 +13,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +26,7 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public AHRS gyro;
     public Limelight limelight;
-    
+    public ChassisSpeeds desiredChassisSpeeds = new ChassisSpeeds();
     public SwerveDriveOdometry odometry;
     public SwerveDrivePoseEstimator poseEstimator;
     public SwerveDriveKinematics kinematics;
@@ -82,17 +83,19 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.MAX_SPEED);
         
         for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(desiredStates[mod.moduleNumber], false);
+            mod.setDesiredState(desiredStates[mod.moduleNumber], true);
         }
     }
 
     public void setChassisSpeeds(ChassisSpeeds speeds) {
         speeds = new ChassisSpeeds(-speeds.vxMetersPerSecond, -speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+        desiredChassisSpeeds = speeds;
         setModuleStates(kinematics.toSwerveModuleStates(speeds));
     }
 
     public Pose2d getPose() {
-        return getEstimatedPose(); // ! TODO If this isnt working, uncomment above
+        return odometry.getPoseMeters();
+        // return getEstimatedPose(); // ! TODO If this isnt working, uncomment above
     }
 
     public Pose2d getOdometryPose() {
@@ -123,6 +126,24 @@ public class Swerve extends SubsystemBase {
         //TODO invert states??????
         return states;
     }
+
+    public SwerveModuleState[] getDesiredStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for(SwerveModule mod : mSwerveMods){
+            states[mod.moduleNumber] = mod.desiredState;
+        }
+        //TODO invert states??????
+        return states;
+    }
+
+    // public SwerveModulePosition[] getDesiredPositions() {
+    //     SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    //     for(SwerveModule mod : mSwerveMods){
+    //         positions[mod.moduleNumber] = mod.desiredState;
+    //     }
+    //     //TODO invert states??????
+    //     return positions;
+    // }
 
     public SwerveModulePosition[] getModulePositions(){
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
@@ -222,6 +243,7 @@ public class Swerve extends SubsystemBase {
         // }
 
         odometry.update(getYaw(), getModulePositions());
+        // odometry.update(getYaw(), kinematics.toSwerveModuleStates(desiredChassisSpeeds));
         poseEstimator.updateWithTime(Timer.getFPGATimestamp(), getYaw(), getModulePositions()); // ! If this is wrong, its probably a problem with getYaw()
         poseHistory.addSample(Timer.getFPGATimestamp(), getPose());
         field.setRobotPose(getPose());

@@ -113,13 +113,6 @@
         "stopIntake",
         "armStow"
       ]
-    },
-    {
-      "position": 1.2000000000000002,
-      "names": [
-        "armIntake",
-        "intakeIn"
-      ]
     }
   ]
 }
